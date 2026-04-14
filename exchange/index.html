@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>해외여행 환전 계산기 | 실시간 전세계 환율</title>
+  <meta name="description" content="실시간 환율 기준 전세계 통화 환전 계산기. 미국, 일본, 유럽, 동남아 등 주요 여행지 환율을 한 번에 확인하세요." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── 라이트 모드 (미니멀 화이트) ── */
+    :root {
+      --bg-page:    #f5f5f7;
+      --bg-card:    #ffffff;
+      --bg-input:   #f5f5f7;
+      --border:     #d2d2d7;
+      --border-focus:#0066cc;
+      --accent:     #0066cc;
+      --accent2:    #34c759;
+      --text-main:  #1d1d1f;
+      --text-sub:   #6e6e73;
+      --text-faint: #aeaeb2;
+      --allowed:    #34c759;
+      --banned:     #ff3b30;
+      --info:       #0066cc;
+      --shadow:     0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* ── 다크 모드 (미니멀 블랙) ── */
+    body.dark {
+      --bg-page:    #000000;
+      --bg-card:    #1c1c1e;
+      --bg-input:   #2c2c2e;
+      --border:     #38383a;
+      --border-focus:#0a84ff;
+      --accent:     #0a84ff;
+      --accent2:    #30d158;
+      --text-main:  #f5f5f7;
+      --text-sub:   #98989d;
+      --text-faint: #48484a;
+      --allowed:    #30d158;
+      --banned:     #ff453a;
+      --info:       #0a84ff;
+      --shadow:     0 1px 6px rgba(0,0,0,0.4);
+    }
+
+    body {
+      font-family: -apple-system, 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+      transition: background 0.25s, color 0.25s;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 24px 24px;
+      position: relative;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 1.7rem; font-weight: 700;
+      color: var(--text-main); letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    header p { font-size: 0.9rem; color: var(--text-sub); }
+
+    /* ── 다크모드 토글 (우측 상단 pill 버튼) ── */
+    .theme-toggle {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--text-sub);
+      font-size: 0.82rem; font-weight: 600;
+      display: flex; align-items: center; gap: 5px;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 12px;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--text-sub); margin-top: 10px;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: var(--allowed); border-radius: 50%;
+      animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ── 레이아웃 ── */
+    main { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .card-title {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text-main); margin-bottom: 20px;
+      letter-spacing: -0.3px;
+    }
+    .card-subtitle {
+      font-size: 0.83rem; color: var(--text-sub);
+      margin-bottom: 20px; margin-top: -12px;
+    }
+
+    /* ── 환전 입력 ── */
+    .exchange-row {
+      display: flex; align-items: stretch; gap: 12px;
+      margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .exchange-box {
+      flex: 1; min-width: 200px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: border-color 0.2s, background 0.25s;
+    }
+    .exchange-box:focus-within { border-color: var(--border-focus); }
+    .exchange-box label {
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--text-sub); display: block; margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .exchange-box .input-row { display: flex; gap: 8px; align-items: center; }
+    .exchange-box input {
+      flex: 1; border: none; background: transparent;
+      font-size: 1.6rem; font-weight: 600;
+      color: var(--text-main); outline: none; min-width: 0;
+      letter-spacing: -0.5px;
+    }
+    .exchange-box input::placeholder { color: var(--text-faint); }
+    .exchange-box select {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 8px; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-main); background: var(--bg-card);
+      cursor: pointer; outline: none;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    .swap-btn {
+      background: var(--bg-input); color: var(--text-sub);
+      border: 1px solid var(--border); border-radius: 50%;
+      width: 40px; height: 40px; align-self: center;
+      font-size: 1rem; cursor: pointer; flex-shrink: 0;
+      transition: all 0.25s;
+    }
+    .swap-btn:hover { border-color: var(--accent); color: var(--accent); transform: rotate(180deg); }
+
+    .calc-btn {
+      width: 100%; padding: 14px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.2px;
+      transition: opacity 0.2s;
+    }
+    .calc-btn:hover { opacity: 0.85; }
+
+    .result-main {
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 24px;
+      margin-top: 14px; text-align: center; display: none;
+      transition: background 0.25s;
+    }
+    .result-main.show { display: block; }
+    .result-main .result-amount {
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--text-main); letter-spacing: -1px; margin-bottom: 4px;
+    }
+    .result-main .result-rate { font-size: 0.88rem; color: var(--text-sub); }
+    .result-main .result-updated { font-size: 0.75rem; color: var(--text-faint); margin-top: 4px; }
+
+    /* ── 환율 그리드 ── */
+    .quick-input-row {
+      display: flex; gap: 10px; margin-bottom: 18px;
+      align-items: center; flex-wrap: wrap;
+    }
+    .quick-input-row input {
+      flex: 1; min-width: 140px;
+      padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 10px;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-main); background: var(--bg-input); outline: none;
+      transition: border-color 0.2s, background 0.25s;
+    }
+    .quick-input-row input:focus { border-color: var(--border-focus); }
+    .quick-input-row button {
+      padding: 10px 20px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .quick-input-row button:hover { opacity: 0.85; }
+
+    .country-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .country-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 14px;
+      text-align: center; transition: all 0.2s;
+    }
+    .country-card:hover { border-color: var(--accent); background: var(--bg-card); }
+    .country-card .flag { font-size: 1.8rem; margin-bottom: 6px; }
+    .country-card .country-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
+    .country-card .converted { font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+    .country-card .currency-code { font-size: 0.72rem; color: var(--text-faint); }
+    .country-card .rate-info { font-size: 0.7rem; color: var(--text-faint); margin-top: 2px; }
+    .loading-text { color: var(--text-faint); font-size: 0.82rem; }
+
+    /* ── 환전 꿀팁 ── */
+    .tip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+    .tip-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      border-left: 3px solid var(--accent2);
+      transition: background 0.25s;
+    }
+    .tip-card .tip-title { font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+    .tip-card .tip-desc { font-size: 0.8rem; color: var(--text-sub); line-height: 1.5; }
+
+    /* ── 규정 카드 ── */
+    .reg-block { margin-bottom: 24px; }
+    .reg-title {
+      font-size: 0.88rem; font-weight: 700;
+      color: var(--text-sub); margin-bottom: 10px;
+      padding-bottom: 8px; border-bottom: 1px solid var(--border);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .reg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+    .reg-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      border-left: 3px solid var(--border);
+      transition: background 0.25s;
+    }
+    .reg-card.allowed { border-left-color: var(--allowed); }
+    .reg-card.banned  { border-left-color: var(--banned); }
+    .reg-card.info    { border-left-color: var(--info); }
+    .reg-icon { font-size: 1.3rem; margin-bottom: 6px; }
+    .reg-name { font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin-bottom: 3px; }
+    .reg-rule { font-size: 0.82rem; color: var(--text-sub); margin-bottom: 3px; }
+    .reg-detail { font-size: 0.76rem; color: var(--text-faint); line-height: 1.5; }
+
+    /* ── 규정 수정 버튼 / 배지 ── */
+    .reg-edit-btn {
+      background: transparent; color: var(--accent);
+      border: 1px solid var(--accent); border-radius: 20px;
+      padding: 5px 14px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap; transition: all 0.2s;
+    }
+    .reg-edit-btn:hover { background: var(--accent); color: #fff; }
+    .update-badge {
+      display: inline-block;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 0.76rem; color: var(--text-faint); white-space: nowrap;
+    }
+
+    /* ── 모달 ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      width: 100%; max-width: 580px;
+      max-height: 85vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 1rem; font-weight: 700; color: var(--text-main);
+    }
+    .modal-close {
+      background: var(--bg-input); border: 1px solid var(--border);
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer; color: var(--text-sub); font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { color: var(--text-main); }
+    .modal-body { overflow-y: auto; padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
+    .modal-field label {
+      display: block; font-size: 0.75rem; font-weight: 700;
+      color: var(--text-sub); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .modal-field input[type="date"],
+    .modal-field input[type="text"],
+    .modal-field textarea {
+      width: 100%; padding: 8px 12px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.88rem; color: var(--text-main); background: var(--bg-input); outline: none;
+      transition: border-color 0.2s;
+    }
+    .modal-field input:focus, .modal-field textarea:focus { border-color: var(--border-focus); }
+    .modal-field textarea { resize: vertical; min-height: 52px; }
+    .edit-item {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .edit-item-header {
+      font-size: 0.83rem; font-weight: 700; color: var(--text-sub);
+      margin-bottom: 2px;
+    }
+    .edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .modal-footer {
+      padding: 14px 22px; border-top: 1px solid var(--border);
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .modal-save {
+      flex: 1; padding: 11px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .modal-save:hover { opacity: 0.85; }
+    .modal-reset {
+      padding: 11px 16px;
+      background: transparent; color: var(--text-sub);
+      border: 1px solid var(--border); border-radius: 10px;
+      font-size: 0.83rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-reset:hover { border-color: var(--banned); color: var(--banned); }
+
+    footer {
+      text-align: center; padding: 28px 20px;
+      font-size: 0.78rem; color: var(--text-faint);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.3rem; }
+      .card { padding: 20px 16px; }
+      .exchange-row { flex-direction: column; }
+      .swap-btn { transform: rotate(90deg); align-self: center; }
+      .swap-btn:hover { transform: rotate(270deg); }
+      .result-main .result-amount { font-size: 1.8rem; }
+      .theme-toggle { top: 14px; right: 12px; padding: 5px 10px; font-size: 0.76rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+    <span class="icon">🌙</span><span id="theme-label">다크 모드</span>
+  </button>
+  <h1>✈️ 해외여행 환전 계산기</h1>
+  <p>실시간 환율 기준으로 전세계 통화를 계산해드립니다</p>
+  <div class="live-badge"><span class="live-dot"></span>실시간 환율 연동</div>
+</header>
+
+<main>
+
+  <!-- 메인 환전 계산기 -->
+  <section class="card">
+    <div class="card-title">💱 환전 계산기</div>
+    <div class="exchange-row">
+      <div class="exchange-box">
+        <label>보내는 금액</label>
+        <div class="input-row">
+          <input type="text" id="from-amount" value="100,000" oninput="fmtInput(this)" inputmode="numeric" />
+          <select id="from-currency" onchange="onCurrencyChange()">
+            <option value="KRW">🇰🇷 KRW</option>
+            <option value="USD">🇺🇸 USD</option>
+            <option value="JPY">🇯🇵 JPY</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="CNY">🇨🇳 CNY</option>
+            <option value="GBP">🇬🇧 GBP</option>
+            <option value="HKD">🇭🇰 HKD</option>
+            <option value="THB">🇹🇭 THB</option>
+            <option value="VND">🇻🇳 VND</option>
+            <option value="TWD">🇹🇼 TWD</option>
+            <option value="SGD">🇸🇬 SGD</option>
+            <option value="AUD">🇦🇺 AUD</option>
+            <option value="CAD">🇨🇦 CAD</option>
+            <option value="CHF">🇨🇭 CHF</option>
+            <option value="MYR">🇲🇾 MYR</option>
+            <option value="PHP">🇵🇭 PHP</option>
+            <option value="IDR">🇮🇩 IDR</option>
+            <option value="TRY">🇹🇷 TRY</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="swap-btn" onclick="swapCurrency()" title="통화 바꾸기">⇄</button>
+
+      <div class="exchange-box">
+        <label>받는 금액</label>
+        <div class="input-row">
+          <input type="number" id="to-amount" placeholder="0" readonly style="color:#888;" />
+          <select id="to-currency" onchange="onCurrencyChange()">
+            <option value="USD">🇺🇸 USD</option>
+            <option value="JPY">🇯🇵 JPY</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="KRW">🇰🇷 KRW</option>
+            <option value="CNY">🇨🇳 CNY</option>
+            <option value="GBP">🇬🇧 GBP</option>
+            <option value="HKD">🇭🇰 HKD</option>
+            <option value="THB">🇹🇭 THB</option>
+            <option value="VND">🇻🇳 VND</option>
+            <option value="TWD">🇹🇼 TWD</option>
+            <option value="SGD">🇸🇬 SGD</option>
+            <option value="AUD">🇦🇺 AUD</option>
+            <option value="CAD">🇨🇦 CAD</option>
+            <option value="CHF">🇨🇭 CHF</option>
+            <option value="MYR">🇲🇾 MYR</option>
+            <option value="PHP">🇵🇭 PHP</option>
+            <option value="IDR">🇮🇩 IDR</option>
+            <option value="TRY">🇹🇷 TRY</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">환전 계산하기</button>
+
+    <div class="result-main" id="main-result">
+      <div class="result-amount" id="result-amount">-</div>
+      <div class="result-rate" id="result-rate">-</div>
+      <div class="result-updated" id="result-updated">-</div>
+    </div>
+  </section>
+
+  <!-- 여행지별 빠른 환율 -->
+  <section class="card">
+    <div class="card-title">🌍 주요 여행지 환율 한눈에 보기</div>
+    <p class="card-subtitle">원화(KRW) 기준으로 주요 국가 통화를 한 번에 확인하세요</p>
+    <div id="fallback-notice" style="display:none; background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:10px 16px; margin-bottom:16px; font-size:0.83rem; color:#7a5c00;">
+      ⚠️ 실시간 환율 조회에 실패했습니다. 2025년 4월 기준 근사 환율을 표시합니다. 정확한 환율은 은행에서 확인하세요.
+    </div>
+    <div class="quick-input-row">
+      <input type="text" id="krw-input" value="100,000" placeholder="원화 금액 입력" oninput="fmtInput(this)" inputmode="numeric" />
+      <button onclick="updateAllRates()">전체 업데이트</button>
+    </div>
+    <div class="country-grid" id="country-grid">
+      <!-- JS로 렌더링 -->
+    </div>
+  </section>
+
+  <!-- 환전 꿀팁 -->
+  <section class="card">
+    <div class="card-title">💡 해외 환전 꿀팁</div>
+    <div class="tip-grid">
+      <div class="tip-card">
+        <div class="tip-title">🏦 은행 우대환율 활용</div>
+        <div class="tip-desc">주거래 은행 앱에서 환전 시 최대 90% 우대환율 적용. 미리 신청하면 더 저렴해요.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">💳 트래블월렛·트래블로그</div>
+        <div class="tip-desc">수수료 없이 실시간 환율로 환전. 해외에서 카드처럼 사용 가능해요.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🇯🇵 엔화 환전 타이밍</div>
+        <div class="tip-desc">엔화는 환율 변동이 크므로 여행 1~2주 전부터 분할 환전하는 게 유리해요.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🏧 현지 ATM 인출</div>
+        <div class="tip-desc">동남아는 현지 ATM 인출 시 수수료 주의. 글로벌 체크카드 활용이 경제적이에요.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">❌ 공항 환전 피하기</div>
+        <div class="tip-desc">공항 환전소는 수수료가 높아요. 최소한의 금액만 환전하고 미리 준비하세요.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">📱 환율 알림 설정</div>
+        <div class="tip-desc">네이버·카카오페이·하나머니 앱에서 목표 환율 도달 시 알림을 받을 수 있어요.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 여행 규정 -->
+  <section class="card" style="text-align:left;" id="reg-section">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:6px;">
+      <span class="card-title" style="display:block;">🧳 해외여행 필수 규정 안내</span>
+      <button class="reg-edit-btn" onclick="openEditModal()">✏️ 규정 수정</button>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+      <p style="font-size:0.85rem; color:var(--text-muted);">출국 전 반드시 확인하세요 — 모르면 공항에서 압수됩니다!</p>
+      <span class="update-badge" id="update-badge">📅 업데이트: -</span>
+    </div>
+    <div id="reg-container"></div>
+    <p style="font-size:0.75rem; color:var(--text-faint); margin-top:8px;">
+      ※ 규정은 항공사·국가·노선에 따라 다를 수 있습니다. 출발 전 이용 항공사 공식 홈페이지에서 최신 규정을 확인하세요.
+    </p>
+  </section>
+
+  <!-- 규정 수정 모달 -->
+  <div id="reg-modal" class="modal-overlay" style="display:none;" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>✏️ 규정 수정</span>
+        <button class="modal-close" onclick="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label>마지막 업데이트 날짜</label>
+          <input type="date" id="edit-date" />
+        </div>
+        <div id="edit-items"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-save" onclick="saveRegs()">💾 저장</button>
+        <button class="modal-reset" onclick="resetRegs()">↩️ 기본값으로 초기화</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>환율 정보는 Frankfurter(ECB) 기준이며 실제 환전 금액과 다를 수 있습니다.</p>
+  <p style="margin-top:6px;">© 2024 해외여행 환전 계산기</p>
+</footer>
+
+<script>
+/* ────────────────────────────────
+   여행 규정 데이터 & 렌더링
+──────────────────────────────── */
+const DEFAULT_REGS = {
+  updatedAt: '2025-04-14',
+  groups: [
+    {
+      title: '✈️ 기내 반입 규정',
+      items: [
+        { icon:'💧', name:'액체류',        type:'allowed', rule:'용기당 100ml 이하',              detail:'1인당 1L 투명 지퍼백 1개에 담아야 함' },
+        { icon:'🔋', name:'보조배터리',    type:'allowed', rule:'100Wh 이하 자유 반입',           detail:'100~160Wh는 항공사 사전 승인 필요 / 160Wh 초과 반입 불가' },
+        { icon:'💻', name:'노트북·태블릿', type:'allowed', rule:'기내 반입 가능',                  detail:'보안검색 시 가방에서 꺼내 별도 X-ray 통과' },
+        { icon:'🔪', name:'날카로운 물건', type:'banned',  rule:'기내 반입 불가',                  detail:'칼, 가위(6cm↑), 면도날 등 → 위탁수하물로' },
+        { icon:'🔥', name:'라이터·성냥',   type:'banned',  rule:'1개만 기내 반입',                 detail:'라이터 1개 소지 가능 / 위탁수하물 불가' },
+        { icon:'🧴', name:'100ml 초과 액체', type:'banned', rule:'기내 반입 불가',                detail:'샴푸·로션·술 등 100ml 초과 시 위탁수하물로' },
+      ]
+    },
+    {
+      title: '💰 면세 한도 (입국 시)',
+      items: [
+        { icon:'🛒', name:'면세 구매 한도', type:'info', rule:'1인당 미화 800달러',         detail:'800달러 초과 시 세관 신고 후 관세 납부' },
+        { icon:'🍶', name:'주류',           type:'info', rule:'1병 (1L 이하, $400 이하)',   detail:'만 19세 이상 / 2병까지 가능하나 1병만 면세' },
+        { icon:'🚬', name:'담배',           type:'info', rule:'궐련 200개비 (1보루)',        detail:'전자담배 20ml / 씹는담배 250g' },
+        { icon:'💵', name:'현금 반입',      type:'info', rule:'$10,000 초과 시 신고',       detail:'원화 포함 동등 금액 초과 시 세관 신고 필수' },
+      ]
+    },
+    {
+      title: '🗄️ 위탁수하물 일반 기준',
+      items: [
+        { icon:'⚖️', name:'무게 제한',    type:'info',   rule:'이코노미 23kg / 비즈니스 32kg', detail:'항공사·노선별 상이 — 탑승 전 반드시 확인' },
+        { icon:'📏', name:'크기 제한',    type:'info',   rule:'3면 합계 158cm 이하',            detail:'초과 시 특대수하물 요금 별도 부과' },
+        { icon:'🔋', name:'리튬배터리',   type:'banned', rule:'위탁수하물 불가',                detail:'보조배터리·배터리 단품은 반드시 기내 반입' },
+      ]
+    }
+  ]
+};
+
+function loadRegs() {
+  try {
+    const saved = localStorage.getItem('travel-regs');
+    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_REGS));
+  } catch { return JSON.parse(JSON.stringify(DEFAULT_REGS)); }
+}
+
+function renderRegs() {
+  const data = loadRegs();
+  const badge = document.getElementById('update-badge');
+  if (badge) badge.textContent = `📅 업데이트: ${data.updatedAt || '-'}`;
+
+  const container = document.getElementById('reg-container');
+  if (!container) return;
+
+  container.innerHTML = data.groups.map(g => `
+    <div class="reg-block">
+      <div class="reg-title">${g.title}</div>
+      <div class="reg-grid">
+        ${g.items.map(item => `
+          <div class="reg-card ${item.type}">
+            <div class="reg-icon">${item.icon}</div>
+            <div class="reg-name">${item.name}</div>
+            <div class="reg-rule">${item.rule}</div>
+            <div class="reg-detail">${item.detail}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── 수정 모달 ── */
+function openEditModal() {
+  const data = loadRegs();
+  document.getElementById('edit-date').value = data.updatedAt || '';
+
+  const itemsEl = document.getElementById('edit-items');
+  itemsEl.innerHTML = data.groups.map((g, gi) => `
+    <div style="margin-bottom:8px;">
+      <div style="font-size:0.82rem; font-weight:800; color:var(--text-h2); margin:12px 0 8px;">${g.title}</div>
+      ${g.items.map((item, ii) => `
+        <div class="edit-item" style="margin-bottom:8px;">
+          <div class="edit-item-header">${item.icon} ${item.name}</div>
+          <div class="edit-row">
+            <div class="modal-field">
+              <label>규정 요약</label>
+              <input type="text" id="rule-${gi}-${ii}" value="${item.rule}" />
+            </div>
+            <div class="modal-field">
+              <label>유형
+                <select id="type-${gi}-${ii}" style="margin-left:6px; border:1px solid var(--border-box); border-radius:6px; background:var(--bg-input); color:var(--text-main); padding:2px 6px;">
+                  <option value="allowed" ${item.type==='allowed'?'selected':''}>✅ 허용</option>
+                  <option value="banned"  ${item.type==='banned' ?'selected':''}>❌ 금지</option>
+                  <option value="info"    ${item.type==='info'   ?'selected':''}>ℹ️ 정보</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="modal-field">
+            <label>상세 설명</label>
+            <textarea id="detail-${gi}-${ii}">${item.detail}</textarea>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  document.getElementById('reg-modal').style.display = 'flex';
+}
+
+function closeEditModal() {
+  document.getElementById('reg-modal').style.display = 'none';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('reg-modal')) closeEditModal();
+}
+
+function saveRegs() {
+  const data = loadRegs();
+  data.updatedAt = document.getElementById('edit-date').value || new Date().toISOString().slice(0,10);
+
+  data.groups.forEach((g, gi) => {
+    g.items.forEach((item, ii) => {
+      item.rule   = document.getElementById(`rule-${gi}-${ii}`).value;
+      item.detail = document.getElementById(`detail-${gi}-${ii}`).value;
+      item.type   = document.getElementById(`type-${gi}-${ii}`).value;
+    });
+  });
+
+  localStorage.setItem('travel-regs', JSON.stringify(data));
+  renderRegs();
+  closeEditModal();
+  alert('✅ 규정이 저장되었습니다!');
+}
+
+function resetRegs() {
+  if (!confirm('기본값으로 초기화하시겠어요?')) return;
+  localStorage.removeItem('travel-regs');
+  renderRegs();
+  closeEditModal();
+}
+
+/* ────────────────────────────────
+   다크 / 라이트 모드 토글
+──────────────────────────────── */
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('fx-theme', isDark ? 'dark' : 'light');
+  updateToggleBtn(isDark);
+}
+function updateToggleBtn(isDark) {
+  document.getElementById('theme-btn').innerHTML = isDark
+    ? '<span class="icon">☀️</span><span id="theme-label">라이트 모드</span>'
+    : '<span class="icon">🌙</span><span id="theme-label">다크 모드</span>';
+}
+(function() {
+  if (localStorage.getItem('fx-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.addEventListener('DOMContentLoaded', () => updateToggleBtn(true));
+  }
+})();
+
+/* ────────────────────────────────
+   콤마 포맷 / 파싱
+──────────────────────────────── */
+function fmtInput(el) {
+  const pos = el.selectionStart;
+  const prevLen = el.value.length;
+  const raw = el.value.replace(/[^0-9]/g, '');
+  el.value = raw ? parseInt(raw, 10).toLocaleString('ko-KR') : '';
+  const diff = el.value.length - prevLen;
+  el.setSelectionRange(pos + diff, pos + diff);
+}
+function parseAmt(id) {
+  return parseFloat(document.getElementById(id).value.replace(/,/g, '')) || 0;
+}
+
+/* ────────────────────────────────
+   국가 정보
+──────────────────────────────── */
+const COUNTRIES = [
+  { code:'USD', flag:'🇺🇸', name:'미국',       symbol:'$'  },
+  { code:'JPY', flag:'🇯🇵', name:'일본',       symbol:'¥'  },
+  { code:'EUR', flag:'🇪🇺', name:'유럽',       symbol:'€'  },
+  { code:'CNY', flag:'🇨🇳', name:'중국',       symbol:'¥'  },
+  { code:'GBP', flag:'🇬🇧', name:'영국',       symbol:'£'  },
+  { code:'HKD', flag:'🇭🇰', name:'홍콩',       symbol:'HK$'},
+  { code:'THB', flag:'🇹🇭', name:'태국',       symbol:'฿'  },
+  { code:'VND', flag:'🇻🇳', name:'베트남',     symbol:'₫'  },
+  { code:'TWD', flag:'🇹🇼', name:'대만',       symbol:'NT$'},
+  { code:'SGD', flag:'🇸🇬', name:'싱가포르',   symbol:'S$' },
+  { code:'AUD', flag:'🇦🇺', name:'호주',       symbol:'A$' },
+  { code:'CAD', flag:'🇨🇦', name:'캐나다',     symbol:'C$' },
+  { code:'MYR', flag:'🇲🇾', name:'말레이시아', symbol:'RM' },
+  { code:'PHP', flag:'🇵🇭', name:'필리핀',     symbol:'₱'  },
+  { code:'IDR', flag:'🇮🇩', name:'인도네시아', symbol:'Rp' },
+  { code:'TRY', flag:'🇹🇷', name:'터키',       symbol:'₺'  },
+];
+
+let ratesCache = {};   // KRW 기준 환율 캐시
+let lastFetched = null;
+let usingFallback = false;
+
+/* ────────────────────────────────
+   KRW 기준 기본 환율 (API 실패 시 사용)
+   2025년 4월 기준 근사값
+──────────────────────────────── */
+const FALLBACK_RATES_KRW = {
+  USD: 0.000730, JPY: 0.1105,  EUR: 0.000672, CNY: 0.00530,
+  GBP: 0.000572, HKD: 0.00570, THB: 0.02510,  VND: 18.50,
+  TWD: 0.02360,  SGD: 0.000984,AUD: 0.001120, CAD: 0.001000,
+  MYR: 0.003440, PHP: 0.04120, IDR: 11.80,    TRY: 0.02530,
+};
+
+/* ────────────────────────────────
+   API 호출 (여러 API 순차 시도)
+──────────────────────────────── */
+async function fetchRates(base = 'KRW') {
+  // API 1: open.er-api.com (무료, CORS 허용)
+  try {
+    const res = await fetch(`https://open.er-api.com/v6/latest/${base}`, { signal: AbortSignal.timeout(5000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.rates) { usingFallback = false; return data.rates; }
+    }
+  } catch(e) {}
+
+  // API 2: exchangerate-api.com (무료 플랜)
+  try {
+    const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${base}`, { signal: AbortSignal.timeout(5000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.rates) { usingFallback = false; return data.rates; }
+    }
+  } catch(e) {}
+
+  // 폴백: 내장 기본 환율 사용
+  usingFallback = true;
+  if (base === 'KRW') return { ...FALLBACK_RATES_KRW };
+
+  // 다른 기준통화: KRW 기준값으로 역산
+  const baseRate = FALLBACK_RATES_KRW[base];
+  if (!baseRate) return null;
+  const result = { KRW: 1 / baseRate };
+  for (const [code, rate] of Object.entries(FALLBACK_RATES_KRW)) {
+    if (code !== base) result[code] = rate / baseRate;
+  }
+  return result;
+}
+
+/* ────────────────────────────────
+   그리드 초기 렌더링
+──────────────────────────────── */
+function renderGrid() {
+  const grid = document.getElementById('country-grid');
+  grid.innerHTML = COUNTRIES.map(c => `
+    <div class="country-card" id="card-${c.code}">
+      <div class="flag">${c.flag}</div>
+      <div class="country-name">${c.name}</div>
+      <div class="converted loading-text" id="val-${c.code}">로딩 중...</div>
+      <div class="currency-code">${c.symbol} ${c.code}</div>
+      <div class="rate-info" id="rate-${c.code}"></div>
+    </div>
+  `).join('');
+}
+
+/* ────────────────────────────────
+   전체 환율 업데이트
+──────────────────────────────── */
+async function updateAllRates() {
+  const krwInput = parseAmt('krw-input') || 100000;
+
+  // 로딩 표시
+  COUNTRIES.forEach(c => {
+    const el = document.getElementById(`val-${c.code}`);
+    if (el) el.textContent = '로딩 중...';
+  });
+
+  const rates = await fetchRates('KRW');
+  if (!rates) {
+    COUNTRIES.forEach(c => {
+      const el = document.getElementById(`val-${c.code}`);
+      if (el) el.textContent = '오류';
+    });
+    return;
+  }
+
+  ratesCache = rates;
+  lastFetched = new Date();
+
+  COUNTRIES.forEach(c => {
+    const rate = rates[c.code];
+    if (!rate) return;
+    const converted = krwInput * rate;
+    const valEl  = document.getElementById(`val-${c.code}`);
+    const rateEl = document.getElementById(`rate-${c.code}`);
+    if (valEl) valEl.textContent = formatAmount(converted, c.code);
+    if (rateEl) rateEl.textContent = usingFallback
+      ? `1원 ≈ ${c.symbol}${rate.toFixed(4)} (기준환율)`
+      : `1원 = ${c.symbol}${rate.toFixed(4)}`;
+  });
+
+  // 폴백 사용 시 상단 안내
+  const notice = document.getElementById('fallback-notice');
+  if (notice) notice.style.display = usingFallback ? 'block' : 'none';
+}
+
+/* ────────────────────────────────
+   메인 계산기
+──────────────────────────────── */
+async function calculate() {
+  const fromAmt  = parseAmt('from-amount');
+  const fromCur  = document.getElementById('from-currency').value;
+  const toCur    = document.getElementById('to-currency').value;
+
+  if (!fromAmt || fromAmt <= 0) { alert('금액을 입력해 주세요.'); return; }
+  if (fromCur === toCur) { alert('같은 통화입니다.'); return; }
+
+  // 버튼 텍스트 변경
+  const btn = document.querySelector('.calc-btn');
+  btn.textContent = '환율 조회 중...';
+  btn.disabled = true;
+
+  const rates = await fetchRates(fromCur);
+
+  btn.textContent = '환전 계산하기';
+  btn.disabled = false;
+
+  if (!rates) {
+    alert('환율 정보를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.');
+    return;
+  }
+
+  const rate = rates[toCur];
+  if (!rate) { alert('해당 통화 정보가 없습니다.'); return; }
+
+  const result = fromAmt * rate;
+  document.getElementById('to-amount').value = result.toFixed(2);
+
+  const now = new Date();
+  document.getElementById('result-amount').textContent =
+    `${formatAmount(result, toCur)} ${toCur}`;
+  document.getElementById('result-rate').textContent =
+    `1 ${fromCur} = ${rate.toFixed(4)} ${toCur}`;
+  document.getElementById('result-updated').textContent = usingFallback
+    ? `⚠️ 실시간 조회 불가 — 2025년 4월 기준 근사 환율 적용`
+    : `기준시각: ${now.toLocaleString('ko-KR')}`;
+
+  document.getElementById('main-result').classList.add('show');
+}
+
+function onCurrencyChange() {
+  document.getElementById('main-result').classList.remove('show');
+  document.getElementById('to-amount').value = '';
+}
+
+function swapCurrency() {
+  const fromSel = document.getElementById('from-currency');
+  const toSel   = document.getElementById('to-currency');
+  [fromSel.value, toSel.value] = [toSel.value, fromSel.value];
+  onCurrencyChange();
+}
+
+/* ────────────────────────────────
+   숫자 포맷
+──────────────────────────────── */
+function formatAmount(n, code) {
+  if (['JPY','IDR','VND','KRW'].includes(code)) {
+    return Math.round(n).toLocaleString('ko-KR');
+  }
+  return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/* ────────────────────────────────
+   초기 실행
+──────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  renderGrid();
+  updateAllRates();
+  renderRegs();
+});
+</script>
+
+</body>
+</html>

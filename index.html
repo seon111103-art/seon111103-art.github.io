@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>무료 계산기 모음 | 부동산 · 환전</title>
+  <meta name="description" content="부동산 대출 상환, 전월세 전환, 취득세, 환전 계산기를 무료로 이용하세요." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-page: #f5f5f7; --bg-card: #ffffff;
+      --border: #d2d2d7; --accent: #0066cc;
+      --text-main: #1d1d1f; --text-sub: #6e6e73;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    body.dark {
+      --bg-page: #000000; --bg-card: #1c1c1e;
+      --border: #38383a; --accent: #0a84ff;
+      --text-main: #f5f5f7; --text-sub: #98989d;
+      --shadow: 0 1px 6px rgba(0,0,0,0.4);
+    }
+    body {
+      font-family: -apple-system, 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: var(--bg-page); color: var(--text-main);
+      min-height: 100vh; transition: background 0.25s, color 0.25s;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      background: var(--bg-card); border-bottom: 1px solid var(--border);
+      padding: 40px 24px 32px; text-align: center; position: relative;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+    header p { font-size: 0.95rem; color: var(--text-sub); }
+    .theme-toggle {
+      position: absolute; top: 20px; right: 20px;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 14px;
+      cursor: pointer; color: var(--text-sub);
+      font-size: 0.82rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    main { max-width: 760px; margin: 0 auto; padding: 48px 16px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px 28px;
+      text-decoration: none; color: var(--text-main);
+      box-shadow: var(--shadow);
+      transition: all 0.2s; display: block;
+    }
+    .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .card .emoji { font-size: 2.4rem; margin-bottom: 14px; display: block; }
+    .card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .card p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.6; }
+    .card .tag {
+      display: inline-block; margin-top: 14px;
+      background: var(--bg-page); border: 1px solid var(--border);
+      color: var(--text-sub); font-size: 0.72rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 8px;
+    }
+
+    footer {
+      text-align: center; padding: 32px 20px;
+      font-size: 0.78rem; color: var(--text-sub);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
+  <h1>📐 무료 계산기 모음</h1>
+  <p>부동산부터 환전까지, 필요한 계산을 바로 해보세요</p>
+</header>
+
+<main>
+  <div class="grid">
+    <a class="card" href="realestate/">
+      <span class="emoji">🏠</span>
+      <h2>부동산 계산기</h2>
+      <p>대출 원리금 상환, 전월세 전환, 월세 수익률, 취득세 계산</p>
+      <span class="tag">4가지 계산기</span>
+    </a>
+    <a class="card" href="exchange/">
+      <span class="emoji">💱</span>
+      <h2>환전 계산기</h2>
+      <p>실시간 환율 기반 환전 금액 계산, 세계 주요국 환율 한눈에 보기</p>
+      <span class="tag">18개국 환율</span>
+    </a>
+  </div>
+</main>
+
+<footer>
+  © 2025 무료 계산기 모음 · 광고 문의: seon111103-art@github
+</footer>
+
+<script>
+  const saved = localStorage.getItem('site-theme');
+  if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('theme-btn').textContent = '☀️ 라이트'; }
+
+  function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark');
+    document.getElementById('theme-btn').textContent = isDark ? '☀️ 라이트' : '🌙 다크';
+    localStorage.setItem('site-theme', isDark ? 'dark' : 'light');
+  }
+</script>
+</body>
+</html>
