@@ -79,7 +79,8 @@
     @media(max-width:600px) {
       header h1 { font-size:1.3rem; }
       .news-grid { grid-template-columns:1fr; }
-      .tab-btn { padding:12px 12px; font-size:.8rem; }
+      .tab-btn { padding:12px 10px; font-size:1.1rem; }
+      .tab-label { display:none; }
     }
   </style>
 </head>
@@ -92,12 +93,12 @@
 </header>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('all')" id="tab-all">🎮 All</button>
-  <button class="tab-btn" onclick="switchTab('nintendo')" id="tab-nintendo">🟥 Nintendo</button>
-  <button class="tab-btn" onclick="switchTab('playstation')" id="tab-playstation">🔵 PlayStation</button>
-  <button class="tab-btn" onclick="switchTab('xbox')" id="tab-xbox">🟩 Xbox</button>
-  <button class="tab-btn" onclick="switchTab('pc')" id="tab-pc">🖥️ PC</button>
-  <button class="tab-btn" onclick="switchTab('mobile')" id="tab-mobile">📱 Mobile</button>
+  <button class="tab-btn active" onclick="switchTab('all')" id="tab-all">🎮 <span class="tab-label">All</span></button>
+  <button class="tab-btn" onclick="switchTab('nintendo')" id="tab-nintendo">🟥 <span class="tab-label">Nintendo</span></button>
+  <button class="tab-btn" onclick="switchTab('playstation')" id="tab-playstation">🔵 <span class="tab-label">PlayStation</span></button>
+  <button class="tab-btn" onclick="switchTab('xbox')" id="tab-xbox">🟩 <span class="tab-label">Xbox</span></button>
+  <button class="tab-btn" onclick="switchTab('pc')" id="tab-pc">🖥️ <span class="tab-label">PC</span></button>
+  <button class="tab-btn" onclick="switchTab('mobile')" id="tab-mobile">📱 <span class="tab-label">Mobile</span></button>
 </div>
 
 <main>
