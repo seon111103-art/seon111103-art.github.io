@@ -105,7 +105,7 @@
 <header>
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
   <h1>📈 실시간 주식 차트</h1>
-  <p>미국·국내 주식 시세와 차트를 한눈에</p>
+  <p>미국·국내 주식 시세와 차트를 한눈에 &nbsp;·&nbsp; <span id="refresh-status" style="font-size:.8rem;color:var(--text-faint);">자동 갱신 대기 중</span></p>
 </header>
 
 <div class="tab-bar">
@@ -422,8 +422,54 @@ async function fetchStock(symbol) {
   throw lastErr;
 }
 
+/* 자동 갱신 */
+const REFRESH_SEC = 60;
+let refreshTimer = null;
+let countdown = REFRESH_SEC;
+
+function startRefreshTimer() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  countdown = REFRESH_SEC;
+  updateRefreshStatus();
+  refreshTimer = setInterval(() => {
+    countdown--;
+    if (countdown <= 0) {
+      refreshAllCharts();
+      countdown = REFRESH_SEC;
+    }
+    updateRefreshStatus();
+  }, 1000);
+}
+
+function updateRefreshStatus() {
+  const el = document.getElementById('refresh-status');
+  const keys = Object.keys(activeCharts);
+  if (!el) return;
+  if (!keys.length) { el.textContent = '자동 갱신 대기 중'; return; }
+  el.textContent = `${countdown}초 후 갱신`;
+}
+
+async function refreshAllCharts() {
+  const symbols = Object.keys(activeCharts);
+  if (!symbols.length) return;
+  const el = document.getElementById('refresh-status');
+  if (el) el.textContent = '갱신 중...';
+  await Promise.allSettled(symbols.map(async symbol => {
+    const nameEl = document.querySelector(`#card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')} .chart-name`);
+    const name = nameEl ? nameEl.textContent : symbol;
+    try {
+      const data = await fetchStock(symbol);
+      const cardEl = document.getElementById(`card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`);
+      if (cardEl) renderChartCard(cardEl, symbol, name, data);
+    } catch(e) {}
+  }));
+  countdown = REFRESH_SEC;
+  updateRefreshStatus();
+}
+
 /* 초기 렌더 */
 renderQuickBtns();
+startRefreshTimer();
 </script>
 </body>
 </html>
