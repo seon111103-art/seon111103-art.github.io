@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>실시간 주식 차트 | 미국·국내 주식 시세</title>
+  <meta name="description" content="애플, 테슬라, 삼성전자 등 미국·국내 주식 실시간 시세와 차트를 확인하세요." />
+  <meta name="google-adsense-account" content="ca-pub-5695400087151759">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-page:#f5f5f7; --bg-card:#ffffff; --bg-input:#f5f5f7;
+      --border:#d2d2d7; --accent:#0066cc;
+      --green:#34c759; --red:#ff3b30;
+      --text-main:#1d1d1f; --text-sub:#6e6e73; --text-faint:#aeaeb2;
+      --shadow:0 1px 3px rgba(0,0,0,0.08);
+    }
+    body.dark {
+      --bg-page:#000; --bg-card:#1c1c1e; --bg-input:#2c2c2e;
+      --border:#38383a; --accent:#0a84ff;
+      --green:#30d158; --red:#ff453a;
+      --text-main:#f5f5f7; --text-sub:#98989d; --text-faint:#48484a;
+      --shadow:0 1px 6px rgba(0,0,0,0.4);
+    }
+    body { font-family:-apple-system,'Pretendard','Noto Sans KR',sans-serif; background:var(--bg-page); color:var(--text-main); -webkit-font-smoothing:antialiased; transition:background .25s,color .25s; }
+
+    header { background:var(--bg-card); border-bottom:1px solid var(--border); padding:28px 24px 22px; text-align:center; position:relative; }
+    header h1 { font-size:1.7rem; font-weight:700; letter-spacing:-.5px; margin-bottom:4px; }
+    header p { font-size:.9rem; color:var(--text-sub); }
+    .theme-toggle { position:absolute; top:20px; right:20px; background:var(--bg-input); border:1px solid var(--border); border-radius:20px; padding:6px 14px; cursor:pointer; color:var(--text-sub); font-size:.82rem; font-weight:600; transition:all .2s; }
+    .theme-toggle:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* 탭 */
+    .tab-bar { background:var(--bg-card); border-bottom:1px solid var(--border); padding:0 20px; display:flex; gap:0; position:sticky; top:0; z-index:100; }
+    .tab-btn { padding:14px 20px; font-size:.88rem; font-weight:700; color:var(--text-faint); border:none; background:transparent; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+    .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+    .tab-btn:hover { color:var(--text-main); }
+
+    main { max-width:1000px; margin:0 auto; padding:24px 16px; }
+
+    /* 검색 */
+    .search-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:16px; box-shadow:var(--shadow); }
+    .search-box { display:flex; align-items:center; gap:10px; background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:14px; }
+    .search-box input { border:none; background:transparent; outline:none; font-size:.92rem; color:var(--text-main); width:100%; }
+    .search-box input::placeholder { color:var(--text-faint); }
+    .quick-btns { display:flex; flex-wrap:wrap; gap:8px; }
+    .quick-btn { background:var(--bg-input); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:.8rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; }
+    .quick-btn:hover, .quick-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+    /* 차트 그리드 */
+    .chart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; margin-bottom:24px; }
+    .chart-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:18px 20px; box-shadow:var(--shadow); position:relative; }
+    .chart-card .remove-btn { position:absolute; top:12px; right:14px; background:none; border:none; cursor:pointer; color:var(--text-faint); font-size:1.1rem; line-height:1; padding:2px 6px; border-radius:6px; transition:all .2s; }
+    .chart-card .remove-btn:hover { background:var(--bg-input); color:var(--red); }
+    .chart-top { margin-bottom:10px; }
+    .chart-symbol { font-size:.72rem; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:.5px; }
+    .chart-name { font-size:1rem; font-weight:700; margin:2px 0; }
+    .chart-price { font-size:1.4rem; font-weight:700; }
+    .chart-change { font-size:.88rem; font-weight:700; margin-top:2px; }
+    .up { color:var(--green); }
+    .down { color:var(--red); }
+    .chart-meta { font-size:.75rem; color:var(--text-faint); margin-top:4px; }
+    .chart-canvas-wrap { height:100px; position:relative; margin-top:12px; }
+
+    /* 검색 결과 */
+    .search-results { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px; box-shadow:var(--shadow); }
+    .search-result-item { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
+    .search-result-item:last-child { border-bottom:none; }
+    .search-result-item:hover { background:var(--bg-input); }
+    .result-name { font-size:.9rem; font-weight:700; }
+    .result-symbol { font-size:.75rem; color:var(--text-faint); }
+    .result-add { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:5px 12px; font-size:.78rem; font-weight:700; cursor:pointer; }
+
+    .empty-state { text-align:center; padding:48px 20px; color:var(--text-faint); }
+    .empty-icon { font-size:2.5rem; margin-bottom:10px; }
+
+    .loading-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:32px; text-align:center; color:var(--text-faint); }
+    .spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 8px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* 쿠팡 */
+    .coupang-section { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; text-align:center; box-shadow:var(--shadow); }
+    .coupang-section h2 { font-size:1rem; font-weight:700; margin-bottom:4px; }
+    .coupang-section p { font-size:.82rem; color:var(--text-sub); margin-bottom:16px; }
+    .coupang-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:10px; }
+    .coupang-card { border:1px solid var(--border); border-radius:12px; padding:16px 10px; text-decoration:none; color:var(--text-main); background:var(--bg-input); display:flex; flex-direction:column; align-items:center; gap:6px; transition:all .2s; }
+    .coupang-card:hover { border-color:var(--red); transform:translateY(-2px); }
+    .c-badge { background:var(--red); color:#fff; font-size:.68rem; padding:2px 8px; border-radius:10px; font-weight:600; }
+    .coupang-notice { font-size:.72rem; color:var(--text-faint); margin-top:4px; }
+
+    footer { text-align:center; padding:28px 20px; font-size:.78rem; color:var(--text-faint); border-top:1px solid var(--border); }
+
+    @media(max-width:600px) {
+      header h1 { font-size:1.3rem; }
+      .theme-toggle { top:14px; right:12px; }
+      .chart-grid { grid-template-columns:1fr; }
+      .tab-btn { padding:12px 14px; font-size:.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
+  <h1>📈 실시간 주식 차트</h1>
+  <p>미국·국내 주식 시세와 차트를 한눈에</p>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('us')" id="tab-us">🇺🇸 미국주식</button>
+  <button class="tab-btn" onclick="switchTab('kr')" id="tab-kr">🇰🇷 국내주식</button>
+  <button class="tab-btn" onclick="switchTab('idx')" id="tab-idx">📊 지수</button>
+</div>
+
+<main>
+
+  <!-- 검색 + 빠른 선택 -->
+  <div class="search-wrap">
+    <div class="search-box">
+      <span style="color:var(--text-faint)">🔍</span>
+      <input type="text" id="search-input" placeholder="종목명 또는 티커 검색 (예: 애플, AAPL)" oninput="onSearch()" />
+    </div>
+    <div class="quick-btns" id="quick-btns"></div>
+  </div>
+
+  <!-- 검색 결과 -->
+  <div class="search-results" id="search-results" style="display:none;"></div>
+
+  <!-- 차트 카드들 -->
+  <div class="chart-grid" id="chart-grid">
+    <div class="empty-state">
+      <div class="empty-icon">📊</div>
+      <p>위에서 종목을 선택하면<br>차트가 여기에 표시됩니다</p>
+    </div>
+  </div>
+
+  <!-- 쿠팡 섹션 -->
+  <div class="coupang-section">
+    <h2>📚 주식 투자 추천 도서</h2>
+    <p>투자 전 꼭 읽어야 할 필독서</p>
+    <div class="coupang-grid">
+      <a class="coupang-card" href="YOUR_COUPANG_LINK_1" target="_blank" rel="noopener">
+        <span style="font-size:1.8rem">📖</span>
+        <span style="font-size:.85rem;font-weight:700;text-align:center">주식 투자 입문</span>
+        <span style="font-size:.75rem;color:var(--text-sub);text-align:center">초보자 필독서</span>
+        <span class="c-badge">쿠팡 최저가</span>
+      </a>
+      <a class="coupang-card" href="YOUR_COUPANG_LINK_2" target="_blank" rel="noopener">
+        <span style="font-size:1.8rem">📊</span>
+        <span style="font-size:.85rem;font-weight:700;text-align:center">차트 분석 바이블</span>
+        <span style="font-size:.75rem;color:var(--text-sub);text-align:center">기술적 분석 완벽 정리</span>
+        <span class="c-badge">쿠팡 최저가</span>
+      </a>
+      <a class="coupang-card" href="YOUR_COUPANG_LINK_3" target="_blank" rel="noopener">
+        <span style="font-size:1.8rem">💰</span>
+        <span style="font-size:.85rem;font-weight:700;text-align:center">워런 버핏의 투자</span>
+        <span style="font-size:.75rem;color:var(--text-sub);text-align:center">가치투자 바이블</span>
+        <span class="c-badge">쿠팡 최저가</span>
+      </a>
+      <a class="coupang-card" href="YOUR_COUPANG_LINK_4" target="_blank" rel="noopener">
+        <span style="font-size:1.8rem">🇺🇸</span>
+        <span style="font-size:.85rem;font-weight:700;text-align:center">미국주식 투자</span>
+        <span style="font-size:.75rem;color:var(--text-sub);text-align:center">해외투자 완벽 가이드</span>
+        <span class="c-badge">쿠팡 최저가</span>
+      </a>
+    </div>
+    <p class="coupang-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
+  </div>
+
+</main>
+
+<footer>
+  <p>주식 정보는 Yahoo Finance 기준이며 실제 거래 가격과 다를 수 있습니다. 투자 판단의 책임은 본인에게 있습니다.</p>
+  <p style="margin-top:6px;">© 2025 실시간 주식 차트 &nbsp;·&nbsp; <a href="privacy.html" style="color:inherit;">개인정보처리방침</a> &nbsp;·&nbsp; <a href="terms.html" style="color:inherit;">이용약관</a></p>
+</footer>
+
+<script>
+/* 테마 */
+const savedTheme = localStorage.getItem('stock-theme');
+if (savedTheme === 'dark') { document.body.classList.add('dark'); document.getElementById('theme-btn').textContent = '☀️ 라이트'; }
+function toggleTheme() {
+  const d = document.body.classList.toggle('dark');
+  document.getElementById('theme-btn').textContent = d ? '☀️ 라이트' : '🌙 다크';
+  localStorage.setItem('stock-theme', d ? 'dark' : 'light');
+}
+
+/* 종목 데이터 */
+const STOCKS = {
+  us: [
+    {symbol:'AAPL', name:'애플'},
+    {symbol:'TSLA', name:'테슬라'},
+    {symbol:'NVDA', name:'엔비디아'},
+    {symbol:'MSFT', name:'마이크로소프트'},
+    {symbol:'AMZN', name:'아마존'},
+    {symbol:'META', name:'메타'},
+    {symbol:'GOOGL', name:'구글'},
+    {symbol:'NFLX', name:'넷플릭스'},
+    {symbol:'AMD', name:'AMD'},
+    {symbol:'COIN', name:'코인베이스'},
+    {symbol:'PLTR', name:'팔란티어'},
+    {symbol:'BABA', name:'알리바바'},
+  ],
+  kr: [
+    {symbol:'005930.KS', name:'삼성전자'},
+    {symbol:'000660.KS', name:'SK하이닉스'},
+    {symbol:'035420.KS', name:'네이버'},
+    {symbol:'035720.KS', name:'카카오'},
+    {symbol:'051910.KS', name:'LG화학'},
+    {symbol:'006400.KS', name:'삼성SDI'},
+    {symbol:'207940.KS', name:'삼성바이오로직스'},
+    {symbol:'068270.KS', name:'셀트리온'},
+    {symbol:'105560.KS', name:'KB금융'},
+    {symbol:'055550.KS', name:'신한지주'},
+  ],
+  idx: [
+    {symbol:'^GSPC', name:'S&P 500'},
+    {symbol:'^IXIC', name:'나스닥'},
+    {symbol:'^DJI', name:'다우존스'},
+    {symbol:'^KS11', name:'코스피'},
+    {symbol:'^KQ11', name:'코스닥'},
+    {symbol:'^VIX', name:'공포지수(VIX)'},
+    {symbol:'^TNX', name:'미국 10년 국채'},
+    {symbol:'GC=F', name:'금 선물'},
+  ]
+};
+
+let currentTab = 'us';
+let activeCharts = {}; // {symbol: chartInstance}
+const chartInstances = {};
+
+/* 탭 전환 */
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results').style.display = 'none';
+  renderQuickBtns();
+}
+
+/* 빠른 선택 버튼 */
+function renderQuickBtns() {
+  const stocks = STOCKS[currentTab];
+  document.getElementById('quick-btns').innerHTML = stocks.map(s =>
+    `<button class="quick-btn ${activeCharts[s.symbol] ? 'active' : ''}" onclick="toggleStock('${s.symbol}','${s.name}')">${s.name}</button>`
+  ).join('');
+}
+
+/* 검색 */
+function onSearch() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('search-results');
+  if (!q) { resultsEl.style.display = 'none'; return; }
+
+  const all = [...STOCKS.us, ...STOCKS.kr, ...STOCKS.idx];
+  const filtered = all.filter(s => s.name.includes(q) || s.symbol.toLowerCase().includes(q));
+
+  if (!filtered.length) { resultsEl.style.display = 'none'; return; }
+
+  resultsEl.style.display = 'block';
+  resultsEl.innerHTML = filtered.map(s => `
+    <div class="search-result-item" onclick="toggleStock('${s.symbol}','${s.name}');document.getElementById('search-input').value='';document.getElementById('search-results').style.display='none';">
+      <div>
+        <div class="result-name">${s.name}</div>
+        <div class="result-symbol">${s.symbol}</div>
+      </div>
+      <button class="result-add">${activeCharts[s.symbol] ? '제거' : '+ 추가'}</button>
+    </div>`).join('');
+}
+
+/* 종목 토글 */
+function toggleStock(symbol, name) {
+  if (activeCharts[symbol]) {
+    removeChart(symbol);
+  } else {
+    addChart(symbol, name);
+  }
+  renderQuickBtns();
+}
+
+/* 차트 추가 */
+async function addChart(symbol, name) {
+  activeCharts[symbol] = true;
+  renderQuickBtns();
+
+  const grid = document.getElementById('chart-grid');
+  // 빈 상태 제거
+  const empty = grid.querySelector('.empty-state');
+  if (empty) empty.remove();
+
+  // 로딩 카드 추가
+  const loadingId = `card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = loadingId;
+  loadingDiv.className = 'chart-card';
+  loadingDiv.innerHTML = `<div class="loading-card"><div class="spinner"></div><p style="font-size:.82rem">${name} 불러오는 중...</p></div>`;
+  grid.appendChild(loadingDiv);
+
+  try {
+    const data = await fetchStock(symbol);
+    renderChartCard(loadingDiv, symbol, name, data);
+  } catch(e) {
+    loadingDiv.innerHTML = `
+      <button class="remove-btn" onclick="removeChart('${symbol}')">✕</button>
+      <div style="text-align:center;padding:20px;color:var(--text-faint);font-size:.85rem">
+        ⚠️ ${name} 데이터를 불러올 수 없습니다
+      </div>`;
+  }
+}
+
+/* 차트 카드 렌더 */
+function renderChartCard(el, symbol, name, data) {
+  const { price, prevClose, closes, currency } = data;
+  const change = price - prevClose;
+  const changePct = (change / prevClose) * 100;
+  const isUp = change >= 0;
+  const cls = isUp ? 'up' : 'down';
+  const sign = isUp ? '+' : '';
+  const canvasId = `canvas-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`;
+
+  const fmtPrice = n => {
+    if (currency === 'KRW') return Math.round(n).toLocaleString('ko-KR') + '원';
+    return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  };
+
+  el.innerHTML = `
+    <button class="remove-btn" onclick="removeChart('${symbol}')">✕</button>
+    <div class="chart-top">
+      <div class="chart-symbol">${symbol}</div>
+      <div class="chart-name">${name}</div>
+      <div class="chart-price">${fmtPrice(price)}</div>
+      <div class="chart-change ${cls}">${sign}${fmtPrice(change)} (${sign}${changePct.toFixed(2)}%)</div>
+      <div class="chart-meta">전일 종가 ${fmtPrice(prevClose)}</div>
+    </div>
+    <div class="chart-canvas-wrap">
+      <canvas id="${canvasId}"></canvas>
+    </div>`;
+
+  const ctx = document.getElementById(canvasId);
+  const color = isUp ? '#30d158' : '#ff453a';
+  if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+  chartInstances[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: closes.map((_,i) => i),
+      datasets: [{
+        data: closes,
+        borderColor: color,
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: true,
+        backgroundColor: isUp ? 'rgba(48,209,88,0.1)' : 'rgba(255,69,58,0.1)',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{enabled:false} },
+      scales: { x:{display:false}, y:{display:false} },
+      animation: { duration:400 }
+    }
+  });
+}
+
+/* 차트 제거 */
+function removeChart(symbol) {
+  delete activeCharts[symbol];
+  const id = `card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const el = document.getElementById(id);
+  if (el) el.remove();
+
+  const canvasId = `canvas-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); delete chartInstances[canvasId]; }
+
+  const grid = document.getElementById('chart-grid');
+  if (!grid.children.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>위에서 종목을 선택하면<br>차트가 여기에 표시됩니다</p></div>';
+  }
+  renderQuickBtns();
+}
+
+/* Yahoo Finance API */
+async function fetchStock(symbol) {
+  const encoded = encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo`);
+  const url = `https://api.allorigins.win/raw?url=${encoded}`;
+  const res = await fetch(url, {signal: AbortSignal.timeout(10000)});
+  if (!res.ok) throw new Error();
+  const json = await res.json();
+  const meta = json.chart.result[0].meta;
+  const closes = json.chart.result[0].indicators.quote[0].close.filter(Boolean);
+  return {
+    price: meta.regularMarketPrice,
+    prevClose: meta.chartPreviousClose,
+    closes,
+    currency: meta.currency,
+  };
+}
+
+/* 초기 렌더 */
+renderQuickBtns();
+</script>
+</body>
+</html>
