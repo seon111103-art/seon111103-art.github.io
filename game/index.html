@@ -14,7 +14,7 @@
       --border:#d2d2d7; --accent:#0066cc;
       --text-main:#1d1d1f; --text-sub:#6e6e73; --text-faint:#aeaeb2;
       --shadow:0 1px 3px rgba(0,0,0,0.08);
-      --nintendo:#e4000f; --playstation:#003087; --xbox:#107c10; --pc:#7b68ee;
+      --nintendo:#e4000f; --playstation:#003087; --xbox:#107c10; --pc:#7b68ee; --mobile:#ff9500;
     }
     body.dark {
       --bg-page:#000; --bg-card:#1c1c1e; --bg-input:#2c2c2e;
@@ -53,6 +53,7 @@
     .platform-xbox { background:var(--xbox); }
     .platform-pc { background:var(--pc); }
     .platform-all { background:var(--accent); }
+    .platform-mobile { background:var(--mobile); }
     .news-title { font-size:.92rem; font-weight:700; line-height:1.5; flex:1; }
     .news-meta { display:flex; justify-content:space-between; align-items:center; }
     .news-source { font-size:.72rem; color:var(--text-faint); font-weight:600; }
@@ -87,15 +88,16 @@
 <header>
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
   <h1>🎮 게임 최신 뉴스</h1>
-  <p>닌텐도 · 플레이스테이션 · 엑스박스 · PC</p>
+  <p>Nintendo · PlayStation · Xbox · PC · Mobile</p>
 </header>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('all')" id="tab-all">🎮 전체</button>
-  <button class="tab-btn" onclick="switchTab('nintendo')" id="tab-nintendo">🟥 닌텐도</button>
-  <button class="tab-btn" onclick="switchTab('playstation')" id="tab-playstation">🔵 플레이스테이션</button>
-  <button class="tab-btn" onclick="switchTab('xbox')" id="tab-xbox">🟩 엑스박스</button>
+  <button class="tab-btn active" onclick="switchTab('all')" id="tab-all">🎮 All</button>
+  <button class="tab-btn" onclick="switchTab('nintendo')" id="tab-nintendo">🟥 Nintendo</button>
+  <button class="tab-btn" onclick="switchTab('playstation')" id="tab-playstation">🔵 PlayStation</button>
+  <button class="tab-btn" onclick="switchTab('xbox')" id="tab-xbox">🟩 Xbox</button>
   <button class="tab-btn" onclick="switchTab('pc')" id="tab-pc">🖥️ PC</button>
+  <button class="tab-btn" onclick="switchTab('mobile')" id="tab-mobile">📱 Mobile</button>
 </div>
 
 <main>
@@ -157,11 +159,12 @@ function toggleTheme() {
 
 /* RSS 소스 */
 const FEEDS = {
-  all:         { url:'https://feeds.ign.com/ign/all',                    name:'IGN',          emoji:'🎮', cls:'platform-all' },
-  nintendo:    { url:'https://www.nintendolife.com/feeds/latest',         name:'Nintendo Life', emoji:'🟥', cls:'platform-nintendo' },
-  playstation: { url:'https://www.pushsquare.com/feeds/latest',          name:'Push Square',  emoji:'🔵', cls:'platform-playstation' },
-  xbox:        { url:'https://www.purexbox.com/feeds/latest',            name:'Pure Xbox',    emoji:'🟩', cls:'platform-xbox' },
-  pc:          { url:'https://www.pcgamer.com/rss/',                     name:'PC Gamer',     emoji:'🖥️', cls:'platform-pc' },
+  all:         { url:'https://feeds.ign.com/ign/all',                    name:'IGN',           emoji:'🎮', cls:'platform-all' },
+  nintendo:    { url:'https://www.nintendolife.com/feeds/latest',        name:'Nintendo Life',  emoji:'🟥', cls:'platform-nintendo' },
+  playstation: { url:'https://www.pushsquare.com/feeds/latest',         name:'Push Square',    emoji:'🔵', cls:'platform-playstation' },
+  xbox:        { url:'https://www.purexbox.com/feeds/latest',           name:'Pure Xbox',      emoji:'🟩', cls:'platform-xbox' },
+  pc:          { url:'https://www.pcgamer.com/rss/',                    name:'PC Gamer',       emoji:'🖥️', cls:'platform-pc' },
+  mobile:      { url:'https://toucharcade.com/feed/',                   name:'TouchArcade',    emoji:'📱', cls:'platform-mobile' },
 };
 
 /* CORS 프록시 */
