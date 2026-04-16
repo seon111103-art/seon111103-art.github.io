@@ -159,12 +159,12 @@ function toggleTheme() {
 
 /* RSS 소스 */
 const FEEDS = {
-  all:         { url:'https://feeds.ign.com/ign/all',                    name:'IGN',           emoji:'🎮', cls:'platform-all' },
-  nintendo:    { url:'https://www.nintendolife.com/feeds/latest',        name:'Nintendo Life',  emoji:'🟥', cls:'platform-nintendo' },
-  playstation: { url:'https://www.pushsquare.com/feeds/latest',         name:'Push Square',    emoji:'🔵', cls:'platform-playstation' },
-  xbox:        { url:'https://www.purexbox.com/feeds/latest',           name:'Pure Xbox',      emoji:'🟩', cls:'platform-xbox' },
-  pc:          { url:'https://www.pcgamer.com/rss/',                    name:'PC Gamer',       emoji:'🖥️', cls:'platform-pc' },
-  mobile:      { url:'https://toucharcade.com/feed/',                   name:'TouchArcade',    emoji:'📱', cls:'platform-mobile' },
+  all:         { urls:['https://www.eurogamer.net/?format=rss','https://www.polygon.com/rss/index.xml','https://www.gamespot.com/feeds/mashup/'], name:'Eurogamer', emoji:'🎮', cls:'platform-all' },
+  nintendo:    { urls:['https://www.nintendolife.com/feeds/latest'],     name:'Nintendo Life',  emoji:'🟥', cls:'platform-nintendo' },
+  playstation: { urls:['https://www.pushsquare.com/feeds/latest'],      name:'Push Square',    emoji:'🔵', cls:'platform-playstation' },
+  xbox:        { urls:['https://www.purexbox.com/feeds/latest'],        name:'Pure Xbox',      emoji:'🟩', cls:'platform-xbox' },
+  pc:          { urls:['https://www.pcgamer.com/rss/','https://www.rockpapershotgun.com/feed/'], name:'PC Gamer', emoji:'🖥️', cls:'platform-pc' },
+  mobile:      { urls:['https://toucharcade.com/feed/','https://www.pocketgamer.com/feed/'],    name:'TouchArcade', emoji:'📱', cls:'platform-mobile' },
 };
 
 /* CORS 프록시 */
@@ -253,12 +253,29 @@ async function loadTab(tab) {
   }
   container.innerHTML = '<div class="loading-wrap"><div class="spinner"></div><p>최신 게임 뉴스를 불러오는 중...</p></div>';
   const feed = FEEDS[tab];
-  try {
-    const items = await fetchRSS(feed.url);
-    const html = renderNews(items, feed);
+  let items = null;
+  let usedName = feed.name;
+  for (const url of feed.urls) {
+    try {
+      items = await fetchRSS(url);
+      if (items && items.length) {
+        // URL에서 소스 이름 추출
+        usedName = url.includes('eurogamer') ? 'Eurogamer'
+                 : url.includes('polygon') ? 'Polygon'
+                 : url.includes('gamespot') ? 'GameSpot'
+                 : url.includes('rockpaper') ? 'Rock Paper Shotgun'
+                 : url.includes('pocketgamer') ? 'Pocket Gamer'
+                 : feed.name;
+        break;
+      }
+    } catch(e) {}
+  }
+  if (items && items.length) {
+    const displayFeed = { ...feed, name: usedName };
+    const html = renderNews(items, displayFeed);
     cache[tab] = html;
     container.innerHTML = `<div class="news-grid">${html}</div>`;
-  } catch(e) {
+  } else {
     container.innerHTML = `<div class="error-wrap">⚠️ 뉴스를 불러오지 못했습니다.<br><span style="font-size:.8rem">잠시 후 다시 시도해주세요.</span></div>`;
   }
 }
