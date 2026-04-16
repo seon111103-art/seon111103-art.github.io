@@ -259,19 +259,40 @@ function fmtVol(n) {
 function fmtChange(n) { return (n >= 0 ? '+' : '') + n.toFixed(2) + '%'; }
 
 /* 시세 불러오기 */
+/* USD→KRW 환율 */
+let usdToKrw = 1380;
+async function fetchExchangeRate() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD', {signal: AbortSignal.timeout(5000)});
+    const data = await res.json();
+    if (data.rates && data.rates.KRW) usdToKrw = data.rates.KRW;
+  } catch(e) {}
+}
+
 async function loadTickers() {
-  const markets = MARKETS.map(m => m.market).join(',');
-  const res = await fetch(`https://api.upbit.com/v1/ticker?markets=${markets}`, {signal: AbortSignal.timeout(8000)});
+  const syms = MARKETS.map(m => m.symbol).join(',');
+  const res = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms}&tsyms=USD`, {signal: AbortSignal.timeout(8000)});
   if (!res.ok) throw new Error('API 오류');
-  return await res.json();
+  const data = await res.json();
+  return MARKETS.map(m => {
+    const d = data.RAW?.[m.symbol]?.USD;
+    if (!d) return null;
+    return {
+      market: m.market,
+      trade_price: d.PRICE * usdToKrw,
+      signed_change_rate: d.CHANGEPCT24HOUR / 100,
+      acc_trade_price_24h: d.TOTALVOLUME24HTO * usdToKrw,
+    };
+  }).filter(Boolean);
 }
 
 /* 차트 데이터 (일봉 30개) */
 async function loadCandles(market) {
-  const res = await fetch(`https://api.upbit.com/v1/candles/days?market=${market}&count=30`, {signal: AbortSignal.timeout(8000)});
+  const sym = market.replace('KRW-','');
+  const res = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${sym}&tsym=USD&limit=29`, {signal: AbortSignal.timeout(8000)});
   if (!res.ok) throw new Error();
   const data = await res.json();
-  return data.reverse().map(c => c.trade_price);
+  return data.Data.Data.map(c => c.close * usdToKrw);
 }
 
 /* 차트 렌더 */
@@ -395,6 +416,7 @@ function filterCoins() {
 async function loadAll() {
   document.getElementById('update-time').textContent = '업데이트 중...';
   try {
+    await fetchExchangeRate();
     allTickers = await loadTickers();
     allTickers.sort((a,b) => b.acc_trade_price_24h - a.acc_trade_price_24h);
     renderTable(allTickers);
