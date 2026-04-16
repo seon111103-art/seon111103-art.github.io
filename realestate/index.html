@@ -10,7 +10,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── 라이트 모드 ── */
+    /* ── 라이트 ── */
     :root {
       --bg-page:   #f5f5f7;
       --bg-card:   #ffffff;
@@ -26,7 +26,7 @@
       --shadow:    0 1px 3px rgba(0,0,0,0.08);
     }
 
-    /* ── 다크 모드 ── */
+    /* ── 다크 ── */
     body.dark {
       --bg-page:   #000000;
       --bg-card:   #1c1c1e;
@@ -225,7 +225,7 @@
 
 <header>
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
-    <span class="icon">🌙</span><span id="theme-label">다크 모드</span>
+    <span class="icon">🌙</span><span id="theme-label">다크</span>
   </button>
   <h1>🏠 부동산 계산기 모음</h1>
   <p>대출 상환 · 전월세 전환 · 월세 수익률 · 취득세를 한 번에 계산하세요</p>
@@ -560,7 +560,7 @@
 
 <script>
 /* ──────────────────────────────────────
-   다크 / 라이트 모드 토글
+   다크 / 라이트 토글
 ────────────────────────────────────── */
 function toggleTheme() {
   const isDark = document.body.classList.toggle('dark');
@@ -570,8 +570,8 @@ function toggleTheme() {
 
 function updateToggleBtn(isDark) {
   document.getElementById('theme-btn').innerHTML = isDark
-    ? '<span class="icon">☀️</span><span id="theme-label">라이트 모드</span>'
-    : '<span class="icon">🌙</span><span id="theme-label">다크 모드</span>';
+    ? '<span class="icon">☀️</span><span id="theme-label">라이트</span>'
+    : '<span class="icon">🌙</span><span id="theme-label">다크</span>';
 }
 
 // 저장된 모드 불러오기

@@ -10,7 +10,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── 라이트 모드 (미니멀 화이트) ── */
+    /* ── 라이트 (미니멀 화이트) ── */
     :root {
       --bg-page:    #f5f5f7;
       --bg-card:    #ffffff;
@@ -28,7 +28,7 @@
       --shadow:     0 1px 3px rgba(0,0,0,0.08);
     }
 
-    /* ── 다크 모드 (미니멀 블랙) ── */
+    /* ── 다크 (미니멀 블랙) ── */
     body.dark {
       --bg-page:    #000000;
       --bg-card:    #1c1c1e;
@@ -384,7 +384,7 @@
 
 <header>
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
-    <span class="icon">🌙</span><span id="theme-label">다크 모드</span>
+    <span class="icon">🌙</span><span id="theme-label">다크</span>
   </button>
   <h1>✈️ 해외여행 환전 계산기</h1>
   <p>실시간 환율 기준으로 전세계 통화를 계산해드립니다</p>
@@ -783,7 +783,7 @@ function resetRegs() {
 }
 
 /* ────────────────────────────────
-   다크 / 라이트 모드 토글
+   다크 / 라이트 토글
 ──────────────────────────────── */
 function toggleTheme() {
   const isDark = document.body.classList.toggle('dark');
@@ -792,8 +792,8 @@ function toggleTheme() {
 }
 function updateToggleBtn(isDark) {
   document.getElementById('theme-btn').innerHTML = isDark
-    ? '<span class="icon">☀️</span><span id="theme-label">라이트 모드</span>'
-    : '<span class="icon">🌙</span><span id="theme-label">다크 모드</span>';
+    ? '<span class="icon">☀️</span><span id="theme-label">라이트</span>'
+    : '<span class="icon">🌙</span><span id="theme-label">다크</span>';
 }
 (function() {
   if (localStorage.getItem('fx-theme') === 'dark') {
