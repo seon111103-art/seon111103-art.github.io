@@ -381,21 +381,37 @@ function removeChart(symbol) {
   renderQuickBtns();
 }
 
-/* Yahoo Finance API */
+/* Yahoo Finance API - 다중 프록시 시도 */
+const PROXIES = [
+  target => `https://corsproxy.io/?${encodeURIComponent(target)}`,
+  target => `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
+  target => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(target)}`,
+];
+
 async function fetchStock(symbol) {
-  const encoded = encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo`);
-  const url = `https://api.allorigins.win/raw?url=${encoded}`;
-  const res = await fetch(url, {signal: AbortSignal.timeout(10000)});
-  if (!res.ok) throw new Error();
-  const json = await res.json();
-  const meta = json.chart.result[0].meta;
-  const closes = json.chart.result[0].indicators.quote[0].close.filter(Boolean);
-  return {
-    price: meta.regularMarketPrice,
-    prevClose: meta.chartPreviousClose,
-    closes,
-    currency: meta.currency,
-  };
+  const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo&includePrePost=false`;
+  let lastErr;
+  for (const makeUrl of PROXIES) {
+    try {
+      const res = await fetch(makeUrl(target), {signal: AbortSignal.timeout(12000)});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (!json.chart || !json.chart.result || !json.chart.result[0]) throw new Error('no data');
+      const meta = json.chart.result[0].meta;
+      const quotes = json.chart.result[0].indicators.quote[0];
+      const closes = (quotes.close || []).filter(v => v !== null && v !== undefined);
+      if (!closes.length) throw new Error('empty closes');
+      return {
+        price: meta.regularMarketPrice,
+        prevClose: meta.chartPreviousClose,
+        closes,
+        currency: meta.currency,
+      };
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
 }
 
 /* 초기 렌더 */
