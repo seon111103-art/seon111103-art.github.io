@@ -80,6 +80,15 @@
     .spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 8px; }
     @keyframes spin { to { transform:rotate(360deg); } }
 
+    /* 증권사 */
+    .broker-section { margin-bottom: 24px; }
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .broker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .broker-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; gap: 4px; transition: all .2s; box-shadow: var(--shadow); }
+    .broker-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+    .broker-name { font-size: .88rem; font-weight: 700; }
+    .broker-sub { font-size: .72rem; color: var(--text-faint); }
+
     /* 쿠팡 */
     .coupang-section { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; text-align:center; box-shadow:var(--shadow); }
     .coupang-section h2 { font-size:1rem; font-weight:700; margin-bottom:4px; }
@@ -133,6 +142,61 @@
     <div class="empty-state">
       <div class="empty-icon">📊</div>
       <p>위에서 종목을 선택하면<br>차트가 여기에 표시됩니다</p>
+    </div>
+  </div>
+
+  <!-- 증권사 사이트 -->
+  <div class="broker-section">
+    <h2 class="section-title">🏦 국내 증권사 바로가기</h2>
+    <div class="broker-grid">
+      <a class="broker-card" href="https://securities.miraeasset.com" target="_blank" rel="noopener">
+        <span class="broker-name">미래에셋증권</span>
+        <span class="broker-sub">MTS·HTS·리서치</span>
+      </a>
+      <a class="broker-card" href="https://www.kiwoom.com" target="_blank" rel="noopener">
+        <span class="broker-name">키움증권</span>
+        <span class="broker-sub">영웅문·수수료 최저</span>
+      </a>
+      <a class="broker-card" href="https://www.samsungsecurities.com" target="_blank" rel="noopener">
+        <span class="broker-name">삼성증권</span>
+        <span class="broker-sub">POP·해외주식</span>
+      </a>
+      <a class="broker-card" href="https://www.nhqv.com" target="_blank" rel="noopener">
+        <span class="broker-name">NH투자증권</span>
+        <span class="broker-sub">나무·QV</span>
+      </a>
+      <a class="broker-card" href="https://www.truefriend.com" target="_blank" rel="noopener">
+        <span class="broker-name">한국투자증권</span>
+        <span class="broker-sub">뱅키스·해외주식</span>
+      </a>
+      <a class="broker-card" href="https://www.kbsec.com" target="_blank" rel="noopener">
+        <span class="broker-name">KB증권</span>
+        <span class="broker-sub">마블·M-able</span>
+      </a>
+      <a class="broker-card" href="https://www.shinhansec.com" target="_blank" rel="noopener">
+        <span class="broker-name">신한투자증권</span>
+        <span class="broker-sub">SOL·신한알파</span>
+      </a>
+      <a class="broker-card" href="https://www.hanaw.com" target="_blank" rel="noopener">
+        <span class="broker-name">하나증권</span>
+        <span class="broker-sub">원큐·해외주식</span>
+      </a>
+      <a class="broker-card" href="https://www.daishin.com" target="_blank" rel="noopener">
+        <span class="broker-name">대신증권</span>
+        <span class="broker-sub">CYBOS·크레온</span>
+      </a>
+      <a class="broker-card" href="https://www.meritz.co.kr" target="_blank" rel="noopener">
+        <span class="broker-name">메리츠증권</span>
+        <span class="broker-sub">m.Stock</span>
+      </a>
+      <a class="broker-card" href="https://www.ebestsec.co.kr" target="_blank" rel="noopener">
+        <span class="broker-name">이베스트증권</span>
+        <span class="broker-sub">xingPlus·HTS</span>
+      </a>
+      <a class="broker-card" href="https://www.iprovest.com" target="_blank" rel="noopener">
+        <span class="broker-name">교보증권</span>
+        <span class="broker-sub">eFriend·리서치</span>
+      </a>
     </div>
   </div>
 
