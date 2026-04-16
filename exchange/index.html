@@ -391,6 +391,9 @@
   <h1>✈️ 해외여행 환전 계산기</h1>
   <p>실시간 환율 기준으로 전세계 통화를 계산해드립니다</p>
   <div class="live-badge"><span class="live-dot"></span>실시간 환율 연동</div>
+  <button id="auto-refresh-btn" onclick="toggleAutoRefresh()" style="margin-top:10px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;color:var(--text-sub);font-size:0.8rem;font-weight:600;transition:all 0.2s;">
+    🔄 자동 갱신 OFF
+  </button>
 </header>
 
 <main>
@@ -787,6 +790,24 @@ function resetRegs() {
 /* ────────────────────────────────
    다크 / 라이트 토글
 ──────────────────────────────── */
+/* 자동 갱신 */
+let autoRefreshTimer = null;
+function toggleAutoRefresh() {
+  const btn = document.getElementById('auto-refresh-btn');
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+    btn.textContent = '🔄 자동 갱신 OFF';
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--text-sub)';
+  } else {
+    autoRefreshTimer = setInterval(() => updateAllRates(), 60000);
+    btn.textContent = '🔄 자동 갱신 ON (1분)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+  }
+}
+
 function toggleTheme() {
   const isDark = document.body.classList.toggle('dark');
   localStorage.setItem('fx-theme', isDark ? 'dark' : 'light');
