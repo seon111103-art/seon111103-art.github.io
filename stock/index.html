@@ -258,18 +258,18 @@ function toggleTheme() {
 /* 종목 데이터 */
 const STOCKS = {
   us: [
-    {symbol:'AAPL', name:'애플'},
-    {symbol:'TSLA', name:'테슬라'},
-    {symbol:'NVDA', name:'엔비디아'},
-    {symbol:'MSFT', name:'마이크로소프트'},
-    {symbol:'AMZN', name:'아마존'},
-    {symbol:'META', name:'메타'},
-    {symbol:'GOOGL', name:'구글'},
-    {symbol:'NFLX', name:'넷플릭스'},
-    {symbol:'AMD', name:'AMD'},
-    {symbol:'COIN', name:'코인베이스'},
-    {symbol:'PLTR', name:'팔란티어'},
-    {symbol:'BABA', name:'알리바바'},
+    {symbol:'AAPL', name:'애플', en:'apple'},
+    {symbol:'TSLA', name:'테슬라', en:'tesla'},
+    {symbol:'NVDA', name:'엔비디아', en:'nvidia'},
+    {symbol:'MSFT', name:'마이크로소프트', en:'microsoft'},
+    {symbol:'AMZN', name:'아마존', en:'amazon'},
+    {symbol:'META', name:'메타', en:'meta facebook'},
+    {symbol:'GOOGL', name:'구글', en:'google alphabet'},
+    {symbol:'NFLX', name:'넷플릭스', en:'netflix'},
+    {symbol:'AMD', name:'AMD', en:'amd'},
+    {symbol:'COIN', name:'코인베이스', en:'coinbase'},
+    {symbol:'PLTR', name:'팔란티어', en:'palantir'},
+    {symbol:'BABA', name:'알리바바', en:'alibaba'},
   ],
   kr: [
     {symbol:'005930.KS', name:'삼성전자'},
@@ -332,7 +332,11 @@ function onSearch() {
   if (!q) { resultsEl.style.display = 'none'; return; }
 
   const all = [...STOCKS.us, ...STOCKS.kr, ...STOCKS.idx];
-  const filtered = all.filter(s => s.name.includes(q) || s.symbol.toLowerCase().includes(q));
+  const filtered = all.filter(s =>
+    s.name.includes(q) ||
+    s.symbol.toLowerCase().includes(q) ||
+    (s.en && s.en.includes(q))
+  );
 
   if (!filtered.length) { resultsEl.style.display = 'none'; return; }
 
