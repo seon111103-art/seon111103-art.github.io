@@ -129,7 +129,8 @@
   <div class="search-wrap">
     <div class="search-box">
       <span style="color:var(--text-faint)">🔍</span>
-      <input type="text" id="search-input" placeholder="종목명 또는 티커 검색 (예: 애플, AAPL)" oninput="onSearch()" />
+      <input type="text" id="search-input" placeholder="종목명·티커 검색 (예: 애플, AAPL, HOOD)" oninput="onSearch()" onkeydown="if(event.key==='Enter')searchDirect()" />
+      <button onclick="searchDirect()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;">검색</button>
     </div>
     <div class="quick-btns" id="quick-btns"></div>
   </div>
@@ -349,6 +350,22 @@ function onSearch() {
       </div>
       <button class="result-add">${activeCharts[s.symbol] ? '제거' : '+ 추가'}</button>
     </div>`).join('');
+}
+
+/* 직접 티커 검색 */
+function searchDirect() {
+  const q = document.getElementById('search-input').value.trim();
+  if (!q) return;
+  const symbol = q.toUpperCase().replace(/\s/g,'');
+  const all = [...STOCKS.us, ...STOCKS.kr, ...STOCKS.idx];
+  const found = all.find(s => s.symbol.toUpperCase() === symbol || s.name === q);
+  if (found) {
+    addChart(found.symbol, found.name);
+  } else {
+    addChart(symbol, symbol);
+  }
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results').style.display = 'none';
 }
 
 /* 종목 토글 */
