@@ -43,6 +43,23 @@
     .cat-btn { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:7px 16px; font-size:.82rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; }
     .cat-btn.active, .cat-btn:hover { background:var(--accent); border-color:var(--accent); color:#fff; }
 
+    /* 인플루언서 */
+    .influencer-section { margin-bottom:20px; }
+    .influencer-title { font-size:.95rem; font-weight:700; margin-bottom:12px; }
+    .influencer-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; }
+    .inf-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text-main); transition:all .2s; box-shadow:var(--shadow); }
+    .inf-card:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.1); }
+    .inf-card.no-link { opacity:.5; cursor:default; pointer-events:none; }
+    .inf-platform { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .plt-youtube   { background:#ff0000; }
+    .plt-instagram { background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+    .plt-blog      { background:#03c75a; }
+    .plt-facebook  { background:#1877f2; }
+    .inf-info { flex:1; min-width:0; }
+    .inf-name { font-size:.85rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .inf-desc { font-size:.72rem; color:var(--text-faint); margin-top:2px; }
+    .inf-badge { font-size:.65rem; color:#fff; padding:1px 6px; border-radius:6px; font-weight:600; background:var(--text-faint); }
+
     /* 나라 소개 */
     .country-intro { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; }
     .country-flag { font-size:2.8rem; }
@@ -106,6 +123,9 @@
 <main>
   <div class="country-intro" id="country-intro"></div>
 
+  <!-- 인플루언서 섹션 -->
+  <div class="influencer-section" id="influencer-section"></div>
+
   <div class="cat-wrap">
     <button class="cat-btn active" onclick="filterCat('all')">🌟 전체</button>
     <button class="cat-btn" onclick="filterCat('food')">🍱 식품·간식</button>
@@ -164,6 +184,71 @@ function toggleTheme() {
   document.getElementById('theme-btn').textContent = d ? '☀️ 라이트' : '🌙 다크';
   localStorage.setItem('gift-theme', d ? 'dark' : 'light');
 }
+
+/* 인플루언서 데이터 */
+const INFLUENCERS = {
+  japan:       [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'일본 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'일본 선물·맛집 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'일본 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'일본 여행 커뮤니티', link:'#'},
+  ],
+  france:      [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'프랑스 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'파리 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'프랑스 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'프랑스 여행 커뮤니티', link:'#'},
+  ],
+  usa:         [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'미국 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'미국 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'미국 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'미국 여행 커뮤니티', link:'#'},
+  ],
+  italy:       [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'이탈리아 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'이탈리아 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'이탈리아 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'이탈리아 여행 커뮤니티', link:'#'},
+  ],
+  thailand:    [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'태국 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'태국 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'태국 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'태국 여행 커뮤니티', link:'#'},
+  ],
+  vietnam:     [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'베트남 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'베트남 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'베트남 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'베트남 여행 커뮤니티', link:'#'},
+  ],
+  singapore:   [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'싱가포르 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'싱가포르 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'싱가포르 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'싱가포르 여행 커뮤니티', link:'#'},
+  ],
+  uk:          [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'영국 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'런던 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'영국 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'영국 여행 커뮤니티', link:'#'},
+  ],
+  swiss:       [
+    {platform:'youtube',   name:'유튜브 채널',    desc:'스위스 여행·쇼핑 추천', link:'#'},
+    {platform:'instagram', name:'인스타 계정',    desc:'스위스 라이프스타일 피드', link:'#'},
+    {platform:'blog',      name:'네이버 블로그',  desc:'스위스 여행 정보 블로그', link:'#'},
+    {platform:'facebook',  name:'페이스북 페이지', desc:'스위스 여행 커뮤니티', link:'#'},
+  ],
+};
+
+const PLT = {
+  youtube:   {cls:'plt-youtube',   icon:'▶️', label:'YouTube'},
+  instagram: {cls:'plt-instagram', icon:'📸', label:'Instagram'},
+  blog:      {cls:'plt-blog',      icon:'📝', label:'Blog'},
+  facebook:  {cls:'plt-facebook',  icon:'👥', label:'Facebook'},
+};
 
 /* 데이터 */
 const COUNTRIES = [
@@ -323,6 +408,28 @@ function renderCountryBar() {
   ).join('');
 }
 
+/* 인플루언서 렌더 */
+function renderInfluencers() {
+  const list = INFLUENCERS[currentCountry] || [];
+  const sec = document.getElementById('influencer-section');
+  sec.innerHTML = `
+    <p class="influencer-title">📌 추천 인플루언서 채널</p>
+    <div class="influencer-grid">
+      ${list.map(inf => {
+        const p = PLT[inf.platform];
+        const hasLink = inf.link && inf.link !== '#';
+        return `<a class="inf-card ${hasLink?'':'no-link'}" href="${hasLink?inf.link:'javascript:void(0)'}" ${hasLink?'target="_blank" rel="noopener"':''}>
+          <div class="inf-platform ${p.cls}">${p.icon}</div>
+          <div class="inf-info">
+            <div class="inf-name">${inf.name}</div>
+            <div class="inf-desc">${inf.desc}</div>
+          </div>
+          ${hasLink ? '' : '<span class="inf-badge">준비중</span>'}
+        </a>`;
+      }).join('')}
+    </div>`;
+}
+
 /* 나라 전환 */
 function switchCountry(id) {
   currentCountry = id;
@@ -330,6 +437,7 @@ function switchCountry(id) {
   document.querySelectorAll('.cat-btn').forEach((b,i) => b.classList.toggle('active', i===0));
   renderCountryBar();
   renderIntro();
+  renderInfluencers();
   renderGifts();
 }
 
@@ -383,6 +491,7 @@ function filterCat(cat) {
 /* 초기 렌더 */
 renderCountryBar();
 renderIntro();
+renderInfluencers();
 renderGifts();
 </script>
 </body>
