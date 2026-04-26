@@ -259,18 +259,76 @@ function toggleTheme() {
 /* 종목 데이터 */
 const STOCKS = {
   us: [
-    {symbol:'AAPL', name:'애플', en:'apple'},
-    {symbol:'TSLA', name:'테슬라', en:'tesla'},
-    {symbol:'NVDA', name:'엔비디아', en:'nvidia'},
-    {symbol:'MSFT', name:'마이크로소프트', en:'microsoft'},
-    {symbol:'AMZN', name:'아마존', en:'amazon'},
-    {symbol:'META', name:'메타', en:'meta facebook'},
-    {symbol:'GOOGL', name:'구글', en:'google alphabet'},
-    {symbol:'NFLX', name:'넷플릭스', en:'netflix'},
-    {symbol:'AMD', name:'AMD', en:'amd'},
-    {symbol:'COIN', name:'코인베이스', en:'coinbase'},
-    {symbol:'PLTR', name:'팔란티어', en:'palantir'},
-    {symbol:'BABA', name:'알리바바', en:'alibaba'},
+    /* 빅테크 */
+    {symbol:'AAPL',  name:'애플',           en:'apple'},
+    {symbol:'MSFT',  name:'마이크로소프트',  en:'microsoft'},
+    {symbol:'GOOGL', name:'구글',            en:'google alphabet'},
+    {symbol:'AMZN',  name:'아마존',          en:'amazon'},
+    {symbol:'META',  name:'메타',            en:'meta facebook'},
+    /* 반도체 */
+    {symbol:'NVDA',  name:'엔비디아',        en:'nvidia'},
+    {symbol:'AMD',   name:'AMD',             en:'amd'},
+    {symbol:'INTC',  name:'인텔',            en:'intel'},
+    {symbol:'QCOM',  name:'퀄컴',            en:'qualcomm'},
+    {symbol:'AVGO',  name:'브로드컴',        en:'broadcom'},
+    {symbol:'MU',    name:'마이크론',        en:'micron'},
+    {symbol:'TSM',   name:'TSMC',            en:'tsmc taiwan semiconductor'},
+    {symbol:'ASML',  name:'ASML',            en:'asml'},
+    {symbol:'AMAT',  name:'어플라이드머티리얼즈', en:'applied materials amat'},
+    {symbol:'SMCI',  name:'슈퍼마이크로',   en:'supermicro smci'},
+    /* 소프트웨어·클라우드 */
+    {symbol:'ORCL',  name:'오라클',          en:'oracle'},
+    {symbol:'CRM',   name:'세일즈포스',      en:'salesforce'},
+    {symbol:'ADBE',  name:'어도비',          en:'adobe'},
+    {symbol:'NOW',   name:'서비스나우',      en:'servicenow'},
+    {symbol:'SNOW',  name:'스노우플레이크',  en:'snowflake'},
+    {symbol:'PLTR',  name:'팔란티어',        en:'palantir'},
+    /* 전기차·모빌리티 */
+    {symbol:'TSLA',  name:'테슬라',          en:'tesla'},
+    {symbol:'RIVN',  name:'리비안',          en:'rivian'},
+    {symbol:'LCID',  name:'루시드',          en:'lucid'},
+    {symbol:'F',     name:'포드',            en:'ford'},
+    {symbol:'GM',    name:'GM',              en:'general motors gm'},
+    /* 엔터·미디어 */
+    {symbol:'NFLX',  name:'넷플릭스',        en:'netflix'},
+    {symbol:'DIS',   name:'디즈니',          en:'disney'},
+    {symbol:'SPOT',  name:'스포티파이',      en:'spotify'},
+    /* 금융 */
+    {symbol:'JPM',   name:'JP모건',          en:'jpmorgan jp morgan'},
+    {symbol:'BAC',   name:'뱅크오브아메리카', en:'bank of america'},
+    {symbol:'GS',    name:'골드만삭스',      en:'goldman sachs'},
+    {symbol:'MS',    name:'모건스탠리',      en:'morgan stanley'},
+    {symbol:'V',     name:'비자',            en:'visa'},
+    {symbol:'MA',    name:'마스터카드',      en:'mastercard'},
+    /* 소비·유통 */
+    {symbol:'WMT',   name:'월마트',          en:'walmart'},
+    {symbol:'COST',  name:'코스트코',        en:'costco'},
+    {symbol:'NKE',   name:'나이키',          en:'nike'},
+    {symbol:'SBUX',  name:'스타벅스',        en:'starbucks'},
+    {symbol:'MCD',   name:'맥도날드',        en:'mcdonalds'},
+    /* 바이오·헬스 */
+    {symbol:'LLY',   name:'일라이릴리',      en:'eli lilly'},
+    {symbol:'JNJ',   name:'존슨앤존슨',      en:'johnson johnson'},
+    {symbol:'PFE',   name:'화이자',          en:'pfizer'},
+    {symbol:'MRNA',  name:'모더나',          en:'moderna'},
+    {symbol:'ABBV',  name:'애브비',          en:'abbvie'},
+    /* 에너지 */
+    {symbol:'XOM',   name:'엑슨모빌',        en:'exxon mobil'},
+    {symbol:'CVX',   name:'쉐브론',          en:'chevron'},
+    /* 항공·여행 */
+    {symbol:'DAL',   name:'델타항공',        en:'delta airlines'},
+    {symbol:'AAL',   name:'아메리칸항공',    en:'american airlines'},
+    {symbol:'ABNB',  name:'에어비앤비',      en:'airbnb'},
+    /* 핀테크·크립토 */
+    {symbol:'COIN',  name:'코인베이스',      en:'coinbase'},
+    {symbol:'HOOD',  name:'로빈후드',        en:'robinhood'},
+    {symbol:'SQ',    name:'블록(스퀘어)',    en:'block square'},
+    {symbol:'PYPL',  name:'페이팔',          en:'paypal'},
+    {symbol:'MSTR',  name:'마이크로스트래티지', en:'microstrategy'},
+    /* 중국·기타 */
+    {symbol:'BABA',  name:'알리바바',        en:'alibaba'},
+    {symbol:'PDD',   name:'핀둬둬(테무)',    en:'pinduoduo temu'},
+    {symbol:'BIDU',  name:'바이두',          en:'baidu'},
   ],
   kr: [
     /* 반도체·IT */
