@@ -477,10 +477,7 @@ function renderGifts() {
       <div class="gift-name">${item.name}</div>
       <div class="gift-desc">${item.desc}</div>
       <div class="gift-price">현지 가격 ${item.price}</div>
-      ${item.link && item.link !== '#'
-        ? `<a class="gift-link" href="${item.link}" target="_blank" rel="noopener">쿠팡에서 구매하기</a>`
-        : `<span class="gift-link no-link">현지 구매 추천</span>`
-      }
+      <a class="gift-link" href="https://www.coupang.com/np/search?q=${encodeURIComponent(item.name)}" target="_blank" rel="noopener sponsored">🛒 쿠팡에서 검색</a>
     </div>`).join('');
 }
 
