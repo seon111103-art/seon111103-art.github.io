@@ -121,6 +121,7 @@
   <button class="tab-btn active" onclick="switchTab('us')" id="tab-us">🇺🇸 미국주식</button>
   <button class="tab-btn" onclick="switchTab('kr')" id="tab-kr">🇰🇷 국내주식</button>
   <button class="tab-btn" onclick="switchTab('idx')" id="tab-idx">📊 지수</button>
+  <button class="tab-btn" onclick="switchTab('div')" id="tab-div">💰 배당주</button>
 </div>
 
 <main>
@@ -420,6 +421,36 @@ const STOCKS = {
     {symbol:'^VIX', name:'공포지수(VIX)'},
     {symbol:'^TNX', name:'미국 10년 국채'},
     {symbol:'GC=F', name:'금 선물'},
+  ],
+  div: [
+    /* 미국 배당주 */
+    {symbol:'KO',   name:'코카콜라',         en:'cocacola coca cola'},
+    {symbol:'PG',   name:'P&G',              en:'procter gamble pg'},
+    {symbol:'JNJ',  name:'존슨앤존슨',       en:'johnson johnson'},
+    {symbol:'MO',   name:'알트리아',         en:'altria'},
+    {symbol:'T',    name:'AT&T',             en:'att'},
+    {symbol:'VZ',   name:'버라이즌',         en:'verizon'},
+    {symbol:'XOM',  name:'엑슨모빌',         en:'exxon mobil'},
+    {symbol:'CVX',  name:'쉐브론',           en:'chevron'},
+    {symbol:'ABBV', name:'애브비',           en:'abbvie'},
+    {symbol:'MMM',  name:'3M',               en:'3m mmm'},
+    {symbol:'IBM',  name:'IBM',              en:'ibm'},
+    {symbol:'O',    name:'리얼티인컴',       en:'realty income'},
+    {symbol:'SO',   name:'서던컴퍼니',       en:'southern company'},
+    {symbol:'D',    name:'도미니언에너지',   en:'dominion energy'},
+    {symbol:'PFE',  name:'화이자',           en:'pfizer'},
+    {symbol:'WMT',  name:'월마트',           en:'walmart'},
+    /* 국내 배당주 */
+    {symbol:'005930.KS', name:'삼성전자'},
+    {symbol:'033780.KS', name:'KT&G'},
+    {symbol:'017670.KS', name:'SK텔레콤'},
+    {symbol:'030200.KS', name:'KT'},
+    {symbol:'055550.KS', name:'신한지주'},
+    {symbol:'105560.KS', name:'KB금융'},
+    {symbol:'086790.KS', name:'하나금융지주'},
+    {symbol:'005490.KS', name:'POSCO홀딩스'},
+    {symbol:'015760.KS', name:'한국전력'},
+    {symbol:'000810.KS', name:'삼성화재'},
   ]
 };
 
