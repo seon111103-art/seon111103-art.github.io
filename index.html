@@ -3,76 +3,175 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>재테크 계산기 | 부동산 · 환전 · 코인 · 주식</title>
-  <meta name="description" content="부동산, 환전, 코인, 주식 차트까지 재테크에 필요한 모든 계산을 무료로 이용하세요." />
+  <title>꿀창고 | 재테크·게임·여행 정보 모음</title>
+  <meta name="description" content="꿀창고 - 부동산, 환전, 코인, 주식, 게임, 해외여행 선물까지 유용한 정보가 가득한 꿀창고!" />
   <meta name="google-adsense-account" content="ca-pub-5695400087151759">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg-page: #f5f5f7; --bg-card: #ffffff;
-      --border: #d2d2d7; --accent: #0066cc;
-      --text-main: #1d1d1f; --text-sub: #6e6e73;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --bg-page: #fffbf0;
+      --bg-card: #ffffff;
+      --border: #f0d890;
+      --accent: #f5a800;
+      --accent-dark: #e09000;
+      --text-main: #3a2a00;
+      --text-sub: #8a7040;
+      --shadow: 0 2px 8px rgba(245,168,0,0.12);
     }
     body.dark {
-      --bg-page: #000000; --bg-card: #1c1c1e;
-      --border: #38383a; --accent: #0a84ff;
-      --text-main: #f5f5f7; --text-sub: #98989d;
-      --shadow: 0 1px 6px rgba(0,0,0,0.4);
+      --bg-page: #1a1400;
+      --bg-card: #2a2000;
+      --border: #4a3800;
+      --accent: #f5a800;
+      --accent-dark: #ffbf00;
+      --text-main: #fff8e0;
+      --text-sub: #c8a84a;
+      --shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
     body {
-      font-family: -apple-system, 'Pretendard', 'Noto Sans KR', sans-serif;
-      background: var(--bg-page); color: var(--text-main);
-      min-height: 100vh; transition: background 0.25s, color 0.25s;
+      font-family: 'Jua', 'Noto Sans KR', sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      transition: background 0.25s, color 0.25s;
       -webkit-font-smoothing: antialiased;
     }
+
+    /* 헤더 */
     header {
-      background: var(--bg-card); border-bottom: 1px solid var(--border);
-      padding: 40px 24px 32px; text-align: center; position: relative;
+      background: var(--bg-card);
+      border-bottom: 2px solid var(--border);
+      padding: 32px 24px 24px;
+      text-align: center;
+      position: relative;
     }
-    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
-    header p { font-size: 0.95rem; color: var(--text-sub); }
     .theme-toggle {
       position: absolute; top: 20px; right: 20px;
-      background: transparent; border: 1px solid var(--border);
+      background: var(--bg-page); border: 2px solid var(--border);
       border-radius: 20px; padding: 6px 14px;
       cursor: pointer; color: var(--text-sub);
       font-size: 0.82rem; font-weight: 600;
+      font-family: 'Jua', sans-serif;
       transition: all 0.2s;
     }
     .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
-    main { max-width: 760px; margin: 0 auto; padding: 48px 16px; }
+    .mascot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .mascot-img {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(245,168,0,0.3));
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .site-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-top: 4px;
+      text-shadow: 0 2px 8px rgba(245,168,0,0.2);
+    }
+    .site-sub {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-top: 6px;
+    }
+
+    /* 카드 그리드 */
+    main { max-width: 780px; margin: 0 auto; padding: 40px 16px 60px; }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
     .card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 32px 28px;
-      text-decoration: none; color: var(--text-main);
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 24px;
+      text-decoration: none;
+      color: var(--text-main);
       box-shadow: var(--shadow);
-      transition: all 0.2s; display: block;
+      transition: all 0.22s;
+      display: block;
+      position: relative;
+      overflow: hidden;
     }
-    .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-    .card .emoji { font-size: 2.4rem; margin-bottom: 14px; display: block; }
-    .card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
-    .card p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.6; }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #ffdd44);
+      opacity: 0;
+      transition: opacity 0.22s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 28px rgba(245,168,0,0.2);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card .emoji {
+      font-size: 2.6rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+    .card p {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
     .card .tag {
-      display: inline-block; margin-top: 14px;
-      background: var(--bg-page); border: 1px solid var(--border);
-      color: var(--text-sub); font-size: 0.72rem; font-weight: 600;
-      padding: 3px 10px; border-radius: 8px;
+      display: inline-block;
+      margin-top: 12px;
+      background: #fff8e0;
+      border: 1px solid var(--border);
+      color: var(--accent-dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-family: 'Jua', sans-serif;
+    }
+    body.dark .card .tag {
+      background: #3a2a00;
+      color: var(--accent);
     }
 
+    /* 푸터 */
     footer {
-      text-align: center; padding: 32px 20px;
-      font-size: 0.78rem; color: var(--text-sub);
-      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      border-top: 2px solid var(--border);
+      font-family: 'Noto Sans KR', sans-serif;
     }
 
     @media (max-width: 560px) {
       .grid { grid-template-columns: 1fr; }
-      header h1 { font-size: 1.5rem; }
+      .site-title { font-size: 1.7rem; }
+      .mascot-img { width: 110px; height: 110px; }
     }
   </style>
 </head>
@@ -80,8 +179,11 @@
 
 <header>
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
-  <h1>💰 재테크 계산기</h1>
-  <p>부동산 &nbsp;·&nbsp; 환전 &nbsp;·&nbsp; 코인 &nbsp;·&nbsp; 주식</p>
+  <div class="mascot-wrap">
+    <img class="mascot-img" src="character.png" alt="꿀창고 마스코트" />
+    <div class="site-title">꿀창고</div>
+    <p class="site-sub">유용한 정보가 가득한 꿀창고 🍯</p>
+  </div>
 </header>
 
 <main>
@@ -117,7 +219,7 @@
       <span class="tag">4개 플랫폼</span>
     </a>
     <a class="card" href="gift/">
-      <span class="emoji">📖</span>
+      <span class="emoji">🎁</span>
       <h2>해외 여행 선물 북</h2>
       <p>각 나라 인플루언서가 추천하는 인기 선물 아이템 모음</p>
       <span class="tag">9개국 · 5개 카테고리</span>
@@ -126,13 +228,15 @@
 </main>
 
 <footer>
-  © 2025 재테크 계산기 · 광고 문의: seon111103-art@github
+  © 2025 꿀창고 · 광고 문의: seon111103-art@github
 </footer>
 
 <script>
   const saved = localStorage.getItem('site-theme');
-  if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('theme-btn').textContent = '☀️ 라이트'; }
-
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent = '☀️ 라이트';
+  }
   function toggleTheme() {
     const isDark = document.body.classList.toggle('dark');
     document.getElementById('theme-btn').textContent = isDark ? '☀️ 라이트' : '🌙 다크';
