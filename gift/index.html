@@ -62,7 +62,7 @@
 
     /* 나라 소개 */
     .country-intro { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; }
-    .country-flag { font-size:2.8rem; }
+    .country-flag { line-height:0; }
     .country-info h2 { font-size:1.2rem; font-weight:700; margin-bottom:4px; }
     .country-info p { font-size:.85rem; color:var(--text-sub); line-height:1.6; }
 
@@ -253,7 +253,7 @@ const PLT = {
 /* 데이터 */
 const COUNTRIES = [
   {
-    id:'japan', flag:'🇯🇵', name:'일본',
+    id:'japan', flag:'🇯🇵', code:'jp', name:'일본',
     desc:'가성비 좋은 과자·화장품부터 고급 위스키까지. 일본 여행 선물의 정석.',
     items:[
       {emoji:'🍫', name:'로이스 생초콜릿', cat:'food', desc:'홋카이도 대표 선물. 부드럽고 고급스러운 생초콜릿. 냉장 보관 필수.', price:'₩15,000~'},
@@ -272,7 +272,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'france', flag:'🇫🇷', name:'프랑스',
+    id:'france', flag:'🇫🇷', code:'fr', name:'프랑스',
     desc:'럭셔리 화장품부터 세계 최고의 와인까지. 유럽 여행의 품격 있는 선물.',
     items:[
       {emoji:'🥐', name:'라뒤레 마카롱', cat:'food', desc:'파리 대표 디저트. 다양한 색감과 맛의 프리미엄 마카롱.', price:'₩25,000~'},
@@ -290,7 +290,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'usa', flag:'🇺🇸', name:'미국',
+    id:'usa', flag:'🇺🇸', code:'us', name:'미국',
     desc:'대용량 스낵부터 프리미엄 위스키까지. 미국 여행의 실용적인 선물.',
     items:[
       {emoji:'🍬', name:'젤리벨리 젤리빈', cat:'food', desc:'미국 대통령도 즐기는 젤리빈. 100가지 맛이 신기하고 재밌는 선물.', price:'₩12,000~'},
@@ -306,7 +306,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'italy', flag:'🇮🇹', name:'이탈리아',
+    id:'italy', flag:'🇮🇹', code:'it', name:'이탈리아',
     desc:'세계 최고의 파스타와 와인, 명품 가죽 제품까지. 이탈리아 감성 선물.',
     items:[
       {emoji:'🍫', name:'페레로 로쉐', cat:'food', desc:'이탈리아산 정품. 현지에서 구매하면 훨씬 저렴하고 신선.', price:'₩15,000~'},
@@ -322,7 +322,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'thailand', flag:'🇹🇭', name:'태국',
+    id:'thailand', flag:'🇹🇭', code:'th', name:'태국',
     desc:'가성비 최고의 뷰티 제품과 독특한 열대 간식. 태국 여행 선물 필수 목록.',
     items:[
       {emoji:'🥭', name:'망고 젤리·건망고', cat:'food', desc:'태국 망고 특유의 달콤함. 마망 브랜드가 인플루언서 픽 1위.', price:'₩5,000~'},
@@ -339,7 +339,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'vietnam', flag:'🇻🇳', name:'베트남',
+    id:'vietnam', flag:'🇻🇳', code:'vn', name:'베트남',
     desc:'세계 최고의 커피와 독특한 열대 간식. 베트남 여행의 알짜 선물.',
     items:[
       {emoji:'☕', name:'G7 드립백 커피', cat:'food', desc:'베트남 No.1 커피 브랜드. 연유커피 맛 드립백이 인플루언서 픽.', price:'₩8,000~'},
@@ -354,7 +354,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'singapore', flag:'🇸🇬', name:'싱가포르',
+    id:'singapore', flag:'🇸🇬', code:'sg', name:'싱가포르',
     desc:'다민족 문화가 만들어낸 독특한 선물들. 아시아 쇼핑 천국의 특별 아이템.',
     items:[
       {emoji:'🦁', name:'머라이언 과자 세트', cat:'food', desc:'싱가포르 상징 머라이언 모양 쿠키. 공항 면세점 베스트셀러.', price:'₩15,000~'},
@@ -368,7 +368,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'uk', flag:'🇬🇧', name:'영국',
+    id:'uk', flag:'🇬🇧', code:'gb', name:'영국',
     desc:'홍차와 스카치 위스키, 전통 쇼트브레드까지. 영국 여행의 품격 있는 선물.',
     items:[
       {emoji:'🫖', name:'포트넘앤메이슨 홍차', cat:'food', desc:'영국 왕실 홍차. 선물용 틴케이스 패키지가 너무 예쁜 고급 선물.', price:'₩25,000~'},
@@ -383,7 +383,7 @@ const COUNTRIES = [
     ]
   },
   {
-    id:'swiss', flag:'🇨🇭', name:'스위스',
+    id:'swiss', flag:'🇨🇭', code:'ch', name:'스위스',
     desc:'세계 최고의 초콜릿과 시계, 명품 아미나이프까지. 스위스 여행의 럭셔리 선물.',
     items:[
       {emoji:'🍫', name:'린트 초콜릿', cat:'food', desc:'스위스 대표 초콜릿. 린드(Lindt) 공장 직구 제품이 훨씬 저렴.', price:'₩15,000~'},
@@ -401,10 +401,15 @@ const COUNTRIES = [
 let currentCountry = 'japan';
 let currentCat = 'all';
 
+/* 국기 이미지 */
+function flagImg(code, size=20) {
+  return `<img src="https://flagcdn.com/w40/${code}.png" width="${size}" height="${size}" style="border-radius:3px;object-fit:cover;vertical-align:middle;" alt="${code}">`;
+}
+
 /* 나라 탭 렌더 */
 function renderCountryBar() {
   document.getElementById('country-bar').innerHTML = COUNTRIES.map(c =>
-    `<button class="country-btn ${c.id===currentCountry?'active':''}" onclick="switchCountry('${c.id}')">${c.flag} ${c.name}</button>`
+    `<button class="country-btn ${c.id===currentCountry?'active':''}" onclick="switchCountry('${c.id}')">${flagImg(c.code)} ${c.name}</button>`
   ).join('');
 }
 
@@ -445,7 +450,7 @@ function switchCountry(id) {
 function renderIntro() {
   const c = COUNTRIES.find(c => c.id === currentCountry);
   document.getElementById('country-intro').innerHTML = `
-    <div class="country-flag">${c.flag}</div>
+    <div class="country-flag">${flagImg(c.code, 52)}</div>
     <div class="country-info">
       <h2>${c.name} 인플루언서 추천 선물</h2>
       <p>${c.desc}</p>
