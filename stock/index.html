@@ -84,6 +84,10 @@
 
     .chart-type-btn { background:var(--bg-input); border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:.75rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; }
     .chart-type-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .interval-row { display:flex; gap:4px; margin:4px 0; overflow-x:auto; scrollbar-width:none; }
+    .interval-row::-webkit-scrollbar { display:none; }
+    .interval-btn { flex-shrink:0; background:var(--bg-input); border:1px solid var(--border); border-radius:7px; padding:3px 9px; font-size:.7rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; white-space:nowrap; }
+    .interval-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
     .loading-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:32px; text-align:center; color:var(--text-faint); }
     .spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 8px; }
     @keyframes spin { to { transform:rotate(360deg); } }
@@ -531,10 +535,19 @@ const CATS = {
   ],
 };
 
+const INTERVALS = [
+  { label:'1분',  interval:'1m',   range:'1d' },
+  { label:'5분',  interval:'5m',   range:'5d' },
+  { label:'30분', interval:'30m',  range:'5d' },
+  { label:'1시간', interval:'60m', range:'1mo' },
+  { label:'일',   interval:'1d',   range:'3mo' },
+  { label:'주',   interval:'1wk',  range:'1y' },
+];
+
 let currentTab = 'us';
 let activeCharts = {};
 const chartInstances = {};
-const chartDataStore = {}; // {canvasId: {closes, ohlc, isUp}}
+const chartDataStore = {}; // {canvasId: {closes, ohlc, isUp, symbol, name, chartType, interval, range}}
 
 /* 탭 전환 */
 function switchTab(tab) {
@@ -672,15 +685,18 @@ function renderChartCard(el, symbol, name, data) {
       <div class="chart-change ${cls}">${sign}${fmtPrice(change)} (${sign}${changePct.toFixed(2)}%)</div>
       <div class="chart-meta">전일 종가 ${fmtPrice(prevClose)}</div>
     </div>
-    <div style="display:flex;gap:6px;margin:8px 0 4px;">
+    <div style="display:flex;gap:6px;margin:8px 0 2px;">
       <button class="chart-type-btn active" id="btn-line-${canvasId}" onclick="switchChartType('${canvasId}','line')">📈 라인</button>
       <button class="chart-type-btn" id="btn-candle-${canvasId}" onclick="switchChartType('${canvasId}','candlestick')">🕯️ 캔들</button>
+    </div>
+    <div class="interval-row" id="ivrow-${canvasId}">
+      ${INTERVALS.map(iv => `<button class="interval-btn${iv.interval==='1d'?' active':''}" data-interval="${iv.interval}" onclick="switchInterval('${canvasId}','${iv.interval}','${iv.range}')">${iv.label}</button>`).join('')}
     </div>
     <div class="chart-canvas-wrap">
       <canvas id="${canvasId}"></canvas>
     </div>`;
 
-  chartDataStore[canvasId] = { closes, ohlc, isUp };
+  chartDataStore[canvasId] = { closes, ohlc, isUp, symbol, name, chartType:'line', interval:'1d', range:'3mo' };
   drawChart(canvasId, 'line');
 }
 
@@ -739,12 +755,35 @@ function drawChart(canvasId, type) {
 }
 
 function switchChartType(canvasId, type) {
+  if (chartDataStore[canvasId]) chartDataStore[canvasId].chartType = type;
   drawChart(canvasId, type);
   ['line','candlestick'].forEach(t => {
     const key = t === 'candlestick' ? 'candle' : t;
     const btn = document.getElementById(`btn-${key}-${canvasId}`);
     if (btn) btn.classList.toggle('active', t === type);
   });
+}
+
+function updateIntervalBtns(canvasId, activeInterval) {
+  const row = document.getElementById(`ivrow-${canvasId}`);
+  if (!row) return;
+  row.querySelectorAll('.interval-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.interval === activeInterval);
+  });
+}
+
+async function switchInterval(canvasId, interval, range) {
+  const store = chartDataStore[canvasId];
+  if (!store) return;
+  updateIntervalBtns(canvasId, interval);
+  try {
+    const data = await fetchStock(store.symbol, interval, range);
+    store.closes = data.closes;
+    store.ohlc = data.ohlc;
+    store.interval = interval;
+    store.range = range;
+    drawChart(canvasId, store.chartType || 'line');
+  } catch(e) {}
 }
 
 /* 차트 제거 */
@@ -772,8 +811,8 @@ const PROXIES = [
   target => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(target)}`,
 ];
 
-async function fetchStock(symbol) {
-  const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo&includePrePost=false`;
+async function fetchStock(symbol, interval = '1d', range = '3mo') {
+  const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=${interval}&range=${range}&includePrePost=false`;
   let lastErr;
   for (const makeUrl of PROXIES) {
     try {
@@ -840,10 +879,12 @@ async function refreshAllCharts() {
   const el = document.getElementById('refresh-status');
   if (el) el.textContent = '갱신 중...';
   await Promise.allSettled(symbols.map(async symbol => {
+    const canvasId = `canvas-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`;
+    const store = chartDataStore[canvasId];
     const nameEl = document.querySelector(`#card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')} .chart-name`);
     const name = nameEl ? nameEl.textContent : symbol;
     try {
-      const data = await fetchStock(symbol);
+      const data = await fetchStock(symbol, store?.interval || '1d', store?.range || '3mo');
       const cardEl = document.getElementById(`card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`);
       if (cardEl) renderChartCard(cardEl, symbol, name, data);
     } catch(e) {}
