@@ -102,6 +102,26 @@
     .c-badge { background:var(--red); color:#fff; font-size:.68rem; padding:2px 8px; border-radius:10px; font-weight:600; }
     .coupang-notice { font-size:.72rem; color:var(--text-faint); margin-top:4px; }
 
+    /* 그때 샀으면? */
+    .whatif-section { margin-bottom:28px; }
+    .whatif-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow); }
+    .whatif-row { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+    .whatif-select, .whatif-custom {
+      flex:1; min-width:140px; background:var(--bg-input); border:1px solid var(--border);
+      border-radius:10px; padding:9px 12px; font-size:.88rem; color:var(--text-main);
+      outline:none; font-family:inherit;
+    }
+    .whatif-select:focus, .whatif-custom:focus { border-color:var(--accent); }
+    .whatif-year-label { text-align:center; font-size:1.6rem; font-weight:700; color:var(--accent); margin-bottom:10px; }
+    .whatif-slider { width:100%; accent-color:var(--accent); cursor:pointer; }
+    .whatif-marks { display:flex; justify-content:space-between; font-size:.7rem; color:var(--text-faint); margin-top:4px; margin-bottom:18px; }
+    .whatif-btn { width:100%; background:var(--accent); color:#fff; border:none; border-radius:12px; padding:14px; font-size:1rem; font-weight:700; cursor:pointer; transition:background .2s; font-family:inherit; }
+    .whatif-btn:hover { filter:brightness(1.1); }
+    .whatif-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .whatif-result { margin-top:16px; background:var(--bg-input); border-radius:12px; padding:20px; text-align:center; display:none; }
+    .wi-pct { font-size:2.4rem; font-weight:700; margin:8px 0 6px; }
+    .wi-box { background:var(--bg-card); border-radius:10px; padding:14px 16px; font-size:.85rem; text-align:left; margin-top:14px; line-height:2; }
+
     footer { text-align:center; padding:28px 20px; font-size:.78rem; color:var(--text-faint); border-top:1px solid var(--border); }
 
     @media(max-width:600px) {
@@ -153,6 +173,45 @@
   <!-- 많이 추가 경고 -->
   <div id="overload-warn" style="display:none; background:#fff3cd; border:1px solid #ffc107; border-radius:12px; padding:12px 16px; margin-bottom:16px; font-size:.84rem; color:#856404;">
     ⚠️ 종목을 많이 추가하면 페이지가 느려질 수 있습니다. 필요한 종목만 선택하는 것을 권장합니다.
+  </div>
+
+  <!-- 그때 샀으면? -->
+  <div class="whatif-section">
+    <h2 class="section-title">🤔 그때 샀으면?</h2>
+    <div class="whatif-card">
+      <div class="whatif-row">
+        <select class="whatif-select" id="wi-stock">
+          <option value="">종목 선택...</option>
+          <optgroup label="🇺🇸 미국주식">
+            <option value="AAPL|애플">애플 (AAPL)</option>
+            <option value="MSFT|마이크로소프트">마이크로소프트 (MSFT)</option>
+            <option value="GOOGL|구글">구글 (GOOGL)</option>
+            <option value="AMZN|아마존">아마존 (AMZN)</option>
+            <option value="META|메타">메타 (META)</option>
+            <option value="NVDA|엔비디아">엔비디아 (NVDA)</option>
+            <option value="TSLA|테슬라">테슬라 (TSLA)</option>
+            <option value="NFLX|넷플릭스">넷플릭스 (NFLX)</option>
+            <option value="COIN|코인베이스">코인베이스 (COIN)</option>
+          </optgroup>
+          <optgroup label="🇰🇷 국내주식">
+            <option value="005930.KS|삼성전자">삼성전자</option>
+            <option value="000660.KS|SK하이닉스">SK하이닉스</option>
+            <option value="035420.KS|네이버">네이버</option>
+            <option value="035720.KS|카카오">카카오</option>
+            <option value="005380.KS|현대차">현대차</option>
+            <option value="259960.KS|크래프톤">크래프톤</option>
+          </optgroup>
+        </select>
+        <input class="whatif-custom" id="wi-custom" placeholder="직접 입력 (예: TSLA)" />
+      </div>
+      <div class="whatif-year-label" id="wi-year-label">2015년</div>
+      <input type="range" class="whatif-slider" id="wi-year" min="2000" max="2024" value="2015" oninput="wiUpdateYear()" />
+      <div class="whatif-marks">
+        <span>2000년</span><span>2005년</span><span>2010년</span><span>2015년</span><span>2020년</span><span>2024년</span>
+      </div>
+      <button class="whatif-btn" id="wi-btn" onclick="calcWhatIf()">📊 수익률 계산하기</button>
+      <div class="whatif-result" id="wi-result"></div>
+    </div>
   </div>
 
   <!-- 증권사 사이트 -->
@@ -771,6 +830,100 @@ async function refreshAllCharts() {
   }));
   countdown = REFRESH_SEC;
   updateRefreshStatus();
+}
+
+/* 그때 샀으면? */
+function wiUpdateYear() {
+  document.getElementById('wi-year-label').textContent = document.getElementById('wi-year').value + '년';
+}
+
+async function calcWhatIf() {
+  const sel = document.getElementById('wi-stock').value;
+  const custom = document.getElementById('wi-custom').value.trim();
+  const year = parseInt(document.getElementById('wi-year').value);
+  const resultEl = document.getElementById('wi-result');
+  const btn = document.getElementById('wi-btn');
+
+  let symbol, name;
+  if (custom) {
+    symbol = custom.toUpperCase();
+    name = symbol;
+  } else if (sel) {
+    [symbol, name] = sel.split('|');
+  } else {
+    alert('종목을 선택하거나 입력해주세요.');
+    return;
+  }
+
+  btn.disabled = true;
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `<div class="spinner" style="margin:0 auto 8px"></div><p style="font-size:.85rem;color:var(--text-faint)">${name} 과거 데이터 불러오는 중...</p>`;
+
+  try {
+    const data = await fetchHistorical(symbol, year);
+    renderWhatIfResult(resultEl, name, year, data);
+  } catch(e) {
+    resultEl.innerHTML = `<p style="color:var(--red);font-size:.85rem">⚠️ ${year}년 데이터를 찾을 수 없어요.<br>다른 연도나 종목을 시도해보세요.</p>`;
+  }
+  btn.disabled = false;
+}
+
+function renderWhatIfResult(el, name, year, { pastPrice, currentPrice, currency }) {
+  const pct = ((currentPrice - pastPrice) / pastPrice) * 100;
+  const isUp = pct >= 0;
+  const sign = isUp ? '+' : '';
+  const clr = isUp ? 'var(--green)' : 'var(--red)';
+  const emoji = pct > 5000 ? '🚀🚀🚀' : pct > 1000 ? '🚀🚀' : pct > 200 ? '🎉🎉' : pct > 0 ? '📈' : '😢';
+  const isKRW = currency === 'KRW';
+  const fmt = n => isKRW
+    ? Math.round(n).toLocaleString('ko-KR') + '원'
+    : '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  const gain1 = currentPrice - pastPrice;
+
+  el.innerHTML = `
+    <div style="font-size:.82rem;color:var(--text-faint);margin-bottom:4px">
+      ${year}년에 <strong style="color:var(--text-main)">${name}</strong> 1주(${fmt(pastPrice)})를 샀다면?
+    </div>
+    <div class="wi-pct" style="color:${clr}">${sign}${pct.toFixed(1)}% ${emoji}</div>
+    <div style="font-size:.85rem;color:var(--text-sub)">현재가 ${fmt(currentPrice)}</div>
+    <div class="wi-box">
+      <div>📦 1주 기준</div>
+      <div>매수가 &nbsp;<strong>${fmt(pastPrice)}</strong></div>
+      <div>현재가 &nbsp;<strong style="color:${clr}">${fmt(currentPrice)}</strong></div>
+      <div>손익 &nbsp;&nbsp;&nbsp;<strong style="color:${clr}">${isUp ? '+' : ''}${fmt(gain1)}</strong></div>
+    </div>`;
+}
+
+async function fetchHistorical(symbol, year) {
+  const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1mo&range=max`;
+  let lastErr;
+  for (const makeUrl of PROXIES) {
+    try {
+      const res = await fetch(makeUrl(target), { signal: AbortSignal.timeout(15000) });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      const result = json.chart?.result?.[0];
+      if (!result) throw new Error('no data');
+
+      const timestamps = result.timestamp;
+      const closes = result.indicators.quote[0].close;
+      const currency = result.meta.currency;
+      const currentPrice = result.meta.regularMarketPrice;
+
+      let pastPrice = null;
+      for (let i = 0; i < timestamps.length; i++) {
+        const d = new Date(timestamps[i] * 1000);
+        if (d.getFullYear() === year && closes[i] != null) {
+          pastPrice = closes[i];
+          break;
+        }
+      }
+      if (!pastPrice) throw new Error('year not found');
+      return { pastPrice, currentPrice, currency };
+    } catch(e) { lastErr = e; }
+  }
+  throw lastErr;
 }
 
 /* 초기 렌더 */
