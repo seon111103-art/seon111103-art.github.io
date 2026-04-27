@@ -156,6 +156,7 @@
       <input type="text" id="search-input" placeholder="종목명·티커 검색 (예: 애플, AAPL, 삼성전자)" oninput="onSearch()" onkeydown="if(event.key==='Enter')searchDirect()" />
       <button onclick="searchDirect()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;">검색</button>
     </div>
+    <div id="quick-btns" style="display:none; flex-wrap:wrap; gap:8px; margin-top:12px;"></div>
   </div>
 
   <!-- 검색 결과 -->
@@ -536,35 +537,22 @@ function switchTab(tab) {
   document.getElementById(`tab-${tab}`).classList.add('active');
   document.getElementById('search-input').value = '';
   document.getElementById('search-results').style.display = 'none';
+  renderQuickBtns();
 }
 
-/* 섹터별 종목 목록 */
+/* 지수·배당주 탭만 빠른 선택 버튼 표시 */
 function renderQuickBtns() {
   const el = document.getElementById('quick-btns');
-  const stocks = STOCKS[currentTab];
-  const cats = CATS[currentTab];
-
-  if (!cats) {
-    el.innerHTML = `<div class="cat-stocks">` + stocks.map(s =>
-      `<button class="cat-stock-btn ${activeCharts[s.symbol] ? 'active' : ''}" onclick="toggleStock('${s.symbol}','${s.name}')">${s.name}</button>`
-    ).join('') + `</div>`;
+  if (currentTab === 'us' || currentTab === 'kr') {
+    el.style.display = 'none';
+    el.innerHTML = '';
     return;
   }
-
-  const stockMap = {};
-  stocks.forEach(s => stockMap[s.symbol] = s);
-
-  el.innerHTML = cats.map(cat => {
-    const btns = cat.symbols.map(sym => {
-      const s = stockMap[sym];
-      if (!s) return '';
-      return `<button class="cat-stock-btn ${activeCharts[sym] ? 'active' : ''}" onclick="toggleStock('${sym}','${s.name}')">${s.name}</button>`;
-    }).join('');
-    return `<div class="cat-section">
-      <div class="cat-header">${cat.icon} ${cat.name}</div>
-      <div class="cat-stocks">${btns}</div>
-    </div>`;
-  }).join('');
+  const stocks = STOCKS[currentTab];
+  el.style.display = 'flex';
+  el.innerHTML = stocks.map(s =>
+    `<button class="cat-stock-btn ${activeCharts[s.symbol] ? 'active' : ''}" onclick="toggleStock('${s.symbol}','${s.name}')">${s.name}</button>`
+  ).join('');
 }
 
 /* 검색 */
@@ -898,6 +886,7 @@ async function fetchHistorical(symbol, year) {
 }
 
 /* 초기 렌더 */
+renderQuickBtns();
 startRefreshTimer();
 </script>
 </body>
