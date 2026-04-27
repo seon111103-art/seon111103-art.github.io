@@ -45,9 +45,12 @@
     .search-box { display:flex; align-items:center; gap:10px; background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:14px; }
     .search-box input { border:none; background:transparent; outline:none; font-size:.92rem; color:var(--text-main); width:100%; caret-color:var(--accent); }
     .search-box input::placeholder { color:var(--text-faint); }
-    .quick-btns { display:flex; flex-wrap:wrap; gap:8px; }
-    .quick-btn { background:var(--bg-input); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:.8rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; }
-    .quick-btn:hover, .quick-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .cat-section { margin-bottom:14px; }
+    .cat-header { display:flex; align-items:center; gap:5px; font-size:.75rem; font-weight:700; color:var(--text-sub); margin-bottom:7px; padding-left:2px; letter-spacing:.3px; }
+    .cat-stocks { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
+    .cat-stocks::-webkit-scrollbar { display:none; }
+    .cat-stock-btn { flex-shrink:0; background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:5px 13px; font-size:.8rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; white-space:nowrap; }
+    .cat-stock-btn:hover, .cat-stock-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 
     /* 차트 그리드 */
     .chart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; margin-bottom:24px; }
@@ -454,6 +457,40 @@ const STOCKS = {
   ]
 };
 
+const CATS = {
+  us: [
+    { icon:'🏢', name:'빅테크',       symbols:['AAPL','MSFT','GOOGL','AMZN','META'] },
+    { icon:'💾', name:'반도체',       symbols:['NVDA','AMD','INTC','QCOM','AVGO','MU','TSM','ASML','AMAT','SMCI'] },
+    { icon:'☁️', name:'소프트웨어·클라우드', symbols:['ORCL','CRM','ADBE','NOW','SNOW','PLTR'] },
+    { icon:'🚗', name:'전기차·모빌리티', symbols:['TSLA','RIVN','LCID','F','GM'] },
+    { icon:'🎬', name:'엔터·미디어',  symbols:['NFLX','DIS','SPOT'] },
+    { icon:'🏦', name:'금융',         symbols:['JPM','BAC','GS','MS','V','MA'] },
+    { icon:'🛒', name:'소비·유통',    symbols:['WMT','COST','NKE','SBUX','MCD'] },
+    { icon:'💊', name:'바이오·헬스',  symbols:['LLY','JNJ','PFE','MRNA','ABBV'] },
+    { icon:'⛽', name:'에너지',       symbols:['XOM','CVX'] },
+    { icon:'✈️', name:'항공·여행',    symbols:['DAL','AAL','ABNB'] },
+    { icon:'💳', name:'핀테크·크립토', symbols:['COIN','HOOD','SQ','PYPL','MSTR'] },
+    { icon:'🇨🇳', name:'중국',        symbols:['BABA','PDD','BIDU'] },
+  ],
+  kr: [
+    { icon:'💾', name:'반도체·IT',    symbols:['005930.KS','000660.KS','009150.KS','066570.KS','018260.KS','034020.KS'] },
+    { icon:'🌐', name:'인터넷·플랫폼', symbols:['035420.KS','035720.KS','047050.KS'] },
+    { icon:'🚗', name:'자동차·부품',  symbols:['005380.KS','000270.KS','012330.KS','161390.KS'] },
+    { icon:'🔋', name:'배터리·신에너지', symbols:['373220.KS','051910.KS','006400.KS','247540.KS','086520.KS','009830.KS'] },
+    { icon:'💊', name:'바이오·헬스',  symbols:['207940.KS','068270.KS','128940.KS','000100.KS','064460.KQ'] },
+    { icon:'🏦', name:'금융·보험',    symbols:['105560.KS','055550.KS','086790.KS','316140.KS','032830.KS','000810.KS'] },
+    { icon:'📊', name:'증권',         symbols:['006800.KS','039490.KS','016360.KS','005940.KS','071050.KS','008560.KS','003540.KS','003470.KS'] },
+    { icon:'📱', name:'통신',         symbols:['017670.KS','030200.KS','032640.KS'] },
+    { icon:'⚡', name:'에너지·화학',  symbols:['096770.KS','011170.KS','010950.KS'] },
+    { icon:'🏗️', name:'철강·소재',    symbols:['005490.KS','004020.KS','010130.KS'] },
+    { icon:'🏠', name:'건설·부동산',  symbols:['000720.KS','028260.KS','047040.KS'] },
+    { icon:'✈️', name:'항공·해운',    symbols:['003490.KS','011200.KS','042660.KS'] },
+    { icon:'🛍️', name:'유통·소비',    symbols:['139480.KS','023530.KS','033780.KS'] },
+    { icon:'🎮', name:'게임·엔터',    symbols:['036570.KS','251270.KS','259960.KS','293490.KQ','263750.KQ'] },
+    { icon:'💡', name:'전력·유틸리티', symbols:['015760.KS','034730.KS','003550.KS'] },
+  ],
+};
+
 let currentTab = 'us';
 let activeCharts = {}; // {symbol: chartInstance}
 const chartInstances = {};
@@ -468,12 +505,33 @@ function switchTab(tab) {
   renderQuickBtns();
 }
 
-/* 빠른 선택 버튼 */
+/* 섹터별 종목 목록 */
 function renderQuickBtns() {
+  const el = document.getElementById('quick-btns');
   const stocks = STOCKS[currentTab];
-  document.getElementById('quick-btns').innerHTML = stocks.map(s =>
-    `<button class="quick-btn ${activeCharts[s.symbol] ? 'active' : ''}" onclick="toggleStock('${s.symbol}','${s.name}')">${s.name}</button>`
-  ).join('');
+  const cats = CATS[currentTab];
+
+  if (!cats) {
+    el.innerHTML = `<div class="cat-stocks">` + stocks.map(s =>
+      `<button class="cat-stock-btn ${activeCharts[s.symbol] ? 'active' : ''}" onclick="toggleStock('${s.symbol}','${s.name}')">${s.name}</button>`
+    ).join('') + `</div>`;
+    return;
+  }
+
+  const stockMap = {};
+  stocks.forEach(s => stockMap[s.symbol] = s);
+
+  el.innerHTML = cats.map(cat => {
+    const btns = cat.symbols.map(sym => {
+      const s = stockMap[sym];
+      if (!s) return '';
+      return `<button class="cat-stock-btn ${activeCharts[sym] ? 'active' : ''}" onclick="toggleStock('${sym}','${s.name}')">${s.name}</button>`;
+    }).join('');
+    return `<div class="cat-section">
+      <div class="cat-header">${cat.icon} ${cat.name}</div>
+      <div class="cat-stocks">${btns}</div>
+    </div>`;
+  }).join('');
 }
 
 /* 검색 */
