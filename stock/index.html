@@ -703,18 +703,29 @@ function renderChartCard(el, symbol, name, data) {
 function drawChart(canvasId, type) {
   const ctx = document.getElementById(canvasId);
   if (!ctx) return;
-  const { closes, ohlc, isUp } = chartDataStore[canvasId] || {};
+  const store = chartDataStore[canvasId] || {};
+  const { closes, ohlc, isUp, interval } = store;
   if (!closes) return;
   const upColor = '#30d158';
   const downColor = '#ff453a';
   if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
 
+  let timeUnit = 'day';
+  if (interval === '1m' || interval === '5m') timeUnit = 'minute';
+  else if (interval === '30m' || interval === '60m') timeUnit = 'hour';
+  else if (interval === '1wk') timeUnit = 'week';
+
   if (type === 'candlestick') {
+    const validOhlc = (ohlc || []).filter(d => d && d.o != null && d.h != null && d.l != null && d.c != null);
+    if (!validOhlc.length) {
+      drawChart(canvasId, 'line');
+      return;
+    }
     chartInstances[canvasId] = new Chart(ctx, {
       type: 'candlestick',
       data: {
         datasets: [{
-          data: ohlc,
+          data: validOhlc,
           color: { up: upColor, down: downColor, unchanged: '#888' },
         }]
       },
@@ -722,7 +733,7 @@ function drawChart(canvasId, type) {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend:{display:false}, tooltip:{enabled:false} },
         scales: {
-          x: { display:false, type:'time', time:{unit:'day'} },
+          x: { display:false, type:'time', time:{unit: timeUnit} },
           y: { display:false }
         },
         animation: { duration:300 }
@@ -825,13 +836,17 @@ async function fetchStock(symbol, interval = '1d', range = '3mo') {
       const timestamps = json.chart.result[0].timestamp || [];
       const closes = (quotes.close || []).filter(v => v != null);
       if (!closes.length) throw new Error('empty closes');
-      const ohlc = timestamps.map((t, i) => ({
-        x: t * 1000,
-        o: quotes.open?.[i] ?? quotes.close[i],
-        h: quotes.high?.[i] ?? quotes.close[i],
-        l: quotes.low?.[i] ?? quotes.close[i],
-        c: quotes.close?.[i] ?? quotes.close[i],
-      })).filter(d => d.c != null);
+      const ohlc = timestamps.map((t, i) => {
+        const c = quotes.close?.[i];
+        if (c == null) return null;
+        return {
+          x: t * 1000,
+          o: quotes.open?.[i] ?? c,
+          h: quotes.high?.[i] ?? c,
+          l: quotes.low?.[i] ?? c,
+          c,
+        };
+      }).filter(d => d !== null && d.o != null && d.h != null && d.l != null);
       return {
         price: meta.regularMarketPrice,
         prevClose: meta.chartPreviousClose,
