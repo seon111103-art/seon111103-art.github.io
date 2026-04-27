@@ -149,14 +149,13 @@
 
 <main>
 
-  <!-- 검색 + 빠른 선택 -->
+  <!-- 검색 -->
   <div class="search-wrap">
     <div class="search-box">
       <span style="color:var(--text-faint)">🔍</span>
-      <input type="text" id="search-input" placeholder="종목명·티커 검색 (예: 애플, AAPL, HOOD)" oninput="onSearch()" onkeydown="if(event.key==='Enter')searchDirect()" />
+      <input type="text" id="search-input" placeholder="종목명·티커 검색 (예: 애플, AAPL, 삼성전자)" oninput="onSearch()" onkeydown="if(event.key==='Enter')searchDirect()" />
       <button onclick="searchDirect()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;">검색</button>
     </div>
-    <div class="quick-btns" id="quick-btns"></div>
   </div>
 
   <!-- 검색 결과 -->
@@ -537,7 +536,6 @@ function switchTab(tab) {
   document.getElementById(`tab-${tab}`).classList.add('active');
   document.getElementById('search-input').value = '';
   document.getElementById('search-results').style.display = 'none';
-  renderQuickBtns();
 }
 
 /* 섹터별 종목 목록 */
@@ -903,7 +901,6 @@ async function fetchHistorical(symbol, year) {
 }
 
 /* 초기 렌더 */
-renderQuickBtns();
 startRefreshTimer();
 </script>
 </body>
