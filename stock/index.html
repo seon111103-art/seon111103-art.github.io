@@ -788,6 +788,7 @@ function updateIntervalBtns(canvasId, activeInterval) {
 async function switchInterval(canvasId, interval, range) {
   const store = chartDataStore[canvasId];
   if (!store) return;
+  const prevInterval = store.interval || '1d';
   updateIntervalBtns(canvasId, interval);
   try {
     const data = await fetchStock(store.symbol, interval, range);
@@ -796,7 +797,17 @@ async function switchInterval(canvasId, interval, range) {
     store.interval = interval;
     store.range = range;
     drawChart(canvasId, store.chartType || 'line');
-  } catch(e) {}
+  } catch(e) {
+    updateIntervalBtns(canvasId, prevInterval);
+    const row = document.getElementById(`ivrow-${canvasId}`);
+    if (row) {
+      const msg = document.createElement('div');
+      msg.style.cssText = 'font-size:.68rem;color:var(--red);padding:2px 2px;';
+      msg.textContent = '⚠️ 해당 기간 데이터를 불러올 수 없습니다';
+      row.after(msg);
+      setTimeout(() => msg.remove(), 2500);
+    }
+  }
 }
 
 /* 차트 제거 */
@@ -825,7 +836,19 @@ const PROXIES = [
 ];
 
 async function fetchStock(symbol, interval = '1d', range = '3mo') {
-  const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=${interval}&range=${range}&includePrePost=false`;
+  // 단기 인터벌은 range 대신 period1/period2 타임스탬프 사용 (Yahoo Finance 제한 우회)
+  let params;
+  const now = Math.floor(Date.now() / 1000);
+  if (interval === '1m') {
+    params = `interval=1m&period1=${now - 86400}&period2=${now}`;
+  } else if (interval === '5m') {
+    params = `interval=5m&period1=${now - 172800}&period2=${now}`;
+  } else if (interval === '60m') {
+    params = `interval=60m&period1=${now - 604800}&period2=${now}`;
+  } else {
+    params = `interval=${interval}&range=${range}`;
+  }
+  const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?${params}&includePrePost=false`;
   let lastErr;
   for (const makeUrl of PROXIES) {
     try {
