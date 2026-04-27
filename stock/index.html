@@ -179,7 +179,7 @@
   <div class="whatif-section">
     <h2 class="section-title">🤔 그때 샀으면?</h2>
     <div class="whatif-card">
-      <input class="whatif-custom" id="wi-custom" placeholder="종목 티커 입력 (예: AAPL, TSLA, 005930.KS)" style="width:100%;margin-bottom:18px;" />
+      <input class="whatif-custom" id="wi-custom" placeholder="종목명·티커 입력 (예: 애플, AAPL, 삼성전자, TSLA)" style="width:100%;margin-bottom:18px;" />
       <div class="whatif-year-label" id="wi-year-label">2015년</div>
       <input type="range" class="whatif-slider" id="wi-year" min="2000" max="2024" value="2015" oninput="wiUpdateYear()" />
       <div class="whatif-marks">
@@ -820,9 +820,16 @@ async function calcWhatIf() {
   const resultEl = document.getElementById('wi-result');
   const btn = document.getElementById('wi-btn');
 
-  if (!custom) { alert('종목 티커를 입력해주세요. (예: AAPL, TSLA)'); return; }
-  const symbol = custom.toUpperCase();
-  const name = symbol;
+  if (!custom) { alert('종목명 또는 티커를 입력해주세요. (예: 애플, AAPL, 삼성전자)'); return; }
+  const allStocks = [...STOCKS.us, ...STOCKS.kr, ...STOCKS.idx, ...STOCKS.div];
+  const q = custom.trim().toLowerCase();
+  const matched = allStocks.find(s =>
+    s.name === custom.trim() ||
+    s.symbol.toLowerCase() === q ||
+    (s.en && s.en.includes(q))
+  );
+  const symbol = matched ? matched.symbol : custom.trim().toUpperCase();
+  const name = matched ? matched.name : symbol;
 
   btn.disabled = true;
   resultEl.style.display = 'block';
