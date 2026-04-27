@@ -721,11 +721,13 @@ function drawChart(canvasId, type) {
       drawChart(canvasId, 'line');
       return;
     }
+    // 타임스탬프 대신 인덱스(0,1,2...) 사용 → 단기 인터벌에서 time 스케일 오류 방지
+    const candleData = validOhlc.map((d, i) => ({ x: i, o: d.o, h: d.h, l: d.l, c: d.c }));
     chartInstances[canvasId] = new Chart(ctx, {
       type: 'candlestick',
       data: {
         datasets: [{
-          data: validOhlc,
+          data: candleData,
           color: { up: upColor, down: downColor, unchanged: '#888' },
         }]
       },
@@ -733,7 +735,7 @@ function drawChart(canvasId, type) {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend:{display:false}, tooltip:{enabled:false} },
         scales: {
-          x: { display:false, type:'time', time:{unit: timeUnit} },
+          x: { display:false, type:'linear' },
           y: { display:false }
         },
         animation: { duration:300 }
