@@ -1,0 +1,46 @@
+{
+  "name": "꿀단지",
+  "short_name": "꿀단지",
+  "description": "재테크·게임·여행 정보가 가득한 꿀단지",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffbf0",
+  "theme_color": "#f5a800",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/character.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/character.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "부동산 계산기",
+      "url": "/realestate/",
+      "icons": [{ "src": "/character.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "환전 계산기",
+      "url": "/exchange/",
+      "icons": [{ "src": "/character.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "주식 차트",
+      "url": "/stock/",
+      "icons": [{ "src": "/character.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "해외 여행 선물 북",
+      "url": "/gift/",
+      "icons": [{ "src": "/character.png", "sizes": "96x96" }]
+    }
+  ]
+}

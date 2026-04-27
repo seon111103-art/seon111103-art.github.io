@@ -7,6 +7,9 @@
   <meta name="description" content="꿀단지 - 부동산, 환전, 코인, 주식, 게임, 해외여행 선물까지 유용한 정보가 가득한 꿀단지!" />
   <meta name="google-adsense-account" content="ca-pub-5695400087151759">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#f5a800" />
+  <link rel="apple-touch-icon" href="/character.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
@@ -232,6 +235,9 @@
 </footer>
 
 <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
   const saved = localStorage.getItem('site-theme');
   if (saved === 'dark') {
     document.body.classList.add('dark');
