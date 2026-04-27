@@ -8,6 +8,9 @@
   <meta name="google-adsense-account" content="ca-pub-5695400087151759">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -529,8 +532,9 @@ const CATS = {
 };
 
 let currentTab = 'us';
-let activeCharts = {}; // {symbol: chartInstance}
+let activeCharts = {};
 const chartInstances = {};
+const chartDataStore = {}; // {canvasId: {closes, ohlc, isUp}}
 
 /* 탭 전환 */
 function switchTab(tab) {
@@ -646,7 +650,7 @@ async function addChart(symbol, name) {
 
 /* 차트 카드 렌더 */
 function renderChartCard(el, symbol, name, data) {
-  const { price, prevClose, closes, currency } = data;
+  const { price, prevClose, closes, ohlc, currency } = data;
   const change = price - prevClose;
   const changePct = (change / prevClose) * 100;
   const isUp = change >= 0;
@@ -669,54 +673,76 @@ function renderChartCard(el, symbol, name, data) {
       <div class="chart-meta">전일 종가 ${fmtPrice(prevClose)}</div>
     </div>
     <div style="display:flex;gap:6px;margin:8px 0 4px;">
-      <button class="chart-type-btn active" id="btn-line-${canvasId}" onclick="switchChartType('${canvasId}','line','${symbol}')">📈 라인</button>
-      <button class="chart-type-btn" id="btn-bar-${canvasId}" onclick="switchChartType('${canvasId}','bar','${symbol}')">📊 막대</button>
+      <button class="chart-type-btn active" id="btn-line-${canvasId}" onclick="switchChartType('${canvasId}','line')">📈 라인</button>
+      <button class="chart-type-btn" id="btn-candle-${canvasId}" onclick="switchChartType('${canvasId}','candlestick')">🕯️ 캔들</button>
     </div>
     <div class="chart-canvas-wrap">
       <canvas id="${canvasId}"></canvas>
     </div>`;
 
-  drawChart(canvasId, 'line', closes, isUp);
+  chartDataStore[canvasId] = { closes, ohlc, isUp };
+  drawChart(canvasId, 'line');
 }
 
-function drawChart(canvasId, type, closes, isUp) {
+function drawChart(canvasId, type) {
   const ctx = document.getElementById(canvasId);
   if (!ctx) return;
-  const color = isUp ? '#30d158' : '#ff453a';
+  const { closes, ohlc, isUp } = chartDataStore[canvasId] || {};
+  if (!closes) return;
+  const upColor = '#30d158';
+  const downColor = '#ff453a';
   if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
-  chartInstances[canvasId] = new Chart(ctx, {
-    type,
-    data: {
-      labels: closes.map((_,i) => i),
-      datasets: [{
-        data: closes,
-        borderColor: color,
-        borderWidth: type === 'line' ? 2 : 1,
-        pointRadius: 0,
-        tension: 0.3,
-        fill: type === 'line',
-        backgroundColor: isUp ? 'rgba(48,209,88,0.5)' : 'rgba(255,69,58,0.5)',
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend:{display:false}, tooltip:{enabled:false} },
-      scales: { x:{display:false}, y:{display:false} },
-      animation: { duration:300 }
-    }
-  });
+
+  if (type === 'candlestick') {
+    chartInstances[canvasId] = new Chart(ctx, {
+      type: 'candlestick',
+      data: {
+        datasets: [{
+          data: ohlc,
+          color: { up: upColor, down: downColor, unchanged: '#888' },
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend:{display:false}, tooltip:{enabled:false} },
+        scales: {
+          x: { display:false, type:'time', time:{unit:'day'} },
+          y: { display:false }
+        },
+        animation: { duration:300 }
+      }
+    });
+  } else {
+    const color = isUp ? upColor : downColor;
+    chartInstances[canvasId] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: closes.map((_,i) => i),
+        datasets: [{
+          data: closes,
+          borderColor: color,
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+          fill: true,
+          backgroundColor: isUp ? 'rgba(48,209,88,0.1)' : 'rgba(255,69,58,0.1)',
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend:{display:false}, tooltip:{enabled:false} },
+        scales: { x:{display:false}, y:{display:false} },
+        animation: { duration:300 }
+      }
+    });
+  }
 }
 
-function switchChartType(canvasId, type, symbol) {
-  const card = document.getElementById(`card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`);
-  const isUp = card && card.querySelector('.up') !== null;
-  const chart = chartInstances[canvasId];
-  if (!chart) return;
-  const closes = chart.data.datasets[0].data;
-  drawChart(canvasId, type, closes, isUp);
-
-  ['line','bar'].forEach(t => {
-    const btn = document.getElementById(`btn-${t}-${canvasId}`);
+function switchChartType(canvasId, type) {
+  drawChart(canvasId, type);
+  ['line','candlestick'].forEach(t => {
+    const key = t === 'candlestick' ? 'candle' : t;
+    const btn = document.getElementById(`btn-${key}-${canvasId}`);
     if (btn) btn.classList.toggle('active', t === type);
   });
 }
@@ -731,6 +757,7 @@ function removeChart(symbol) {
 
   const canvasId = `canvas-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`;
   if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); delete chartInstances[canvasId]; }
+  delete chartDataStore[canvasId];
 
   const grid = document.getElementById('chart-grid');
   if (!grid.children.length) {
@@ -756,12 +783,21 @@ async function fetchStock(symbol) {
       if (!json.chart || !json.chart.result || !json.chart.result[0]) throw new Error('no data');
       const meta = json.chart.result[0].meta;
       const quotes = json.chart.result[0].indicators.quote[0];
-      const closes = (quotes.close || []).filter(v => v !== null && v !== undefined);
+      const timestamps = json.chart.result[0].timestamp || [];
+      const closes = (quotes.close || []).filter(v => v != null);
       if (!closes.length) throw new Error('empty closes');
+      const ohlc = timestamps.map((t, i) => ({
+        x: t * 1000,
+        o: quotes.open?.[i] ?? quotes.close[i],
+        h: quotes.high?.[i] ?? quotes.close[i],
+        l: quotes.low?.[i] ?? quotes.close[i],
+        c: quotes.close?.[i] ?? quotes.close[i],
+      })).filter(d => d.c != null);
       return {
         price: meta.regularMarketPrice,
         prevClose: meta.chartPreviousClose,
         closes,
+        ohlc,
         currency: meta.currency,
       };
     } catch(e) {
