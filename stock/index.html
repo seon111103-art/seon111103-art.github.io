@@ -616,7 +616,6 @@ function toggleStock(symbol, name) {
   } else {
     addChart(symbol, name);
   }
-  renderQuickBtns();
 }
 
 /* 경고 표시 */
@@ -628,7 +627,6 @@ function updateWarn() {
 /* 차트 추가 */
 async function addChart(symbol, name) {
   activeCharts[symbol] = true;
-  renderQuickBtns();
   updateWarn();
 
   const grid = document.getElementById('chart-grid');
@@ -725,7 +723,6 @@ function removeChart(symbol) {
   if (!grid.children.length) {
     grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>위에서 종목을 선택하면<br>차트가 여기에 표시됩니다</p></div>';
   }
-  renderQuickBtns();
 }
 
 /* Yahoo Finance API - 다중 프록시 시도 */
