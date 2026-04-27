@@ -79,6 +79,8 @@
     .empty-state { text-align:center; padding:48px 20px; color:var(--text-faint); }
     .empty-icon { font-size:2.5rem; margin-bottom:10px; }
 
+    .chart-type-btn { background:var(--bg-input); border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:.75rem; font-weight:700; cursor:pointer; color:var(--text-sub); transition:all .2s; }
+    .chart-type-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
     .loading-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:32px; text-align:center; color:var(--text-faint); }
     .spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 8px; }
     @keyframes spin { to { transform:rotate(360deg); } }
@@ -666,33 +668,56 @@ function renderChartCard(el, symbol, name, data) {
       <div class="chart-change ${cls}">${sign}${fmtPrice(change)} (${sign}${changePct.toFixed(2)}%)</div>
       <div class="chart-meta">전일 종가 ${fmtPrice(prevClose)}</div>
     </div>
+    <div style="display:flex;gap:6px;margin:8px 0 4px;">
+      <button class="chart-type-btn active" id="btn-line-${canvasId}" onclick="switchChartType('${canvasId}','line','${symbol}')">📈 라인</button>
+      <button class="chart-type-btn" id="btn-bar-${canvasId}" onclick="switchChartType('${canvasId}','bar','${symbol}')">📊 막대</button>
+    </div>
     <div class="chart-canvas-wrap">
       <canvas id="${canvasId}"></canvas>
     </div>`;
 
+  drawChart(canvasId, 'line', closes, isUp);
+}
+
+function drawChart(canvasId, type, closes, isUp) {
   const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
   const color = isUp ? '#30d158' : '#ff453a';
   if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
   chartInstances[canvasId] = new Chart(ctx, {
-    type: 'line',
+    type,
     data: {
       labels: closes.map((_,i) => i),
       datasets: [{
         data: closes,
         borderColor: color,
-        borderWidth: 2,
+        borderWidth: type === 'line' ? 2 : 1,
         pointRadius: 0,
         tension: 0.3,
-        fill: true,
-        backgroundColor: isUp ? 'rgba(48,209,88,0.1)' : 'rgba(255,69,58,0.1)',
+        fill: type === 'line',
+        backgroundColor: isUp ? 'rgba(48,209,88,0.5)' : 'rgba(255,69,58,0.5)',
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend:{display:false}, tooltip:{enabled:false} },
       scales: { x:{display:false}, y:{display:false} },
-      animation: { duration:400 }
+      animation: { duration:300 }
     }
+  });
+}
+
+function switchChartType(canvasId, type, symbol) {
+  const card = document.getElementById(`card-${symbol.replace(/[^a-zA-Z0-9]/g,'_')}`);
+  const isUp = card && card.querySelector('.up') !== null;
+  const chart = chartInstances[canvasId];
+  if (!chart) return;
+  const closes = chart.data.datasets[0].data;
+  drawChart(canvasId, type, closes, isUp);
+
+  ['line','bar'].forEach(t => {
+    const btn = document.getElementById(`btn-${t}-${canvasId}`);
+    if (btn) btn.classList.toggle('active', t === type);
   });
 }
 
