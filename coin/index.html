@@ -206,33 +206,31 @@ function toggleTheme() {
   localStorage.setItem('coin-theme', d ? 'dark' : 'light');
 }
 
-/* 인기 코인 (기본 표시) */
+/* CoinGecko ID 매핑 */
 const POPULAR = [
-  {market:'KRW-BTC',  name:'비트코인'},
-  {market:'KRW-ETH',  name:'이더리움'},
-  {market:'KRW-XRP',  name:'리플'},
-  {market:'KRW-SOL',  name:'솔라나'},
-  {market:'KRW-DOGE', name:'도지코인'},
-  {market:'KRW-ADA',  name:'에이다'},
-  {market:'KRW-AVAX', name:'아발란체'},
-  {market:'KRW-LINK', name:'체인링크'},
-  {market:'KRW-DOT',  name:'폴카닷'},
-  {market:'KRW-TRX',  name:'트론'},
-  {market:'KRW-SHIB', name:'시바이누'},
-  {market:'KRW-BCH',  name:'비트코인캐시'},
+  {id:'bitcoin',       sym:'BTC',  name:'비트코인'},
+  {id:'ethereum',      sym:'ETH',  name:'이더리움'},
+  {id:'ripple',        sym:'XRP',  name:'리플'},
+  {id:'solana',        sym:'SOL',  name:'솔라나'},
+  {id:'dogecoin',      sym:'DOGE', name:'도지코인'},
+  {id:'cardano',       sym:'ADA',  name:'에이다'},
+  {id:'avalanche-2',   sym:'AVAX', name:'아발란체'},
+  {id:'chainlink',     sym:'LINK', name:'체인링크'},
+  {id:'polkadot',      sym:'DOT',  name:'폴카닷'},
+  {id:'tron',          sym:'TRX',  name:'트론'},
+  {id:'shiba-inu',     sym:'SHIB', name:'시바이누'},
+  {id:'bitcoin-cash',  sym:'BCH',  name:'비트코인캐시'},
 ];
 
 const INTERVALS = [
-  {label:'7일', unit:'days', count:7},
-  {label:'30일', unit:'days', count:30},
-  {label:'90일', unit:'days', count:90},
-  {label:'1년', unit:'days', count:365},
-  {label:'주봉', unit:'weeks', count:52},
+  {label:'7일',  days:7},
+  {label:'30일', days:30},
+  {label:'90일', days:90},
+  {label:'1년',  days:365},
 ];
 
-let allMarkets = [];   // 업비트 전체 KRW 코인
-let tickerMap = {};    // {market: tickerData}
-let activeCharts = {}; // {market: true}
+let tickerMap = {};
+let activeCharts = {};
 const chartInstances = {};
 const chartDataStore = {};
 
@@ -240,54 +238,51 @@ const chartDataStore = {};
 function fmtPrice(n) {
   if (n >= 1000000) return Math.round(n).toLocaleString('ko-KR') + '원';
   if (n >= 1)       return n.toLocaleString('ko-KR', {minimumFractionDigits: n < 100 ? 2 : 0, maximumFractionDigits: n < 100 ? 2 : 0}) + '원';
-  return n.toFixed(4) + '원';
+  return n.toFixed(6) + '원';
 }
-function fmtChange(r) { const p = r * 100; return (p >= 0 ? '+' : '') + p.toFixed(2) + '%'; }
-function logoUrl(market) { return `https://static.upbit.com/logos/${market.replace('KRW-','')}.png`; }
-
-/* fetch with timeout */
-function fetchWithTimeout(url, ms=10000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('timeout')), ms);
-    fetch(url).then(r => { clearTimeout(timer); resolve(r); }).catch(e => { clearTimeout(timer); reject(e); });
-  });
-}
-
-/* 업비트 전체 마켓 로드 */
-async function loadMarkets() {
-  const res = await fetchWithTimeout('https://api.upbit.com/v1/market/all?isDetails=false', 8000);
-  const data = await res.json();
-  allMarkets = data.filter(m => m.market.startsWith('KRW-'));
-  renderPopularBtns();
+function fmtChange(r) { return (r >= 0 ? '+' : '') + r.toFixed(2) + '%'; }
+function logoUrl(id) { return `https://assets.coingecko.com/coins/images/1/small/bitcoin.png`; }
+function cgLogoUrl(coin) {
+  const map = {
+    bitcoin:'1/small/bitcoin.png', ethereum:'279/small/ethereum.png',
+    ripple:'44/small/xrp-symbol-white-128.png', solana:'4128/small/solana.png',
+    dogecoin:'5/small/dogecoin.png', cardano:'975/small/cardano.png',
+    'avalanche-2':'12559/small/Avalanche_Circle_RedWhite_Trans.png',
+    chainlink:'877/small/chainlink-new-logo.png', polkadot:'12171/small/polkadot.png',
+    tron:'1094/small/tron-logo.png', 'shiba-inu':'11939/small/shiba.png',
+    'bitcoin-cash':'780/small/bitcoin-cash-circle.png',
+  };
+  return map[coin.id] ? `https://assets.coingecko.com/coins/images/${map[coin.id]}` : '';
 }
 
 /* 시세 새로고침 */
 async function refreshPrices() {
   document.getElementById('update-time').textContent = '업데이트 중...';
   try {
-    const markets = POPULAR.map(p => p.market).join(',');
-    const res = await fetchWithTimeout(`https://api.upbit.com/v1/ticker?markets=${markets}`, 8000);
+    const ids = POPULAR.map(p => p.id).join(',');
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=krw&include_24hr_change=true`);
+    if (!res.ok) throw new Error(res.status);
     const data = await res.json();
-    data.forEach(t => { tickerMap[t.market] = t; });
+    POPULAR.forEach(p => { if (data[p.id]) tickerMap[p.id] = data[p.id]; });
     renderPopularBtns();
     const now = new Date();
     document.getElementById('update-time').textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 업데이트`;
   } catch(e) {
-    document.getElementById('update-time').textContent = '업데이트 실패';
+    document.getElementById('update-time').textContent = '잠시 후 재시도';
   }
 }
 
 /* 인기 코인 버튼 렌더 */
 function renderPopularBtns() {
   document.getElementById('popular-btns').innerHTML = POPULAR.map(p => {
-    const t = tickerMap[p.market];
-    const chg = t ? (t.signed_change_rate * 100).toFixed(2) : null;
-    const cls = activeCharts[p.market] ? 'active' : '';
-    const chgHtml = chg !== null
-      ? `<span style="font-size:.72rem;${Number(chg)>=0?'color:#30d158':'color:#ff453a'}">${Number(chg)>=0?'+':''}${chg}%</span>`
+    const t = tickerMap[p.id];
+    const chg = t ? t.krw_24h_change : null;
+    const cls = activeCharts[p.id] ? 'active' : '';
+    const chgHtml = chg != null
+      ? `<span style="font-size:.72rem;${chg>=0?'color:#30d158':'color:#ff453a'}">${chg>=0?'+':''}${chg.toFixed(2)}%</span>`
       : '';
-    return `<button class="coin-btn ${cls}" onclick="toggleCoin('${p.market}','${p.name}')">
-      <img src="${logoUrl(p.market)}" alt="${p.name}" onerror="this.style.display='none'" />
+    return `<button class="coin-btn ${cls}" onclick="toggleCoin('${p.id}','${p.name}','${p.sym}')">
+      <img src="${cgLogoUrl(p)}" alt="${p.name}" onerror="this.style.display='none'" />
       ${p.name} ${chgHtml}
     </button>`;
   }).join('');
@@ -298,134 +293,92 @@ function onSearch() {
   const q = document.getElementById('search-input').value.trim().toLowerCase();
   const resultsEl = document.getElementById('search-results');
   if (!q) { resultsEl.style.display = 'none'; return; }
-
-  const filtered = allMarkets.filter(m =>
-    m.korean_name.includes(q) ||
-    m.english_name.toLowerCase().includes(q) ||
-    m.market.toLowerCase().includes(q)
-  ).slice(0, 20);
-
+  const filtered = POPULAR.filter(p =>
+    p.name.includes(q) || p.sym.toLowerCase().includes(q) || p.id.includes(q)
+  );
   if (!filtered.length) { resultsEl.style.display = 'none'; return; }
-
   resultsEl.style.display = 'block';
-  resultsEl.innerHTML = filtered.map(m => {
-    const isActive = activeCharts[m.market];
-    return `<div class="search-item" onclick="toggleCoinFromSearch('${m.market}','${m.korean_name}')">
+  resultsEl.innerHTML = filtered.map(p => {
+    const isActive = activeCharts[p.id];
+    return `<div class="search-item" onclick="toggleCoinFromSearch('${p.id}','${p.name}','${p.sym}')">
       <div style="display:flex;align-items:center;gap:8px;">
-        <img src="${logoUrl(m.market)}" width="22" height="22" style="border-radius:50%" onerror="this.style.display='none'" />
-        <div>
-          <div class="s-name">${m.korean_name}</div>
-          <div class="s-sym">${m.market.replace('KRW-','')}</div>
-        </div>
+        <img src="${cgLogoUrl(p)}" width="22" height="22" style="border-radius:50%" onerror="this.style.display='none'" />
+        <div><div class="s-name">${p.name}</div><div class="s-sym">${p.sym}</div></div>
       </div>
       <button class="s-add ${isActive?'active':''}">${isActive ? '제거' : '+ 추가'}</button>
     </div>`;
   }).join('');
 }
 
-function toggleCoinFromSearch(market, name) {
-  toggleCoin(market, name);
+function toggleCoinFromSearch(id, name, sym) {
+  toggleCoin(id, name, sym);
   document.getElementById('search-input').value = '';
   document.getElementById('search-results').style.display = 'none';
 }
 
-/* 검색창 외부 클릭 시 닫기 */
 document.addEventListener('click', e => {
-  if (!e.target.closest('.search-wrap')) {
-    document.getElementById('search-results').style.display = 'none';
-  }
+  if (!e.target.closest('.search-wrap')) document.getElementById('search-results').style.display = 'none';
 });
 
 /* 코인 토글 */
-function toggleCoin(market, name) {
-  if (activeCharts[market]) {
-    removeCoin(market);
-  } else {
-    addCoin(market, name);
-  }
+function toggleCoin(id, name, sym) {
+  if (activeCharts[id]) { removeCoin(id); } else { addCoin(id, name, sym); }
   renderPopularBtns();
 }
 
-/* 경고 */
 function updateWarn() {
-  const el = document.getElementById('overload-warn');
-  el.style.display = Object.keys(activeCharts).length >= 6 ? 'block' : 'none';
+  document.getElementById('overload-warn').style.display = Object.keys(activeCharts).length >= 6 ? 'block' : 'none';
 }
 
 /* 코인 추가 */
-async function addCoin(market, name) {
-  activeCharts[market] = true;
+async function addCoin(id, name, sym) {
+  activeCharts[id] = true;
   updateWarn();
-
   const grid = document.getElementById('chart-grid');
   const empty = grid.querySelector('.empty-state');
   if (empty) empty.remove();
-
-  const cardId = `card-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const cardId = `card-${id.replace(/[^a-zA-Z0-9]/g,'_')}`;
   const card = document.createElement('div');
-  card.id = cardId;
-  card.className = 'chart-card';
+  card.id = cardId; card.className = 'chart-card';
   card.innerHTML = `<div class="loading-card"><div class="spinner"></div><p style="font-size:.82rem">${name} 불러오는 중...</p></div>`;
   grid.appendChild(card);
-
   try {
-    const [candles, ticker] = await Promise.all([
-      fetchCandles(market, 'days', 30),
-      fetchTicker(market),
-    ]);
-    renderChartCard(card, market, name, candles, ticker);
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=krw&days=30`);
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const prices = data.prices.map(p => p[1]);
+    const ticker = tickerMap[id] || {};
+    const price = ticker.krw || prices[prices.length-1];
+    const changeRate = ticker.krw_24h_change || 0;
+    renderChartCard(card, id, name, sym, prices, price, changeRate);
   } catch(e) {
-    card.innerHTML = `<button class="remove-btn" onclick="removeCoin('${market}')">✕</button>
+    card.innerHTML = `<button class="remove-btn" onclick="removeCoin('${id}')">✕</button>
       <div style="text-align:center;padding:20px;color:var(--text-faint);font-size:.85rem">⚠️ ${name} 데이터를 불러올 수 없습니다</div>`;
   }
 }
 
-/* 캔들 데이터 */
-async function fetchCandles(market, unit, count) {
-  const url = `https://api.upbit.com/v1/candles/${unit}?market=${market}&count=${count}`;
-  const res = await fetchWithTimeout(url, 10000);
-  const data = await res.json();
-  return data.reverse();
-}
-
-/* 현재 시세 */
-async function fetchTicker(market) {
-  const res = await fetchWithTimeout(`https://api.upbit.com/v1/ticker?markets=${market}`, 8000);
-  const data = await res.json();
-  return data[0];
-}
-
 /* 차트 카드 렌더 */
-function renderChartCard(el, market, name, candles, ticker) {
-  const price = ticker.trade_price;
-  const prevClose = ticker.prev_closing_price;
-  const changeRate = ticker.signed_change_rate;
+function renderChartCard(el, id, name, sym, prices, price, changeRate) {
   const isUp = changeRate >= 0;
   const cls = isUp ? 'up' : 'down';
-  const canvasId = `canvas-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
-  const closes = candles.map(c => c.trade_price);
-  const ohlc = candles.map(c => ({o:c.opening_price, h:c.high_price, l:c.low_price, c:c.trade_price}));
-
+  const canvasId = `canvas-${id.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const coin = POPULAR.find(p => p.id === id) || {id};
   el.innerHTML = `
-    <button class="remove-btn" onclick="removeCoin('${market}')">✕</button>
+    <button class="remove-btn" onclick="removeCoin('${id}')">✕</button>
     <div class="chart-top">
-      <div class="chart-symbol">${market.replace('KRW-','')}</div>
+      <div class="chart-symbol">${sym}</div>
       <div class="chart-name">
-        <img class="coin-logo" src="${logoUrl(market)}" onerror="this.style.display='none'" />
+        <img class="coin-logo" src="${cgLogoUrl(coin)}" onerror="this.style.display='none'" />
         ${name}
       </div>
       <div class="chart-price">${fmtPrice(price)}</div>
       <div class="chart-change ${cls}">${fmtChange(changeRate)}</div>
-      <div class="chart-meta">전일 종가 ${fmtPrice(prevClose)}</div>
     </div>
     <div class="interval-row" id="ivrow-${canvasId}">
-      ${INTERVALS.map((iv,i) => `<button class="interval-btn${i===1?' active':''}" onclick="switchInterval('${canvasId}','${market}','${iv.unit}',${iv.count})">${iv.label}</button>`).join('')}
+      ${INTERVALS.map((iv,i) => `<button class="interval-btn${i===1?' active':''}" onclick="switchInterval('${canvasId}','${id}',${iv.days})">${iv.label}</button>`).join('')}
     </div>
-    <div class="chart-canvas-wrap">
-      <canvas id="${canvasId}"></canvas>
-    </div>`;
-
-  chartDataStore[canvasId] = {closes, ohlc, isUp, market, name};
+    <div class="chart-canvas-wrap"><canvas id="${canvasId}"></canvas></div>`;
+  chartDataStore[canvasId] = {prices, isUp, id, name};
   drawChart(canvasId);
 }
 
@@ -433,61 +386,51 @@ function renderChartCard(el, market, name, candles, ticker) {
 function drawChart(canvasId) {
   const store = chartDataStore[canvasId];
   if (!store) return;
-  const {closes, isUp} = store;
+  const {prices, isUp} = store;
   const ctx = document.getElementById(canvasId);
   if (!ctx) return;
   if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
-
   const color = isUp ? '#30d158' : '#ff453a';
   chartInstances[canvasId] = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: closes.map((_,i) => i),
-      datasets: [{
-        data: closes,
-        borderColor: color,
-        borderWidth: 2,
-        pointRadius: 0,
-        tension: 0.3,
-        fill: true,
-        backgroundColor: isUp ? 'rgba(48,209,88,0.1)' : 'rgba(255,69,58,0.1)',
-      }]
+      labels: prices.map((_,i) => i),
+      datasets: [{data: prices, borderColor: color, borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
+        backgroundColor: isUp ? 'rgba(48,209,88,0.1)' : 'rgba(255,69,58,0.1)'}]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: {legend:{display:false}, tooltip:{
-        callbacks: { label: ctx => fmtPrice(ctx.raw) }
-      }},
-      scales: { x:{display:false}, y:{display:false} },
+      plugins: {legend:{display:false}, tooltip:{callbacks:{label: c => fmtPrice(c.raw)}}},
+      scales: {x:{display:false}, y:{display:false}},
       animation: {duration:300}
     }
   });
 }
 
 /* 인터벌 전환 */
-async function switchInterval(canvasId, market, unit, count) {
+async function switchInterval(canvasId, id, days) {
   const row = document.getElementById(`ivrow-${canvasId}`);
-  if (row) row.querySelectorAll('.interval-btn').forEach((b,i) => {
-    b.classList.toggle('active', b.textContent === INTERVALS.find(iv=>iv.unit===unit&&iv.count===count)?.label);
+  if (row) row.querySelectorAll('.interval-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === INTERVALS.find(iv=>iv.days===days)?.label);
   });
   try {
-    const candles = await fetchCandles(market, unit, count);
-    const closes = candles.map(c => c.trade_price);
-    const ohlc = candles.map(c => ({o:c.opening_price,h:c.high_price,l:c.low_price,c:c.trade_price}));
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=krw&days=${days}`);
+    const data = await res.json();
+    const prices = data.prices.map(p => p[1]);
     const store = chartDataStore[canvasId];
-    if (store) { store.closes = closes; store.ohlc = ohlc; }
+    if (store) store.prices = prices;
     drawChart(canvasId);
   } catch(e) {}
 }
 
 /* 코인 제거 */
-function removeCoin(market) {
-  delete activeCharts[market];
+function removeCoin(id) {
+  delete activeCharts[id];
   updateWarn();
-  const cardId = `card-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const cardId = `card-${id.replace(/[^a-zA-Z0-9]/g,'_')}`;
   const el = document.getElementById(cardId);
   if (el) el.remove();
-  const canvasId = `canvas-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const canvasId = `canvas-${id.replace(/[^a-zA-Z0-9]/g,'_')}`;
   if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); delete chartInstances[canvasId]; }
   delete chartDataStore[canvasId];
   const grid = document.getElementById('chart-grid');
@@ -499,7 +442,7 @@ function removeCoin(market) {
 
 /* 초기화 */
 async function init() {
-  await loadMarkets();
+  renderPopularBtns();
   await refreshPrices();
 }
 
