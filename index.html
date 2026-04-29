@@ -127,11 +127,17 @@
     }
     .card:hover::before { opacity: 1; }
 
-    .card .emoji {
-      font-size: 2.6rem;
-      margin-bottom: 12px;
+    .card .emoji { display: none; }
+    .card-char {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
       display: block;
+      margin: 0 auto 10px;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.12));
+      animation: card-bounce 2.5s ease-in-out infinite;
     }
+    @keyframes card-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     .card h2 {
       font-size: 1.15rem;
       font-weight: 700;
@@ -193,36 +199,42 @@
   <div class="grid">
     <a class="card" href="realestate/">
       <span class="emoji">🏠</span>
+      <img class="card-char" src="realestate/character.png" alt="부동산 캐릭터" />
       <h2>부동산 계산기</h2>
       <p>대출 원리금 상환, 전월세 전환, 월세 수익률, 취득세 계산</p>
       <span class="tag">4가지 계산기</span>
     </a>
     <a class="card" href="exchange/">
       <span class="emoji">💱</span>
+      <img class="card-char" src="exchange/character.png" alt="환전 캐릭터" />
       <h2>환전 계산기</h2>
       <p>실시간 환율 기반 환전 금액 계산, 세계 주요국 환율 한눈에 보기</p>
       <span class="tag">18개국 환율</span>
     </a>
     <a class="card" href="coin/">
       <span class="emoji">₿</span>
+      <img class="card-char" src="coin/character.png" alt="코인 캐릭터" />
       <h2>실시간 코인 시세</h2>
       <p>비트코인, 이더리움 등 주요 암호화폐 실시간 시세 및 차트</p>
       <span class="tag">20개 코인</span>
     </a>
     <a class="card" href="stock/">
       <span class="emoji">📈</span>
+      <img class="card-char" src="stock/character.png" alt="주식 캐릭터" />
       <h2>실시간 주식 차트</h2>
       <p>미국·국내 주식 및 주요 지수 실시간 시세와 30일 차트</p>
       <span class="tag">미국·국내·지수</span>
     </a>
     <a class="card" href="game/">
       <span class="emoji">🎮</span>
+      <img class="card-char" src="game/character.png" alt="게임 캐릭터" />
       <h2>게임 최신 뉴스</h2>
       <p>닌텐도, 플레이스테이션, 엑스박스, PC 최신 게임 소식</p>
       <span class="tag">4개 플랫폼</span>
     </a>
     <a class="card" href="gift/">
       <span class="emoji">🎁</span>
+      <img class="card-char" src="gift/character.png" alt="선물 캐릭터" />
       <h2>해외 여행 선물 북</h2>
       <p>각 나라 인플루언서가 추천하는 인기 선물 아이템 모음</p>
       <span class="tag">9개국 · 5개 카테고리</span>
