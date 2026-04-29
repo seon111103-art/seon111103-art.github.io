@@ -32,6 +32,9 @@
     header { background:var(--bg-card); border-bottom:1px solid var(--border); padding:56px 24px 22px; text-align:center; position:relative; }
     header h1 { font-size:1.7rem; font-weight:700; letter-spacing:-.5px; margin-bottom:4px; }
     header p { font-size:.9rem; color:var(--text-sub); }
+
+    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
+    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     .theme-toggle { position:absolute; top:20px; right:20px; background:var(--bg-input); border:1px solid var(--border); border-radius:20px; padding:6px 14px; cursor:pointer; color:var(--text-sub); font-size:.82rem; font-weight:600; transition:all .2s; }
     .theme-toggle:hover { border-color:var(--accent); color:var(--accent); }
 
@@ -135,7 +138,10 @@
 
     @media(max-width:600px) {
       header h1 { font-size:1.3rem; }
-      .theme-toggle { top:14px; right:12px; }
+  
+    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
+    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .theme-toggle { top:14px; right:12px; }
       .chart-grid { grid-template-columns:1fr; }
       .tab-btn { padding:12px 14px; font-size:.82rem; }
     }
@@ -145,6 +151,7 @@
 
 <header>
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
+  <img class="page-mascot" src="character.png" alt="주식 캐릭터" />
   <h1>📈 실시간 주식 차트</h1>
   <p>미국·국내 주식 시세와 차트를 한눈에 &nbsp;·&nbsp; <span id="refresh-status" style="font-size:.8rem;color:var(--text-faint);">자동 갱신 대기 중</span></p>
 </header>

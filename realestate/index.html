@@ -62,6 +62,9 @@
     header h1 { font-size: 1.7rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; margin-bottom: 4px; }
     header p  { font-size: 0.9rem; color: var(--text-sub); }
 
+
+    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
+    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     .theme-toggle {
       position: absolute; top: 20px; right: 20px;
       background: var(--bg-input); border: 1px solid var(--border);
@@ -217,7 +220,10 @@
       .form-grid { grid-template-columns: 1fr; }
       .calc-section { padding: 20px 16px; }
       header h1 { font-size: 1.3rem; }
-      .theme-toggle { top: 14px; right: 12px; padding: 5px 10px; font-size: 0.76rem; }
+  
+    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
+    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .theme-toggle { top: 14px; right: 12px; padding: 5px 10px; font-size: 0.76rem; }
     }
   </style>
 </head>
@@ -227,6 +233,7 @@
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
     <span class="icon">🌙</span><span id="theme-label">다크</span>
   </button>
+  <img class="page-mascot" src="character.png" alt="부동산 캐릭터" />
   <h1>🏠 부동산 계산기 모음</h1>
   <p>대출 상환 · 전월세 전환 · 월세 수익률 · 취득세를 한 번에 계산하세요</p>
 </header>

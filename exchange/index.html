@@ -71,6 +71,9 @@
     header p { font-size: 0.9rem; color: var(--text-sub); }
 
     /* ── 다크모드 토글 (우측 상단 pill 버튼) ── */
+
+    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
+    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     .theme-toggle {
       position: absolute; top: 20px; right: 20px;
       background: var(--bg-input);
@@ -380,7 +383,10 @@
       .exchange-box input { font-size: 1.1rem; min-width: 0; width: 100%; flex: 1 1 60%; }
       .exchange-box select { flex-shrink: 0; font-size: 0.8rem; padding: 5px 6px; max-width: 110px; }
       .result-main .result-amount { font-size: 1.5rem; }
-      .theme-toggle { top: 14px; right: 12px; padding: 5px 10px; font-size: 0.76rem; }
+  
+    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
+    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .theme-toggle { top: 14px; right: 12px; padding: 5px 10px; font-size: 0.76rem; }
     }
   </style>
 </head>
@@ -390,6 +396,7 @@
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
     <span class="icon">🌙</span><span id="theme-label">다크</span>
   </button>
+  <img class="page-mascot" src="character.png" alt="환전 캐릭터" />
   <h1>✈️ 해외여행 환전 계산기</h1>
   <p>실시간 환율 기준으로 전세계 통화를 계산해드립니다</p>
   <div class="live-badge"><span class="live-dot"></span>실시간 환율 연동</div>
