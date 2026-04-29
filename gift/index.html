@@ -405,15 +405,10 @@ const COUNTRIES = [
 let currentCountry = 'japan';
 let currentCat = 'all';
 
-/* 국기 이미지 */
-function flagImg(code, size=20) {
-  return `<img src="https://flagcdn.com/w40/${code}.png" width="${size}" height="${size}" style="border-radius:3px;object-fit:cover;vertical-align:middle;" alt="${code}">`;
-}
-
 /* 나라 탭 렌더 */
 function renderCountryBar() {
   document.getElementById('country-bar').innerHTML = COUNTRIES.map(c =>
-    `<button class="country-btn ${c.id===currentCountry?'active':''}" onclick="switchCountry('${c.id}')">${flagImg(c.code)} ${c.name}</button>`
+    `<button class="country-btn ${c.id===currentCountry?'active':''}" onclick="switchCountry('${c.id}')">${c.flag} ${c.name}</button>`
   ).join('');
 }
 
@@ -454,7 +449,7 @@ function switchCountry(id) {
 function renderIntro() {
   const c = COUNTRIES.find(c => c.id === currentCountry);
   document.getElementById('country-intro').innerHTML = `
-    <div class="country-flag">${flagImg(c.code, 52)}</div>
+    <div class="country-flag" style="font-size:52px;line-height:1;">${c.flag}</div>
     <div class="country-info">
       <h2>${c.name} 인플루언서 추천 선물</h2>
       <p>${c.desc}</p>
