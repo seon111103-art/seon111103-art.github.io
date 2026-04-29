@@ -206,20 +206,20 @@ function toggleTheme() {
   localStorage.setItem('coin-theme', d ? 'dark' : 'light');
 }
 
-/* CoinGecko ID 매핑 */
+/* 코인 목록 (Binance 심볼 포함) */
 const POPULAR = [
-  {id:'bitcoin',       sym:'BTC',  name:'비트코인'},
-  {id:'ethereum',      sym:'ETH',  name:'이더리움'},
-  {id:'ripple',        sym:'XRP',  name:'리플'},
-  {id:'solana',        sym:'SOL',  name:'솔라나'},
-  {id:'dogecoin',      sym:'DOGE', name:'도지코인'},
-  {id:'cardano',       sym:'ADA',  name:'에이다'},
-  {id:'avalanche-2',   sym:'AVAX', name:'아발란체'},
-  {id:'chainlink',     sym:'LINK', name:'체인링크'},
-  {id:'polkadot',      sym:'DOT',  name:'폴카닷'},
-  {id:'tron',          sym:'TRX',  name:'트론'},
-  {id:'shiba-inu',     sym:'SHIB', name:'시바이누'},
-  {id:'bitcoin-cash',  sym:'BCH',  name:'비트코인캐시'},
+  {id:'bitcoin',       sym:'BTC',  name:'비트코인',     bsym:'BTCUSDT'},
+  {id:'ethereum',      sym:'ETH',  name:'이더리움',     bsym:'ETHUSDT'},
+  {id:'ripple',        sym:'XRP',  name:'리플',         bsym:'XRPUSDT'},
+  {id:'solana',        sym:'SOL',  name:'솔라나',       bsym:'SOLUSDT'},
+  {id:'dogecoin',      sym:'DOGE', name:'도지코인',     bsym:'DOGEUSDT'},
+  {id:'cardano',       sym:'ADA',  name:'에이다',       bsym:'ADAUSDT'},
+  {id:'avalanche-2',   sym:'AVAX', name:'아발란체',     bsym:'AVAXUSDT'},
+  {id:'chainlink',     sym:'LINK', name:'체인링크',     bsym:'LINKUSDT'},
+  {id:'polkadot',      sym:'DOT',  name:'폴카닷',       bsym:'DOTUSDT'},
+  {id:'tron',          sym:'TRX',  name:'트론',         bsym:'TRXUSDT'},
+  {id:'shiba-inu',     sym:'SHIB', name:'시바이누',     bsym:'SHIBUSDT'},
+  {id:'bitcoin-cash',  sym:'BCH',  name:'비트코인캐시', bsym:'BCHUSDT'},
 ];
 
 const INTERVALS = [
@@ -229,6 +229,7 @@ const INTERVALS = [
   {label:'1년',  days:365},
 ];
 
+let usdKrw = 1400;
 let tickerMap = {};
 let activeCharts = {};
 const chartInstances = {};
@@ -241,7 +242,6 @@ function fmtPrice(n) {
   return n.toFixed(6) + '원';
 }
 function fmtChange(r) { return (r >= 0 ? '+' : '') + r.toFixed(2) + '%'; }
-function logoUrl(id) { return `https://assets.coingecko.com/coins/images/1/small/bitcoin.png`; }
 function cgLogoUrl(coin) {
   const map = {
     bitcoin:'1/small/bitcoin.png', ethereum:'279/small/ethereum.png',
@@ -255,15 +255,30 @@ function cgLogoUrl(coin) {
   return map[coin.id] ? `https://assets.coingecko.com/coins/images/${map[coin.id]}` : '';
 }
 
-/* 시세 새로고침 */
+/* USD→KRW 환율 */
+async function fetchExchangeRate() {
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const data = await res.json();
+    if (data.rates && data.rates.KRW) usdKrw = data.rates.KRW;
+  } catch(e) {}
+}
+
+/* Binance 일괄 시세 */
 async function refreshPrices() {
   document.getElementById('update-time').textContent = '업데이트 중...';
   try {
-    const ids = POPULAR.map(p => p.id).join(',');
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=krw&include_24hr_change=true`);
+    const symbols = encodeURIComponent(JSON.stringify(POPULAR.map(p => p.bsym)));
+    const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symbols}`);
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
-    POPULAR.forEach(p => { if (data[p.id]) tickerMap[p.id] = data[p.id]; });
+    data.forEach(t => {
+      const coin = POPULAR.find(p => p.bsym === t.symbol);
+      if (coin) tickerMap[coin.id] = {
+        krw: parseFloat(t.lastPrice) * usdKrw,
+        krw_24h_change: parseFloat(t.priceChangePercent)
+      };
+    });
     renderPopularBtns();
     const now = new Date();
     document.getElementById('update-time').textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 업데이트`;
@@ -330,8 +345,10 @@ function updateWarn() {
   document.getElementById('overload-warn').style.display = Object.keys(activeCharts).length >= 6 ? 'block' : 'none';
 }
 
-/* 코인 추가 */
+/* 코인 추가 (Binance klines) */
 async function addCoin(id, name, sym) {
+  const coin = POPULAR.find(p => p.id === id);
+  if (!coin) return;
   activeCharts[id] = true;
   updateWarn();
   const grid = document.getElementById('chart-grid');
@@ -343,12 +360,12 @@ async function addCoin(id, name, sym) {
   card.innerHTML = `<div class="loading-card"><div class="spinner"></div><p style="font-size:.82rem">${name} 불러오는 중...</p></div>`;
   grid.appendChild(card);
   try {
-    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=krw&days=30`);
+    const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${coin.bsym}&interval=1d&limit=30`);
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
-    const prices = data.prices.map(p => p[1]);
+    const prices = data.map(k => parseFloat(k[4]) * usdKrw);
     const ticker = tickerMap[id] || {};
-    const price = ticker.krw || prices[prices.length-1];
+    const price = ticker.krw || prices[prices.length - 1];
     const changeRate = ticker.krw_24h_change || 0;
     renderChartCard(card, id, name, sym, prices, price, changeRate);
   } catch(e) {
@@ -409,14 +426,16 @@ function drawChart(canvasId) {
 
 /* 인터벌 전환 */
 async function switchInterval(canvasId, id, days) {
+  const coin = POPULAR.find(p => p.id === id);
+  if (!coin) return;
   const row = document.getElementById(`ivrow-${canvasId}`);
   if (row) row.querySelectorAll('.interval-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent === INTERVALS.find(iv=>iv.days===days)?.label);
+    b.classList.toggle('active', b.textContent.trim() === INTERVALS.find(iv=>iv.days===days)?.label);
   });
   try {
-    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=krw&days=${days}`);
+    const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${coin.bsym}&interval=1d&limit=${days}`);
     const data = await res.json();
-    const prices = data.prices.map(p => p[1]);
+    const prices = data.map(k => parseFloat(k[4]) * usdKrw);
     const store = chartDataStore[canvasId];
     if (store) store.prices = prices;
     drawChart(canvasId);
@@ -443,11 +462,13 @@ function removeCoin(id) {
 /* 초기화 */
 async function init() {
   renderPopularBtns();
+  await fetchExchangeRate();
   await refreshPrices();
 }
 
 init();
 setInterval(refreshPrices, 60000);
+setInterval(fetchExchangeRate, 600000);
 </script>
 </body>
 </html>
