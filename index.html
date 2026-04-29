@@ -180,7 +180,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 22px 26px;
+      padding: 20px 20px;
       box-shadow: var(--shadow);
     }
     .info-box h3 {
@@ -193,30 +193,30 @@
     .info-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     .info-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      background: var(--bg-page);
+      border-radius: 12px;
+      padding: 12px 14px;
       font-size: 0.82rem;
       color: var(--text-sub);
-      line-height: 1.6;
+      line-height: 1.7;
       font-family: 'Noto Sans KR', sans-serif;
     }
-    .info-item .info-badge {
-      flex-shrink: 0;
+    .info-badge {
+      display: inline-block;
       background: #fff8e0;
       border: 1px solid var(--border);
       color: var(--accent-dark);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
       padding: 2px 10px;
       border-radius: 10px;
       font-family: 'Jua', sans-serif;
-      margin-top: 1px;
+      margin-bottom: 6px;
     }
-    body.dark .info-item .info-badge {
+    body.dark .info-badge {
       background: #3a2a00;
       color: var(--accent);
     }
@@ -300,20 +300,20 @@
       <h3>🍯 꿀단지 서비스 안내</h3>
       <div class="info-list">
         <div class="info-item">
-          <span class="info-badge">₿ 코인</span>
-          비트코인·이더리움 등 국내 거래량 기준 인기 코인 <strong>20종</strong>의 실시간 시세를 제공합니다. 전체 코인이 아닌 주요 인기 코인 위주로 구성되어 있습니다.
+          <span class="info-badge">₿ 코인</span><br>
+          비트코인·이더리움 등 인기 코인 <strong>20종</strong> 실시간 시세. 업비트 전체 코인 검색 가능.
         </div>
         <div class="info-item">
-          <span class="info-badge">📈 주식</span>
-          미국·국내·지수 합산 <strong>156종목</strong>을 제공합니다. 전체 종목이 아닌 시가총액 상위 및 인기 종목 위주로 구성되어 있으며, 검색으로 빠르게 찾을 수 있습니다.
+          <span class="info-badge">📈 주식</span><br>
+          미국·국내·지수 <strong>156종목</strong> 제공. 시가총액 상위 인기 종목 위주, 검색으로 빠르게 찾기 가능.
         </div>
         <div class="info-item">
-          <span class="info-badge">🎁 선물</span>
-          일본·프랑스·미국 등 <strong>9개국</strong> 현지 인플루언서 추천 선물 아이템을 소개합니다. 패션·푸드·뷰티·리빙·기념품 5개 카테고리로 정리되어 있습니다.
+          <span class="info-badge">🎁 해외선물</span><br>
+          일본·프랑스·미국 등 <strong>9개국</strong> 인플루언서 추천 선물. 패션·푸드·뷰티·리빙·기념품 5개 카테고리.
         </div>
         <div class="info-item">
-          <span class="info-badge">🎮 게임</span>
-          닌텐도·플레이스테이션·엑스박스·PC 플랫폼별 최신 게임 뉴스를 실시간으로 제공합니다.
+          <span class="info-badge">🎮 게임뉴스</span><br>
+          닌텐도·플레이스테이션·엑스박스·PC 플랫폼별 최신 게임 뉴스 실시간 제공.
         </div>
       </div>
     </div>
