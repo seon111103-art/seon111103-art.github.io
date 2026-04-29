@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>실시간 코인 시세 | 암호화폐 가격 정보</title>
-  <meta name="description" content="비트코인, 이더리움 등 주요 암호화폐 실시간 시세를 원화(KRW)로 확인하세요." />
+  <title>실시간 코인 시세 | 업비트 전체 코인 차트</title>
+  <meta name="description" content="업비트 전체 코인 실시간 시세 및 차트. 비트코인, 이더리움 등 원하는 코인을 검색해 차트를 확인하세요." />
   <meta name="google-adsense-account" content="ca-pub-5695400087151759">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -29,86 +29,90 @@
     header { background:var(--bg-card); border-bottom:1px solid var(--border); padding:56px 24px 22px; text-align:center; position:relative; }
     header h1 { font-size:1.7rem; font-weight:700; letter-spacing:-.5px; margin-bottom:4px; }
     header p { font-size:.9rem; color:var(--text-sub); }
-
     .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
     @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     .theme-toggle { position:absolute; top:20px; right:20px; background:var(--bg-input); border:1px solid var(--border); border-radius:20px; padding:6px 14px; cursor:pointer; color:var(--text-sub); font-size:.82rem; font-weight:600; transition:all .2s; }
     .theme-toggle:hover { border-color:var(--accent); color:var(--accent); }
 
+    /* 툴바 */
     .toolbar { background:var(--bg-card); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; position:sticky; top:0; z-index:100; }
-    .search-box { display:flex; align-items:center; gap:8px; background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:8px 14px; flex:1; max-width:300px; }
+    .search-wrap { position:relative; flex:1; max-width:340px; }
+    .search-box { display:flex; align-items:center; gap:8px; background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:8px 14px; }
     .search-box input { border:none; background:transparent; outline:none; font-size:.88rem; color:var(--text-main); width:100%; }
     .search-box input::placeholder { color:var(--text-faint); }
+    .search-results { position:absolute; top:calc(100% + 6px); left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:200; max-height:260px; overflow-y:auto; display:none; }
+    .search-item { display:flex; align-items:center; justify-content:space-between; padding:11px 16px; cursor:pointer; transition:background .15s; gap:10px; }
+    .search-item:hover { background:var(--bg-input); }
+    .search-item:not(:last-child) { border-bottom:1px solid var(--border); }
+    .s-name { font-size:.88rem; font-weight:700; }
+    .s-sym { font-size:.73rem; color:var(--text-faint); }
+    .s-add { font-size:.75rem; font-weight:700; color:var(--accent); background:transparent; border:1px solid var(--accent); border-radius:8px; padding:3px 10px; cursor:pointer; white-space:nowrap; }
+    .s-add.active { background:var(--red); border-color:var(--red); color:#fff; }
     .update-info { font-size:.78rem; color:var(--text-faint); }
     .refresh-btn { background:var(--bg-input); border:1px solid var(--border); border-radius:8px; padding:6px 12px; cursor:pointer; color:var(--text-sub); font-size:.8rem; font-weight:600; transition:all .2s; }
     .refresh-btn:hover { border-color:var(--accent); color:var(--accent); }
 
-    main { max-width:1000px; margin:0 auto; padding:24px 16px; }
+    main { max-width:1100px; margin:0 auto; padding:20px 16px; }
 
-    /* 상단 3개 요약 */
-    .summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
-    .summary-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); }
-    .s-label { font-size:.72rem; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
-    .s-value { font-size:1.15rem; font-weight:700; }
-    .s-change { font-size:.82rem; font-weight:700; margin-top:3px; }
+    /* 인기 코인 버튼 */
+    .popular-section { margin-bottom:20px; }
+    .popular-label { font-size:.78rem; font-weight:700; color:var(--text-faint); margin-bottom:10px; text-transform:uppercase; letter-spacing:.4px; }
+    .popular-btns { display:flex; flex-wrap:wrap; gap:8px; }
+    .coin-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; background:var(--bg-card); border:1px solid var(--border); border-radius:20px; cursor:pointer; font-size:.82rem; font-weight:700; color:var(--text-main); transition:all .2s; }
+    .coin-btn img { width:20px; height:20px; border-radius:50%; }
+    .coin-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .coin-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 
-    /* 코인 테이블 */
-    .coin-table { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:24px; }
-    .table-header { display:grid; grid-template-columns:44px 2fr 1.4fr 1fr 1.2fr; padding:12px 20px; border-bottom:1px solid var(--border); font-size:.72rem; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:.4px; }
-    .coin-row { display:grid; grid-template-columns:44px 2fr 1.4fr 1fr 1.2fr; padding:13px 20px; border-bottom:1px solid var(--border); align-items:center; transition:background .15s; }
-    .coin-row:last-child { border-bottom:none; }
-    .coin-row:hover { background:var(--bg-input); }
-    .rank { font-size:.82rem; color:var(--text-faint); font-weight:600; }
-    .coin-info { display:flex; align-items:center; gap:10px; }
-    .coin-img { width:30px; height:30px; border-radius:50%; }
-    .coin-name-text { font-size:.9rem; font-weight:700; }
-    .coin-symbol-text { font-size:.73rem; color:var(--text-faint); text-transform:uppercase; }
-    .coin-price { font-size:.9rem; font-weight:700; text-align:right; }
-    .coin-change { font-size:.88rem; font-weight:700; text-align:right; }
-    .up { color:var(--green); }
-    .down { color:var(--red); }
-    .coin-vol { font-size:.8rem; color:var(--text-sub); text-align:right; }
-    .coin-high-low { font-size:.75rem; color:var(--text-faint); text-align:right; }
+    /* 경고 */
+    .overload-warn { background:#fff3cd; border:1px solid #ffc107; border-radius:10px; padding:10px 16px; font-size:.82rem; color:#856404; margin-bottom:16px; display:none; }
+    body.dark .overload-warn { background:#3a2f00; border-color:#ffc107; color:#ffd60a; }
 
-    /* 차트 섹션 */
-    .section-title { font-size:1.05rem; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
-    .chart-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; margin-bottom:24px; }
-    .chart-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; box-shadow:var(--shadow); }
-    .chart-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
-    .chart-coin-name { font-size:.9rem; font-weight:700; }
-    .chart-coin-price { font-size:.88rem; font-weight:700; text-align:right; }
-    .chart-coin-change { font-size:.78rem; font-weight:700; text-align:right; }
-    .chart-canvas { width:100% !important; height:80px !important; }
+    /* 차트 그리드 */
+    .chart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; margin-bottom:24px; }
+    .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-faint); }
+    .empty-icon { font-size:3rem; margin-bottom:12px; }
+    .empty-state p { font-size:.9rem; line-height:1.8; }
 
-    /* 쿠팡 */
-    .coupang-section { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; text-align:center; box-shadow:var(--shadow); }
-    .coupang-section h2 { font-size:1rem; font-weight:700; margin-bottom:4px; }
-    .coupang-section p { font-size:.82rem; color:var(--text-sub); margin-bottom:16px; }
-    .coupang-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:10px; }
-    .coupang-card { border:1px solid var(--border); border-radius:12px; padding:16px 10px; text-decoration:none; color:var(--text-main); background:var(--bg-input); display:flex; flex-direction:column; align-items:center; gap:6px; transition:all .2s; }
-    .coupang-card:hover { border-color:var(--red); transform:translateY(-2px); }
-    .c-icon { font-size:1.8rem; }
-    .c-name { font-size:.85rem; font-weight:700; text-align:center; }
-    .c-desc { font-size:.75rem; color:var(--text-sub); text-align:center; }
-    .c-badge { background:var(--red); color:#fff; font-size:.68rem; padding:2px 8px; border-radius:10px; font-weight:600; }
-    .coupang-notice { font-size:.72rem; color:var(--text-faint); margin-top:4px; }
+    /* 차트 카드 */
+    .chart-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:18px; box-shadow:var(--shadow); position:relative; }
+    .remove-btn { position:absolute; top:12px; right:12px; background:var(--bg-input); border:1px solid var(--border); border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:.8rem; color:var(--text-faint); display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .remove-btn:hover { background:var(--red); border-color:var(--red); color:#fff; }
+    .chart-top { margin-bottom:10px; padding-right:30px; }
+    .chart-symbol { font-size:.75rem; color:var(--text-faint); font-weight:700; text-transform:uppercase; }
+    .chart-name { font-size:1rem; font-weight:700; margin:2px 0 4px; display:flex; align-items:center; gap:8px; }
+    .coin-logo { width:24px; height:24px; border-radius:50%; vertical-align:middle; }
+    .chart-price { font-size:1.1rem; font-weight:700; }
+    .chart-change { font-size:.82rem; font-weight:700; margin-top:2px; }
+    .up { color:var(--green); } .down { color:var(--red); }
+    .chart-meta { font-size:.72rem; color:var(--text-faint); margin-top:3px; }
+    .interval-row { display:flex; gap:4px; margin:8px 0 6px; flex-wrap:wrap; }
+    .interval-btn { padding:4px 10px; font-size:.72rem; font-weight:700; border:1px solid var(--border); border-radius:8px; background:transparent; color:var(--text-faint); cursor:pointer; transition:all .15s; }
+    .interval-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .chart-canvas-wrap { height:120px; position:relative; }
 
-    .loading { text-align:center; padding:48px 20px; color:var(--text-faint); }
-    .spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 10px; }
+    .loading-card { text-align:center; padding:30px 20px; color:var(--text-faint); }
+    .spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 8px; }
     @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* 유용한 사이트 */
+    .link-section { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; box-shadow:var(--shadow); }
+    .link-section h2 { font-size:1rem; font-weight:700; margin-bottom:4px; }
+    .link-section p { font-size:.82rem; color:var(--text-sub); margin-bottom:16px; }
+    .link-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:10px; }
+    .link-card { border:1px solid var(--border); border-radius:12px; padding:14px 10px; text-decoration:none; color:var(--text-main); background:var(--bg-input); display:flex; flex-direction:column; align-items:center; gap:5px; transition:all .2s; }
+    .link-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+    .l-icon { font-size:1.7rem; }
+    .l-name { font-size:.83rem; font-weight:700; text-align:center; }
+    .l-desc { font-size:.73rem; color:var(--text-sub); text-align:center; }
+    .l-badge { background:var(--red); color:#fff; font-size:.66rem; padding:2px 8px; border-radius:10px; font-weight:600; }
+    .coupang-notice { font-size:.72rem; color:var(--text-faint); margin-top:4px; text-align:center; }
 
     footer { text-align:center; padding:28px 20px; font-size:.78rem; color:var(--text-faint); border-top:1px solid var(--border); }
 
     @media(max-width:600px) {
-      .summary-grid { grid-template-columns:1fr 1fr; }
-      .table-header,.coin-row { grid-template-columns:36px 2fr 1.2fr 1fr; }
-      .h-vol,.coin-vol,.h-hl,.coin-high-low { display:none; }
-      .chart-grid { grid-template-columns:1fr 1fr; }
       header h1 { font-size:1.3rem; }
-  
-    .page-mascot { width:90px; height:90px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15)); animation:mascot-bounce 2.5s ease-in-out infinite; display:block; margin-left:auto; margin-right:auto; }
-    @keyframes mascot-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-    .theme-toggle { top:14px; right:12px; }
+      .chart-grid { grid-template-columns:1fr; }
+      .theme-toggle { top:14px; right:12px; }
     }
   </style>
 </head>
@@ -118,138 +122,69 @@
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
   <img class="page-mascot" src="character.png" alt="코인 캐릭터" />
   <h1>₿ 실시간 코인 시세</h1>
-  <p>업비트 기준 실시간 암호화폐 원화(KRW) 가격</p>
+  <p>업비트 전체 코인 실시간 시세 · 원하는 코인을 선택해 차트를 확인하세요</p>
 </header>
 
 <div class="toolbar">
-  <div class="search-box">
-    <span style="color:var(--text-faint)">🔍</span>
-    <input type="text" id="search-input" placeholder="코인 검색 (BTC, 이더리움...)" oninput="filterCoins()" />
+  <div class="search-wrap">
+    <div class="search-box">
+      <span style="color:var(--text-faint)">🔍</span>
+      <input type="text" id="search-input" placeholder="코인 검색 (비트코인, BTC...)" oninput="onSearch()" autocomplete="off" />
+    </div>
+    <div class="search-results" id="search-results"></div>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <span class="update-info" id="update-time">불러오는 중...</span>
-    <button class="refresh-btn" onclick="loadAll()">↻ 새로고침</button>
+    <button class="refresh-btn" onclick="refreshPrices()">↻ 새로고침</button>
   </div>
 </div>
 
 <main>
 
-  <!-- 상단 요약 -->
-  <div class="summary-grid">
-    <div class="summary-card">
-      <div class="s-label">비트코인 BTC</div>
-      <div class="s-value" id="s-btc-price">-</div>
-      <div class="s-change" id="s-btc-change">-</div>
-    </div>
-    <div class="summary-card">
-      <div class="s-label">이더리움 ETH</div>
-      <div class="s-value" id="s-eth-price">-</div>
-      <div class="s-change" id="s-eth-change">-</div>
-    </div>
-    <div class="summary-card">
-      <div class="s-label">리플 XRP</div>
-      <div class="s-value" id="s-xrp-price">-</div>
-      <div class="s-change" id="s-xrp-change">-</div>
+  <!-- 인기 코인 버튼 -->
+  <div class="popular-section">
+    <div class="popular-label">🔥 인기 코인</div>
+    <div class="popular-btns" id="popular-btns">
+      <div class="spinner" style="margin:0;width:20px;height:20px;"></div>
     </div>
   </div>
 
-  <!-- 코인 시세 테이블 -->
-  <div class="coin-table">
-    <div class="table-header">
-      <div>#</div>
-      <div>코인</div>
-      <div style="text-align:right">현재가</div>
-      <div style="text-align:right">24h</div>
-      <div class="h-vol" style="text-align:right">거래대금</div>
-    </div>
-    <div id="coin-list">
-      <div class="loading"><div class="spinner"></div><p>시세 불러오는 중...</p></div>
-    </div>
-  </div>
+  <!-- 경고 -->
+  <div class="overload-warn" id="overload-warn">⚠️ 차트를 6개 이상 추가하면 로딩이 느려질 수 있습니다.</div>
 
-  <!-- 알트코인 차트 -->
-  <div class="section-title">📈 주요 알트코인 차트 <span style="font-size:.75rem;color:var(--text-faint);font-weight:400;">(최근 30일)</span></div>
+  <!-- 차트 그리드 -->
   <div class="chart-grid" id="chart-grid">
-    <div class="loading"><div class="spinner"></div></div>
+    <div class="empty-state">
+      <div class="empty-icon">₿</div>
+      <p>위에서 코인을 선택하면<br>차트가 여기에 표시됩니다</p>
+    </div>
   </div>
 
-  <!-- 코인 관련 사이트 -->
-  <div class="coupang-section" style="text-align:left;">
+  <!-- 코인 관련 유용한 사이트 -->
+  <div class="link-section" style="text-align:left;">
     <h2 style="text-align:center;">🌐 코인 관련 유용한 사이트</h2>
     <p style="text-align:center;">거래소, 시세 정보, 뉴스까지 한 번에</p>
-    <div class="coupang-grid">
-      <a class="coupang-card" href="https://upbit.com" target="_blank" rel="noopener">
-        <span class="c-icon">🇰🇷</span>
-        <span class="c-name">업비트</span>
-        <span class="c-desc">국내 1위 거래소</span>
-      </a>
-      <a class="coupang-card" href="https://www.bithumb.com" target="_blank" rel="noopener">
-        <span class="c-icon">💹</span>
-        <span class="c-name">빗썸</span>
-        <span class="c-desc">국내 2위 거래소</span>
-      </a>
-      <a class="coupang-card" href="https://coinmarketcap.com/ko" target="_blank" rel="noopener">
-        <span class="c-icon">📊</span>
-        <span class="c-name">코인마켓캡</span>
-        <span class="c-desc">전세계 코인 시세</span>
-      </a>
-      <a class="coupang-card" href="https://www.coingecko.com/ko" target="_blank" rel="noopener">
-        <span class="c-icon">🦎</span>
-        <span class="c-name">코인게코</span>
-        <span class="c-desc">시세·정보 분석</span>
-      </a>
-      <a class="coupang-card" href="https://kimpga.com/" target="_blank" rel="noopener">
-        <span class="c-icon">🌶️</span>
-        <span class="c-name">김치프리미엄</span>
-        <span class="c-desc">국내외 가격 차이</span>
-      </a>
-      <a class="coupang-card" href="https://www.binance.com/ko" target="_blank" rel="noopener">
-        <span class="c-icon">🌍</span>
-        <span class="c-name">바이낸스</span>
-        <span class="c-desc">세계 최대 거래소</span>
-      </a>
-      <a class="coupang-card" href="https://coinness.com" target="_blank" rel="noopener">
-        <span class="c-icon">📰</span>
-        <span class="c-name">코인니스</span>
-        <span class="c-desc">실시간 코인 뉴스</span>
-      </a>
-      <a class="coupang-card" href="https://alternative.me/crypto/fear-and-greed-index" target="_blank" rel="noopener">
-        <span class="c-icon">😱</span>
-        <span class="c-name">공포탐욕지수</span>
-        <span class="c-desc">시장 심리 지표</span>
-      </a>
+    <div class="link-grid">
+      <a class="link-card" href="https://upbit.com" target="_blank" rel="noopener"><span class="l-icon">🇰🇷</span><span class="l-name">업비트</span><span class="l-desc">국내 1위 거래소</span></a>
+      <a class="link-card" href="https://www.bithumb.com" target="_blank" rel="noopener"><span class="l-icon">💹</span><span class="l-name">빗썸</span><span class="l-desc">국내 2위 거래소</span></a>
+      <a class="link-card" href="https://coinmarketcap.com/ko" target="_blank" rel="noopener"><span class="l-icon">📊</span><span class="l-name">코인마켓캡</span><span class="l-desc">전세계 코인 시세</span></a>
+      <a class="link-card" href="https://www.coingecko.com/ko" target="_blank" rel="noopener"><span class="l-icon">🦎</span><span class="l-name">코인게코</span><span class="l-desc">시세·정보 분석</span></a>
+      <a class="link-card" href="https://kimpga.com/" target="_blank" rel="noopener"><span class="l-icon">🌶️</span><span class="l-name">김치프리미엄</span><span class="l-desc">국내외 가격 차이</span></a>
+      <a class="link-card" href="https://www.binance.com/ko" target="_blank" rel="noopener"><span class="l-icon">🌍</span><span class="l-name">바이낸스</span><span class="l-desc">세계 최대 거래소</span></a>
+      <a class="link-card" href="https://coinness.com" target="_blank" rel="noopener"><span class="l-icon">📰</span><span class="l-name">코인니스</span><span class="l-desc">실시간 코인 뉴스</span></a>
+      <a class="link-card" href="https://alternative.me/crypto/fear-and-greed-index" target="_blank" rel="noopener"><span class="l-icon">😱</span><span class="l-name">공포탐욕지수</span><span class="l-desc">시장 심리 지표</span></a>
     </div>
   </div>
 
-  <!-- 쿠팡 섹션 -->
-  <div class="coupang-section">
+  <!-- 쿠팡 도서 -->
+  <div class="link-section">
     <h2>📚 코인 투자 추천 도서</h2>
     <p>암호화폐 투자 전 꼭 읽어야 할 필독서</p>
-    <div class="coupang-grid">
-      <a class="coupang-card" href="https://link.coupang.com/a/epShRb" target="_blank" rel="noopener">
-        <span class="c-icon">📖</span>
-        <span class="c-name">비트코인 투자 입문</span>
-        <span class="c-desc">초보자 필독서</span>
-        <span class="c-badge">쿠팡 최저가</span>
-      </a>
-      <a class="coupang-card" href="https://link.coupang.com/a/epSiHx" target="_blank" rel="noopener">
-        <span class="c-icon">📊</span>
-        <span class="c-name">암호화폐 투자</span>
-        <span class="c-desc">차트 완벽 가이드</span>
-        <span class="c-badge">쿠팡 최저가</span>
-      </a>
-      <a class="coupang-card" href="https://link.coupang.com/a/epSjtX" target="_blank" rel="noopener">
-        <span class="c-icon">💰</span>
-        <span class="c-name">블록체인 책</span>
-        <span class="c-desc">미래 기술 이해하기</span>
-        <span class="c-badge">쿠팡 최저가</span>
-      </a>
-      <a class="coupang-card" href="https://link.coupang.com/a/epSkuN" target="_blank" rel="noopener">
-        <span class="c-icon">🔐</span>
-        <span class="c-name">코인 투자 입문</span>
-        <span class="c-desc">코인 투자 완벽 정리</span>
-        <span class="c-badge">쿠팡 최저가</span>
-      </a>
+    <div class="link-grid">
+      <a class="link-card" href="https://link.coupang.com/a/epShRb" target="_blank" rel="noopener"><span class="l-icon">📖</span><span class="l-name">비트코인 투자 입문</span><span class="l-desc">초보자 필독서</span><span class="l-badge">쿠팡 최저가</span></a>
+      <a class="link-card" href="https://link.coupang.com/a/epSiHx" target="_blank" rel="noopener"><span class="l-icon">📊</span><span class="l-name">암호화폐 투자</span><span class="l-desc">차트 완벽 가이드</span><span class="l-badge">쿠팡 최저가</span></a>
+      <a class="link-card" href="https://link.coupang.com/a/epSjtX" target="_blank" rel="noopener"><span class="l-icon">💰</span><span class="l-name">블록체인 책</span><span class="l-desc">미래 기술 이해하기</span><span class="l-badge">쿠팡 최저가</span></a>
+      <a class="link-card" href="https://link.coupang.com/a/epSkuN" target="_blank" rel="noopener"><span class="l-icon">🔐</span><span class="l-name">코인 투자 입문</span><span class="l-desc">코인 투자 완벽 정리</span><span class="l-badge">쿠팡 최저가</span></a>
     </div>
     <p class="coupang-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
   </div>
@@ -257,7 +192,7 @@
 </main>
 
 <footer>
-  <p>시세 정보는 CryptoCompare 기준이며 실제 거래 가격과 다를 수 있습니다. 투자 판단의 책임은 본인에게 있습니다.</p>
+  <p>시세 정보는 업비트 기준이며 실제 거래 가격과 다를 수 있습니다. 투자 판단의 책임은 본인에게 있습니다.</p>
   <p style="margin-top:10px;">© 2025 실시간 코인 시세 &nbsp;·&nbsp; <a href="privacy.html" style="color:inherit;">개인정보처리방침</a> &nbsp;·&nbsp; <a href="terms.html" style="color:inherit;">이용약관</a></p>
 </footer>
 
@@ -271,222 +206,297 @@ function toggleTheme() {
   localStorage.setItem('coin-theme', d ? 'dark' : 'light');
 }
 
-/* 코인 목록 */
-const MARKETS = [
-  {market:'KRW-BTC', name:'비트코인', symbol:'BTC', img:'https://static.upbit.com/logos/BTC.png'},
-  {market:'KRW-ETH', name:'이더리움', symbol:'ETH', img:'https://static.upbit.com/logos/ETH.png'},
-  {market:'KRW-XRP', name:'리플', symbol:'XRP', img:'https://static.upbit.com/logos/XRP.png'},
-  {market:'KRW-SOL', name:'솔라나', symbol:'SOL', img:'https://static.upbit.com/logos/SOL.png'},
-  {market:'KRW-DOGE', name:'도지코인', symbol:'DOGE', img:'https://static.upbit.com/logos/DOGE.png'},
-  {market:'KRW-ADA', name:'에이다', symbol:'ADA', img:'https://static.upbit.com/logos/ADA.png'},
-  {market:'KRW-AVAX', name:'아발란체', symbol:'AVAX', img:'https://static.upbit.com/logos/AVAX.png'},
-  {market:'KRW-DOT', name:'폴카닷', symbol:'DOT', img:'https://static.upbit.com/logos/DOT.png'},
-  {market:'KRW-LINK', name:'체인링크', symbol:'LINK', img:'https://static.upbit.com/logos/LINK.png'},
-  {market:'KRW-ATOM', name:'코스모스', symbol:'ATOM', img:'https://static.upbit.com/logos/ATOM.png'},
-  {market:'KRW-ETC', name:'이더리움클래식', symbol:'ETC', img:'https://static.upbit.com/logos/ETC.png'},
-  {market:'KRW-BCH', name:'비트코인캐시', symbol:'BCH', img:'https://static.upbit.com/logos/BCH.png'},
-  {market:'KRW-LTC', name:'라이트코인', symbol:'LTC', img:'https://static.upbit.com/logos/LTC.png'},
-  {market:'KRW-TRX', name:'트론', symbol:'TRX', img:'https://static.upbit.com/logos/TRX.png'},
-  {market:'KRW-XLM', name:'스텔라루멘', symbol:'XLM', img:'https://static.upbit.com/logos/XLM.png'},
-  {market:'KRW-SAND', name:'샌드박스', symbol:'SAND', img:'https://static.upbit.com/logos/SAND.png'},
-  {market:'KRW-MANA', name:'디센트럴랜드', symbol:'MANA', img:'https://static.upbit.com/logos/MANA.png'},
-  {market:'KRW-SHIB', name:'시바이누', symbol:'SHIB', img:'https://static.upbit.com/logos/SHIB.png'},
-  {market:'KRW-MATIC', name:'폴리곤', symbol:'MATIC', img:'https://static.upbit.com/logos/MATIC.png'},
-  {market:'KRW-UNI', name:'유니스왑', symbol:'UNI', img:'https://static.upbit.com/logos/UNI.png'},
+/* 인기 코인 (기본 표시) */
+const POPULAR = [
+  {market:'KRW-BTC',  name:'비트코인'},
+  {market:'KRW-ETH',  name:'이더리움'},
+  {market:'KRW-XRP',  name:'리플'},
+  {market:'KRW-SOL',  name:'솔라나'},
+  {market:'KRW-DOGE', name:'도지코인'},
+  {market:'KRW-ADA',  name:'에이다'},
+  {market:'KRW-AVAX', name:'아발란체'},
+  {market:'KRW-LINK', name:'체인링크'},
+  {market:'KRW-DOT',  name:'폴카닷'},
+  {market:'KRW-TRX',  name:'트론'},
+  {market:'KRW-SHIB', name:'시바이누'},
+  {market:'KRW-BCH',  name:'비트코인캐시'},
 ];
 
-const CHART_COINS = ['KRW-BTC','KRW-ETH','KRW-XRP','KRW-SOL','KRW-DOGE','KRW-ADA','KRW-AVAX','KRW-DOT','KRW-LINK','KRW-ATOM','KRW-ETC','KRW-BCH'];
+const INTERVALS = [
+  {label:'7일', unit:'days', count:7},
+  {label:'30일', unit:'days', count:30},
+  {label:'90일', unit:'days', count:90},
+  {label:'1년', unit:'days', count:365},
+  {label:'주봉', unit:'weeks', count:52},
+];
 
-let allTickers = [];
+let allMarkets = [];   // 업비트 전체 KRW 코인
+let tickerMap = {};    // {market: tickerData}
+let activeCharts = {}; // {market: true}
 const chartInstances = {};
+const chartDataStore = {};
 
 /* 포맷 */
 function fmtPrice(n) {
   if (n >= 1000000) return Math.round(n).toLocaleString('ko-KR') + '원';
-  if (n >= 1)       return n.toFixed(n < 10 ? 2 : 0).replace(/\B(?=(\d{3})+(?!\d))/g,',') + '원';
+  if (n >= 1)       return n.toLocaleString('ko-KR', {minimumFractionDigits: n < 100 ? 2 : 0, maximumFractionDigits: n < 100 ? 2 : 0}) + '원';
   return n.toFixed(4) + '원';
 }
-function fmtVol(n) {
-  if (n >= 1e12) return (n/1e12).toFixed(1) + '조';
-  if (n >= 1e8)  return Math.round(n/1e8) + '억';
-  return Math.round(n/1e4) + '만';
-}
-function fmtChange(n) { return (n >= 0 ? '+' : '') + n.toFixed(2) + '%'; }
+function fmtChange(r) { const p = r * 100; return (p >= 0 ? '+' : '') + p.toFixed(2) + '%'; }
+function logoUrl(market) { return `https://static.upbit.com/logos/${market.replace('KRW-','')}.png`; }
 
-/* 시세 불러오기 */
-/* USD→KRW 환율 */
-let usdToKrw = 1380;
-async function fetchExchangeRate() {
+/* 업비트 전체 마켓 로드 */
+async function loadMarkets() {
+  const res = await fetch('https://api.upbit.com/v1/market/all?isDetails=false', {signal: AbortSignal.timeout(8000)});
+  const data = await res.json();
+  allMarkets = data.filter(m => m.market.startsWith('KRW-'));
+  renderPopularBtns();
+}
+
+/* 시세 새로고침 */
+async function refreshPrices() {
+  document.getElementById('update-time').textContent = '업데이트 중...';
   try {
-    const res = await fetch('https://open.er-api.com/v6/latest/USD', {signal: AbortSignal.timeout(5000)});
+    const markets = POPULAR.map(p => p.market).join(',');
+    const res = await fetch(`https://api.upbit.com/v1/ticker?markets=${markets}`, {signal: AbortSignal.timeout(8000)});
     const data = await res.json();
-    if (data.rates && data.rates.KRW) usdToKrw = data.rates.KRW;
-  } catch(e) {}
+    data.forEach(t => { tickerMap[t.market] = t; });
+    renderPopularBtns();
+    const now = new Date();
+    document.getElementById('update-time').textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 업데이트`;
+  } catch(e) {
+    document.getElementById('update-time').textContent = '업데이트 실패';
+  }
 }
 
-async function loadTickers() {
-  const syms = MARKETS.map(m => m.symbol).join(',');
-  const res = await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms}&tsyms=USD`, {signal: AbortSignal.timeout(8000)});
-  if (!res.ok) throw new Error('API 오류');
+/* 인기 코인 버튼 렌더 */
+function renderPopularBtns() {
+  document.getElementById('popular-btns').innerHTML = POPULAR.map(p => {
+    const t = tickerMap[p.market];
+    const chg = t ? (t.signed_change_rate * 100).toFixed(2) : null;
+    const cls = activeCharts[p.market] ? 'active' : '';
+    const chgHtml = chg !== null
+      ? `<span style="font-size:.72rem;${Number(chg)>=0?'color:#30d158':'color:#ff453a'}">${Number(chg)>=0?'+':''}${chg}%</span>`
+      : '';
+    return `<button class="coin-btn ${cls}" onclick="toggleCoin('${p.market}','${p.name}')">
+      <img src="${logoUrl(p.market)}" alt="${p.name}" onerror="this.style.display='none'" />
+      ${p.name} ${chgHtml}
+    </button>`;
+  }).join('');
+}
+
+/* 검색 */
+function onSearch() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('search-results');
+  if (!q) { resultsEl.style.display = 'none'; return; }
+
+  const filtered = allMarkets.filter(m =>
+    m.korean_name.includes(q) ||
+    m.english_name.toLowerCase().includes(q) ||
+    m.market.toLowerCase().includes(q)
+  ).slice(0, 20);
+
+  if (!filtered.length) { resultsEl.style.display = 'none'; return; }
+
+  resultsEl.style.display = 'block';
+  resultsEl.innerHTML = filtered.map(m => {
+    const isActive = activeCharts[m.market];
+    return `<div class="search-item" onclick="toggleCoinFromSearch('${m.market}','${m.korean_name}')">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img src="${logoUrl(m.market)}" width="22" height="22" style="border-radius:50%" onerror="this.style.display='none'" />
+        <div>
+          <div class="s-name">${m.korean_name}</div>
+          <div class="s-sym">${m.market.replace('KRW-','')}</div>
+        </div>
+      </div>
+      <button class="s-add ${isActive?'active':''}">${isActive ? '제거' : '+ 추가'}</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleCoinFromSearch(market, name) {
+  toggleCoin(market, name);
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results').style.display = 'none';
+}
+
+/* 검색창 외부 클릭 시 닫기 */
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) {
+    document.getElementById('search-results').style.display = 'none';
+  }
+});
+
+/* 코인 토글 */
+function toggleCoin(market, name) {
+  if (activeCharts[market]) {
+    removeCoin(market);
+  } else {
+    addCoin(market, name);
+  }
+  renderPopularBtns();
+}
+
+/* 경고 */
+function updateWarn() {
+  const el = document.getElementById('overload-warn');
+  el.style.display = Object.keys(activeCharts).length >= 6 ? 'block' : 'none';
+}
+
+/* 코인 추가 */
+async function addCoin(market, name) {
+  activeCharts[market] = true;
+  updateWarn();
+
+  const grid = document.getElementById('chart-grid');
+  const empty = grid.querySelector('.empty-state');
+  if (empty) empty.remove();
+
+  const cardId = `card-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const card = document.createElement('div');
+  card.id = cardId;
+  card.className = 'chart-card';
+  card.innerHTML = `<div class="loading-card"><div class="spinner"></div><p style="font-size:.82rem">${name} 불러오는 중...</p></div>`;
+  grid.appendChild(card);
+
+  try {
+    const [candles, ticker] = await Promise.all([
+      fetchCandles(market, 'days', 30),
+      fetchTicker(market),
+    ]);
+    renderChartCard(card, market, name, candles, ticker);
+  } catch(e) {
+    card.innerHTML = `<button class="remove-btn" onclick="removeCoin('${market}')">✕</button>
+      <div style="text-align:center;padding:20px;color:var(--text-faint);font-size:.85rem">⚠️ ${name} 데이터를 불러올 수 없습니다</div>`;
+  }
+}
+
+/* 캔들 데이터 */
+async function fetchCandles(market, unit, count) {
+  const url = `https://api.upbit.com/v1/candles/${unit}?market=${market}&count=${count}`;
+  const res = await fetch(url, {signal: AbortSignal.timeout(10000)});
   const data = await res.json();
-  return MARKETS.map(m => {
-    const d = data.RAW?.[m.symbol]?.USD;
-    if (!d) return null;
-    return {
-      market: m.market,
-      trade_price: d.PRICE * usdToKrw,
-      signed_change_rate: d.CHANGEPCT24HOUR / 100,
-      acc_trade_price_24h: d.TOTALVOLUME24HTO * usdToKrw,
-    };
-  }).filter(Boolean);
+  return data.reverse(); // 오래된 순으로
 }
 
-/* 차트 데이터 (일봉 30개) */
-async function loadCandles(market) {
-  const sym = market.replace('KRW-','');
-  const res = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${sym}&tsym=USD&limit=29`, {signal: AbortSignal.timeout(8000)});
-  if (!res.ok) throw new Error();
+/* 현재 시세 */
+async function fetchTicker(market) {
+  const res = await fetch(`https://api.upbit.com/v1/ticker?markets=${market}`, {signal: AbortSignal.timeout(8000)});
   const data = await res.json();
-  return data.Data.Data.map(c => c.close * usdToKrw);
+  return data[0];
 }
 
-/* 차트 렌더 */
-function renderChart(canvasId, prices, isUp) {
+/* 차트 카드 렌더 */
+function renderChartCard(el, market, name, candles, ticker) {
+  const price = ticker.trade_price;
+  const prevClose = ticker.prev_closing_price;
+  const changeRate = ticker.signed_change_rate;
+  const isUp = changeRate >= 0;
+  const cls = isUp ? 'up' : 'down';
+  const canvasId = `canvas-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const closes = candles.map(c => c.trade_price);
+  const ohlc = candles.map(c => ({o:c.opening_price, h:c.high_price, l:c.low_price, c:c.trade_price}));
+
+  el.innerHTML = `
+    <button class="remove-btn" onclick="removeCoin('${market}')">✕</button>
+    <div class="chart-top">
+      <div class="chart-symbol">${market.replace('KRW-','')}</div>
+      <div class="chart-name">
+        <img class="coin-logo" src="${logoUrl(market)}" onerror="this.style.display='none'" />
+        ${name}
+      </div>
+      <div class="chart-price">${fmtPrice(price)}</div>
+      <div class="chart-change ${cls}">${fmtChange(changeRate)}</div>
+      <div class="chart-meta">전일 종가 ${fmtPrice(prevClose)}</div>
+    </div>
+    <div class="interval-row" id="ivrow-${canvasId}">
+      ${INTERVALS.map((iv,i) => `<button class="interval-btn${i===1?' active':''}" onclick="switchInterval('${canvasId}','${market}','${iv.unit}',${iv.count})">${iv.label}</button>`).join('')}
+    </div>
+    <div class="chart-canvas-wrap">
+      <canvas id="${canvasId}"></canvas>
+    </div>`;
+
+  chartDataStore[canvasId] = {closes, ohlc, isUp, market, name};
+  drawChart(canvasId);
+}
+
+/* 차트 그리기 */
+function drawChart(canvasId) {
+  const store = chartDataStore[canvasId];
+  if (!store) return;
+  const {closes, isUp} = store;
   const ctx = document.getElementById(canvasId);
   if (!ctx) return;
-  if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); }
+  if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+
   const color = isUp ? '#30d158' : '#ff453a';
   chartInstances[canvasId] = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: prices.map((_,i) => i),
+      labels: closes.map((_,i) => i),
       datasets: [{
-        data: prices,
+        data: closes,
         borderColor: color,
         borderWidth: 2,
         pointRadius: 0,
         tension: 0.3,
         fill: true,
-        backgroundColor: isUp ? 'rgba(48,209,88,0.08)' : 'rgba(255,69,58,0.08)',
+        backgroundColor: isUp ? 'rgba(48,209,88,0.1)' : 'rgba(255,69,58,0.1)',
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      scales: { x: { display: false }, y: { display: false } },
-      animation: { duration: 400 }
+      responsive: true, maintainAspectRatio: false,
+      plugins: {legend:{display:false}, tooltip:{
+        callbacks: { label: ctx => fmtPrice(ctx.raw) }
+      }},
+      scales: { x:{display:false}, y:{display:false} },
+      animation: {duration:300}
     }
   });
 }
 
-/* 코인 테이블 렌더 */
-function renderTable(tickers) {
-  if (!tickers.length) {
-    document.getElementById('coin-list').innerHTML = '<div class="loading"><p>검색 결과 없음</p></div>';
-    return;
-  }
-  document.getElementById('coin-list').innerHTML = tickers.map((t, i) => {
-    const info = MARKETS.find(m => m.market === t.market) || {name: t.market, symbol: t.market.replace('KRW-',''), img:''};
-    const chg = t.signed_change_rate * 100;
-    const cls = chg >= 0 ? 'up' : 'down';
-    return `
-      <div class="coin-row">
-        <div class="rank">${i+1}</div>
-        <div class="coin-info">
-          <img class="coin-img" src="${info.img}" alt="${info.name}" onerror="this.style.display='none'" loading="lazy" />
-          <div>
-            <div class="coin-name-text">${info.name}</div>
-            <div class="coin-symbol-text">${info.symbol}</div>
-          </div>
-        </div>
-        <div class="coin-price">${fmtPrice(t.trade_price)}</div>
-        <div class="coin-change ${cls}">${fmtChange(chg)}</div>
-        <div class="coin-vol">${fmtVol(t.acc_trade_price_24h)}원</div>
-      </div>`;
-  }).join('');
-}
-
-/* 요약 카드 업데이트 */
-function updateSummary(tickers) {
-  [['BTC','s-btc'],['ETH','s-eth'],['XRP','s-xrp']].forEach(([sym, id]) => {
-    const t = tickers.find(x => x.market === `KRW-${sym}`);
-    if (!t) return;
-    const chg = t.signed_change_rate * 100;
-    document.getElementById(`${id}-price`).textContent = fmtPrice(t.trade_price);
-    const el = document.getElementById(`${id}-change`);
-    el.textContent = fmtChange(chg);
-    el.style.color = chg >= 0 ? 'var(--green)' : 'var(--red)';
+/* 인터벌 전환 */
+async function switchInterval(canvasId, market, unit, count) {
+  const row = document.getElementById(`ivrow-${canvasId}`);
+  if (row) row.querySelectorAll('.interval-btn').forEach((b,i) => {
+    b.classList.toggle('active', b.textContent === INTERVALS.find(iv=>iv.unit===unit&&iv.count===count)?.label);
   });
-}
-
-/* 차트 카드 렌더 */
-async function renderCharts(tickers) {
-  const grid = document.getElementById('chart-grid');
-  grid.innerHTML = CHART_COINS.map(market => {
-    const info = MARKETS.find(m => m.market === market);
-    const t = tickers.find(x => x.market === market);
-    if (!info || !t) return '';
-    const chg = t.signed_change_rate * 100;
-    const cls = chg >= 0 ? 'up' : 'down';
-    return `
-      <div class="chart-card">
-        <div class="chart-top">
-          <div>
-            <div class="chart-coin-name">${info.name} <span style="font-size:.72rem;color:var(--text-faint)">${info.symbol}</span></div>
-            <div class="chart-coin-price" style="margin-top:2px">${fmtPrice(t.trade_price)}</div>
-          </div>
-          <div class="chart-coin-change ${cls}">${fmtChange(chg)}</div>
-        </div>
-        <div style="height:80px;position:relative">
-          <canvas id="chart-${market}" class="chart-canvas"></canvas>
-        </div>
-      </div>`;
-  }).join('');
-
-  /* 차트 데이터 순차 로드 */
-  for (const market of CHART_COINS) {
-    const t = tickers.find(x => x.market === market);
-    const isUp = t ? t.signed_change_rate >= 0 : true;
-    try {
-      const prices = await loadCandles(market);
-      renderChart(`chart-${market}`, prices, isUp);
-      await new Promise(r => setTimeout(r, 120)); /* API 과부하 방지 */
-    } catch(e) {}
-  }
-}
-
-/* 검색 */
-function filterCoins() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  if (!q) { renderTable(allTickers); return; }
-  const filtered = allTickers.filter(t => {
-    const info = MARKETS.find(m => m.market === t.market);
-    return info && (info.name.includes(q) || info.symbol.toLowerCase().includes(q));
-  });
-  renderTable(filtered);
-}
-
-/* 전체 로드 */
-async function loadAll() {
-  document.getElementById('update-time').textContent = '업데이트 중...';
   try {
-    await fetchExchangeRate();
-    allTickers = await loadTickers();
-    allTickers.sort((a,b) => b.acc_trade_price_24h - a.acc_trade_price_24h);
-    renderTable(allTickers);
-    updateSummary(allTickers);
-    renderCharts(allTickers);
-    const now = new Date();
-    document.getElementById('update-time').textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 업데이트`;
-  } catch(e) {
-    document.getElementById('coin-list').innerHTML = '<div class="loading"><p>⚠️ 시세를 불러올 수 없습니다. 새로고침 해주세요.</p></div>';
-    document.getElementById('update-time').textContent = '불러오기 실패';
-  }
+    const candles = await fetchCandles(market, unit, count);
+    const closes = candles.map(c => c.trade_price);
+    const ohlc = candles.map(c => ({o:c.opening_price,h:c.high_price,l:c.low_price,c:c.trade_price}));
+    const store = chartDataStore[canvasId];
+    if (store) { store.closes = closes; store.ohlc = ohlc; }
+    drawChart(canvasId);
+  } catch(e) {}
 }
 
-loadAll();
-setInterval(loadAll, 60000);
+/* 코인 제거 */
+function removeCoin(market) {
+  delete activeCharts[market];
+  updateWarn();
+  const cardId = `card-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const el = document.getElementById(cardId);
+  if (el) el.remove();
+  const canvasId = `canvas-${market.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); delete chartInstances[canvasId]; }
+  delete chartDataStore[canvasId];
+  const grid = document.getElementById('chart-grid');
+  if (!grid.children.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">₿</div><p>위에서 코인을 선택하면<br>차트가 여기에 표시됩니다</p></div>';
+  }
+  renderPopularBtns();
+}
+
+/* 초기화 */
+async function init() {
+  await loadMarkets();
+  await refreshPrices();
+}
+
+init();
+setInterval(refreshPrices, 60000);
 </script>
 </body>
 </html>
