@@ -113,6 +113,9 @@
       header h1 { font-size:1.3rem; }
       .chart-grid { grid-template-columns:1fr; }
       .theme-toggle { top:14px; right:12px; }
+      .toolbar { flex-direction:column; padding:10px 16px; gap:8px; }
+      .search-wrap { max-width:100%; }
+      .toolbar-right { width:100%; justify-content:space-between; }
     }
   </style>
 </head>
@@ -133,9 +136,9 @@
     </div>
     <div class="search-results" id="search-results"></div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;">
+  <div class="toolbar-right" style="display:flex;align-items:center;gap:10px;">
     <span class="update-info" id="update-time">불러오는 중...</span>
-    <button class="refresh-btn" onclick="refreshPrices()">↻ 새로고침</button>
+    <button class="refresh-btn" id="refresh-btn" onclick="manualRefresh()">↻ 새로고침</button>
   </div>
 </div>
 
@@ -266,7 +269,10 @@ async function fetchExchangeRate() {
 
 /* Binance 일괄 시세 */
 async function refreshPrices() {
-  document.getElementById('update-time').textContent = '업데이트 중...';
+  const btn = document.getElementById('refresh-btn');
+  const timeEl = document.getElementById('update-time');
+  timeEl.textContent = '업데이트 중...';
+  if (btn) btn.style.opacity = '0.5';
   try {
     const symbols = encodeURIComponent(JSON.stringify(POPULAR.map(p => p.bsym)));
     const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symbols}`);
@@ -281,10 +287,17 @@ async function refreshPrices() {
     });
     renderPopularBtns();
     const now = new Date();
-    document.getElementById('update-time').textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 업데이트`;
+    timeEl.textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 업데이트 · 1분마다 자동갱신`;
   } catch(e) {
-    document.getElementById('update-time').textContent = '잠시 후 재시도';
+    timeEl.textContent = '잠시 후 재시도';
+  } finally {
+    if (btn) btn.style.opacity = '';
   }
+}
+
+function manualRefresh() {
+  fetchExchangeRate();
+  refreshPrices();
 }
 
 /* 인기 코인 버튼 렌더 */
