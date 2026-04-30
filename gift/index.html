@@ -468,10 +468,10 @@ const WIKI_TITLE = {
   '도쿄 바나나':'Tokyo Banana',
   '기타카트 초콜릿':'Kit Kat',
   '말차 과자 세트':'Matcha',
-  '캔메이크 파우더':'Canmake',
-  '소프트99 핸드크림':'Hand cream',
+  '캔메이크 파우더':'Face powder',
+  '소프트99 핸드크림':'Lotion',
   '시세이도 스킨케어':'Shiseido',
-  '이니스프리 재팬 한정':'Innisfree',
+  '이니스프리 재팬 한정':'Korean beauty',
   '유카타·기모노 소품':'Yukata',
   '무인양품(MUJI) 용품':'Muji',
   '야마자키 위스키':'Yamazaki distillery',
@@ -617,8 +617,7 @@ async function renderGifts() {
 
   const buildCard = (item, imgSrc) => {
     const lock = strHash(currentCountry + item.name);
-    const fallbackKw = encodeURIComponent(EMOJI_IMG[item.emoji] || CAT_IMG[item.cat]);
-    const src = imgSrc || `https://loremflickr.com/320/185/${fallbackKw}?lock=${lock}`;
+    const src = imgSrc || `https://picsum.photos/seed/${lock}/320/185`;
     return `
     <div class="gift-card" id="gc-${lock}">
       <img class="gift-thumb" src="${src}" alt="${item.name}" loading="lazy"
