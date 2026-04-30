@@ -461,28 +461,64 @@ const CAT_LABEL = { food:'식품·간식', beauty:'뷰티·화장품', fashion:'
 const CAT_CLS   = { food:'cat-food', beauty:'cat-beauty', fashion:'cat-fashion', life:'cat-life', drink:'cat-drink' };
 const CAT_IMG   = { food:'food snack', beauty:'cosmetics skincare', fashion:'fashion accessories', life:'souvenir gift', drink:'alcohol drink' };
 
-/* 이모지 → 이미지 키워드 */
-const EMOJI_IMG = {
-  '🍫':'chocolate confectionery','🍌':'banana cake pastry','🥔':'potato chips snack',
-  '🌸':'japanese candy sweet','🍜':'ramen noodles bowl','🧴':'skincare lotion bottle',
-  '👘':'kimono japanese fashion','🍺':'beer glass cold','🍶':'sake rice wine',
-  '🥐':'croissant french pastry','🧀':'cheese gourmet food','💄':'lipstick cosmetics makeup',
-  '👜':'handbag leather purse','🥃':'whiskey spirits glass','🍾':'champagne wine bottle',
-  '☕':'coffee espresso cup','🥭':'mango tropical fruit','🥥':'coconut tropical food',
-  '☀️':'sunscreen beach lotion','🌿':'herbal organic nature','🐘':'elephant souvenir',
-  '🌶️':'tiger balm herbal cream','👟':'sneakers athletic shoes','🍻':'craft beer pint',
-  '🌾':'rice grain food','🎎':'japanese doll souvenir','⚾':'baseball cap sport',
-  '🏀':'basketball nba jersey','💊':'vitamin supplement capsule','🔪':'swiss army knife',
-  '⌚':'wristwatch luxury timepiece','🎼':'music box melody','🫖':'tea teapot english',
-  '🍪':'cookie biscuit sweet','🫒':'olive oil bottle','💍':'glass art jewelry',
-  '🍷':'red wine glass','🍋':'lemon citrus liqueur','🦁':'lion souvenir tourism',
-  '🧣':'scarf wool fashion','🥜':'nuts peanut snack','🍝':'pasta italian food',
-  '🫙':'gin bottle spirits','🍬':'candy jelly colorful','💆':'spa massage therapy',
-  '🌺':'flower tropical beauty','🏯':'castle ancient souvenir','🍵':'matcha green tea',
-  '🎋':'bamboo green tea japanese',
+/* 이모지 → Wikipedia 문서 제목 (실물 사진) */
+const WIKI_TITLE = {
+  '🍫':'Kit Kat','🍌':'Tokyo Banana','🥔':'Potato chip','🌸':'Wagashi',
+  '🍜':'Ramen','🧴':'Moisturizer','💆':'Facial mask','👘':'Yukata',
+  '🍺':'Beer','🍶':'Sake','🥐':'Croissant','🧀':'Emmental cheese',
+  '💄':'Lipstick','👜':'Handbag','🥃':'Whisky','🍾':'Champagne',
+  '☕':'Espresso','🥭':'Mango','🥥':'Coconut','☀️':'Sunscreen',
+  '🌿':'Herbal medicine','🌶️':'Tiger Balm','👟':'Sneakers','🍻':'Beer',
+  '🌾':'Rice wine','🎎':'Daruma','⚾':'Baseball cap','🏀':'Basketball',
+  '💊':'Dietary supplement','🔪':'Swiss Army knife','⌚':'Swatch',
+  '🎼':'Music box','🫖':'Tea','🍪':'Shortbread','🫒':'Olive oil',
+  '💍':'Murano glass','🍷':'Red wine','🍋':'Limoncello','🦁':'Merlion',
+  '🧣':'Cashmere','🥜':'Cashew','🍝':'Pasta','🫙':'Gin',
+  '🍬':'Jelly bean','🍵':'Matcha','🎋':'Matcha',
 };
 
-/* 안정적인 해시 (같은 아이템은 항상 같은 사진) */
+/* 이모지 → 재고 사진 키워드 (Wikipedia 없을 때 폴백) */
+const EMOJI_IMG = {
+  '🍫':'chocolate','🍌':'banana cake','🥔':'potato chips','🌸':'japanese candy',
+  '🍜':'ramen noodles','🧴':'skincare lotion','💆':'spa beauty','👘':'kimono fashion',
+  '🍺':'beer glass','🍶':'sake wine','🥐':'croissant pastry','🧀':'cheese gourmet',
+  '💄':'lipstick cosmetics','👜':'handbag leather','🥃':'whiskey glass','🍾':'champagne bottle',
+  '☕':'coffee espresso','🥭':'mango fruit','🥥':'coconut food','☀️':'sunscreen lotion',
+  '🌿':'herbal organic','🌶️':'tiger balm cream','👟':'sneakers shoes','🍻':'craft beer',
+  '🌾':'rice grain','🎎':'japanese doll','⚾':'baseball cap','🏀':'basketball jersey',
+  '💊':'vitamin capsule','🔪':'swiss knife','⌚':'wristwatch','🎼':'music box',
+  '🫖':'tea teapot','🍪':'cookie biscuit','🫒':'olive oil','💍':'glass jewelry',
+  '🍷':'red wine','🍋':'lemon citrus','🦁':'lion souvenir','🧣':'cashmere scarf',
+  '🥜':'cashew nuts','🍝':'pasta italian','🫙':'gin bottle','🍬':'jelly candy',
+  '🍵':'matcha green tea','🎋':'japanese bamboo',
+};
+
+const wikiCache = {};
+
+/* Wikipedia API로 실물 사진 일괄 로드 */
+async function fetchWikiImages(emojis) {
+  const needed = [...new Set(emojis)].filter(e => WIKI_TITLE[e] && !(e in wikiCache));
+  if (!needed.length) return;
+  const titles = needed.map(e => WIKI_TITLE[e]).join('|');
+  try {
+    const r = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(titles)}&prop=pageimages&format=json&pithumbsize=400&origin=*`
+    );
+    const data = await r.json();
+    const norm = {};
+    (data.query.normalized || []).forEach(n => { norm[n.to] = n.from; });
+    Object.values(data.query.pages).forEach(page => {
+      const fromTitle = norm[page.title] || page.title;
+      const emoji = needed.find(e => WIKI_TITLE[e] === fromTitle || WIKI_TITLE[e] === page.title);
+      wikiCache[emoji || ''] = page.thumbnail?.source || null;
+    });
+    needed.forEach(e => { if (!(e in wikiCache)) wikiCache[e] = null; });
+  } catch(e) {
+    needed.forEach(e => { wikiCache[e] = null; });
+  }
+}
+
+/* 안정적인 해시 */
 function strHash(s) {
   let h = 0;
   for (let i = 0; i < s.length; i++) { h = Math.imul(31, h) + s.charCodeAt(i) | 0; }
@@ -490,7 +526,7 @@ function strHash(s) {
 }
 
 /* 선물 렌더 */
-function renderGifts() {
+async function renderGifts() {
   const c = COUNTRIES.find(c => c.id === currentCountry);
   const filtered = c.items.filter(i => currentCat === 'all' || i.cat === currentCat);
   const grid = document.getElementById('gift-grid');
@@ -498,13 +534,14 @@ function renderGifts() {
     grid.innerHTML = '<div class="empty" style="grid-column:1/-1">해당 카테고리 선물이 없습니다.</div>';
     return;
   }
-  grid.innerHTML = filtered.map(item => {
-    const kw = encodeURIComponent(EMOJI_IMG[item.emoji] || CAT_IMG[item.cat]);
+
+  const buildCard = (item, imgSrc) => {
     const lock = strHash(currentCountry + item.name);
-    const imgUrl = `https://loremflickr.com/320/185/${kw}?lock=${lock}`;
+    const fallbackKw = encodeURIComponent(EMOJI_IMG[item.emoji] || CAT_IMG[item.cat]);
+    const src = imgSrc || `https://loremflickr.com/320/185/${fallbackKw}?lock=${lock}`;
     return `
-    <div class="gift-card">
-      <img class="gift-thumb" src="${imgUrl}" alt="${item.name}" loading="lazy"
+    <div class="gift-card" id="gc-${lock}">
+      <img class="gift-thumb" src="${src}" alt="${item.name}" loading="lazy"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="gift-thumb-placeholder" style="display:none">${item.emoji}</div>
       <div class="gift-body">
@@ -515,7 +552,26 @@ function renderGifts() {
         <a class="gift-link" href="https://www.coupang.com/np/search?q=${encodeURIComponent(item.name)}" target="_blank" rel="noopener sponsored">🛒 쿠팡에서 검색</a>
       </div>
     </div>`;
-  }).join('');
+  };
+
+  /* 1단계: 즉시 렌더 (재고 사진) */
+  grid.innerHTML = filtered.map(item => buildCard(item)).join('');
+
+  /* 2단계: Wikipedia 실물 사진 로드 후 교체 */
+  await fetchWikiImages(filtered.map(i => i.emoji));
+  filtered.forEach(item => {
+    const wikiImg = wikiCache[item.emoji];
+    if (wikiImg) {
+      const lock = strHash(currentCountry + item.name);
+      const card = document.getElementById(`gc-${lock}`);
+      if (card) {
+        const img = card.querySelector('.gift-thumb');
+        const ph = card.querySelector('.gift-thumb-placeholder');
+        if (img) { img.src = wikiImg; img.style.display = ''; }
+        if (ph) ph.style.display = 'none';
+      }
+    }
+  });
 }
 
 /* 카테고리 필터 */
