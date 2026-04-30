@@ -71,22 +71,22 @@
 
     /* 선물 그리드 */
     .gift-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:28px; }
-    .gift-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:var(--shadow); transition:all .2s; display:flex; flex-direction:column; gap:10px; }
-    .gift-card:hover { transform:translateY(-2px); border-color:var(--accent); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
-    .gift-card.hidden { display:none; }
-    .gift-emoji { font-size:2.4rem; }
-    .gift-cat { display:inline-block; font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:8px; }
+    .gift-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow); transition:all .2s; display:flex; flex-direction:column; }
+    .gift-card:hover { transform:translateY(-3px); border-color:var(--accent); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+    .gift-thumb { width:100%; height:160px; object-fit:cover; background:var(--bg-input); display:block; }
+    .gift-thumb-placeholder { width:100%; height:160px; display:flex; align-items:center; justify-content:center; font-size:3.5rem; background:var(--bg-input); }
+    .gift-body { padding:14px 16px; display:flex; flex-direction:column; gap:8px; flex:1; }
+    .gift-cat { display:inline-block; font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:8px; align-self:flex-start; }
     .cat-food    { background:#ff9500; color:#fff; }
     .cat-beauty  { background:#ff2d55; color:#fff; }
     .cat-fashion { background:#5856d6; color:#fff; }
     .cat-life    { background:#34c759; color:#fff; }
     .cat-drink   { background:#8e4ec6; color:#fff; }
-    .gift-name { font-size:1rem; font-weight:700; }
-    .gift-desc { font-size:.83rem; color:var(--text-sub); line-height:1.6; flex:1; }
-    .gift-price { font-size:.82rem; font-weight:700; color:var(--accent); }
+    .gift-name { font-size:.95rem; font-weight:700; line-height:1.4; }
+    .gift-desc { font-size:.82rem; color:var(--text-sub); line-height:1.6; flex:1; }
+    .gift-price { font-size:.8rem; font-weight:700; color:var(--accent); }
     .gift-link { display:block; background:var(--accent); color:#fff; text-align:center; border-radius:10px; padding:9px; font-size:.82rem; font-weight:700; text-decoration:none; transition:opacity .2s; }
     .gift-link:hover { opacity:.85; }
-    .gift-link.no-link { background:var(--bg-input); color:var(--text-faint); cursor:default; }
 
     /* 없음 안내 */
     .empty { text-align:center; padding:48px 20px; color:var(--text-faint); }
@@ -459,6 +459,35 @@ function renderIntro() {
 /* 카테고리 레이블 */
 const CAT_LABEL = { food:'식품·간식', beauty:'뷰티·화장품', fashion:'패션·잡화', life:'생활용품', drink:'주류' };
 const CAT_CLS   = { food:'cat-food', beauty:'cat-beauty', fashion:'cat-fashion', life:'cat-life', drink:'cat-drink' };
+const CAT_IMG   = { food:'food snack', beauty:'cosmetics skincare', fashion:'fashion accessories', life:'souvenir gift', drink:'alcohol drink' };
+
+/* 이모지 → 이미지 키워드 */
+const EMOJI_IMG = {
+  '🍫':'chocolate confectionery','🍌':'banana cake pastry','🥔':'potato chips snack',
+  '🌸':'japanese candy sweet','🍜':'ramen noodles bowl','🧴':'skincare lotion bottle',
+  '👘':'kimono japanese fashion','🍺':'beer glass cold','🍶':'sake rice wine',
+  '🥐':'croissant french pastry','🧀':'cheese gourmet food','💄':'lipstick cosmetics makeup',
+  '👜':'handbag leather purse','🥃':'whiskey spirits glass','🍾':'champagne wine bottle',
+  '☕':'coffee espresso cup','🥭':'mango tropical fruit','🥥':'coconut tropical food',
+  '☀️':'sunscreen beach lotion','🌿':'herbal organic nature','🐘':'elephant souvenir',
+  '🌶️':'tiger balm herbal cream','👟':'sneakers athletic shoes','🍻':'craft beer pint',
+  '🌾':'rice grain food','🎎':'japanese doll souvenir','⚾':'baseball cap sport',
+  '🏀':'basketball nba jersey','💊':'vitamin supplement capsule','🔪':'swiss army knife',
+  '⌚':'wristwatch luxury timepiece','🎼':'music box melody','🫖':'tea teapot english',
+  '🍪':'cookie biscuit sweet','🫒':'olive oil bottle','💍':'glass art jewelry',
+  '🍷':'red wine glass','🍋':'lemon citrus liqueur','🦁':'lion souvenir tourism',
+  '🧣':'scarf wool fashion','🥜':'nuts peanut snack','🍝':'pasta italian food',
+  '🫙':'gin bottle spirits','🍬':'candy jelly colorful','💆':'spa massage therapy',
+  '🌺':'flower tropical beauty','🏯':'castle ancient souvenir','🍵':'matcha green tea',
+  '🎋':'bamboo green tea japanese',
+};
+
+/* 안정적인 해시 (같은 아이템은 항상 같은 사진) */
+function strHash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = Math.imul(31, h) + s.charCodeAt(i) | 0; }
+  return Math.abs(h) % 9999 + 1;
+}
 
 /* 선물 렌더 */
 function renderGifts() {
@@ -469,15 +498,24 @@ function renderGifts() {
     grid.innerHTML = '<div class="empty" style="grid-column:1/-1">해당 카테고리 선물이 없습니다.</div>';
     return;
   }
-  grid.innerHTML = filtered.map(item => `
+  grid.innerHTML = filtered.map(item => {
+    const kw = encodeURIComponent(EMOJI_IMG[item.emoji] || CAT_IMG[item.cat]);
+    const lock = strHash(currentCountry + item.name);
+    const imgUrl = `https://loremflickr.com/320/185/${kw}?lock=${lock}`;
+    return `
     <div class="gift-card">
-      <div>${item.emoji}</div>
-      <span class="gift-cat ${CAT_CLS[item.cat]}">${CAT_LABEL[item.cat]}</span>
-      <div class="gift-name">${item.name}</div>
-      <div class="gift-desc">${item.desc}</div>
-      <div class="gift-price">현지 가격 ${item.price}</div>
-      <a class="gift-link" href="https://www.coupang.com/np/search?q=${encodeURIComponent(item.name)}" target="_blank" rel="noopener sponsored">🛒 쿠팡에서 검색</a>
-    </div>`).join('');
+      <img class="gift-thumb" src="${imgUrl}" alt="${item.name}" loading="lazy"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="gift-thumb-placeholder" style="display:none">${item.emoji}</div>
+      <div class="gift-body">
+        <span class="gift-cat ${CAT_CLS[item.cat]}">${CAT_LABEL[item.cat]}</span>
+        <div class="gift-name">${item.name}</div>
+        <div class="gift-desc">${item.desc}</div>
+        <div class="gift-price">현지 가격 ${item.price}</div>
+        <a class="gift-link" href="https://www.coupang.com/np/search?q=${encodeURIComponent(item.name)}" target="_blank" rel="noopener sponsored">🛒 쿠팡에서 검색</a>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 /* 카테고리 필터 */
