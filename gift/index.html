@@ -461,23 +461,92 @@ const CAT_LABEL = { food:'식품·간식', beauty:'뷰티·화장품', fashion:'
 const CAT_CLS   = { food:'cat-food', beauty:'cat-beauty', fashion:'cat-fashion', life:'cat-life', drink:'cat-drink' };
 const CAT_IMG   = { food:'food snack', beauty:'cosmetics skincare', fashion:'fashion accessories', life:'souvenir gift', drink:'alcohol drink' };
 
-/* 이모지 → Wikipedia 문서 제목 (실물 사진) */
+/* 상품명 → Wikipedia 문서 제목 (상품마다 고유한 실물 사진) */
 const WIKI_TITLE = {
-  '🍫':'Kit Kat','🍡':'Kit Kat','🍌':'Tokyo Banana','🥔':'Potato chip','🌸':'Wagashi',
-  '🍜':'Ramen','🧴':'Moisturizer','💆':'Facial mask','👘':'Yukata',
-  '🍺':'Beer','🍶':'Sake','🥐':'Croissant','🧀':'Emmental cheese',
-  '💄':'Lipstick','🌹':'Lipstick','👜':'Handbag','🥃':'Whisky','🍾':'Champagne',
-  '☕':'Espresso','🥭':'Mango','🥥':'Coconut','☀️':'Sunscreen',
-  '🌿':'Herbal medicine','🌶️':'Tiger Balm','👟':'Sneakers','🍻':'Beer',
-  '🌾':'Rice wine','🎎':'Daruma','⚾':'Baseball cap','🏀':'Basketball',
-  '💊':'Dietary supplement','🔪':'Swiss Army knife','⌚':'Swatch',
-  '🎼':'Music box','🫖':'Tea','🍪':'Shortbread','🫒':'Olive oil',
-  '💍':'Murano glass','🍷':'Red wine','🍋':'Limoncello','🦁':'Merlion',
-  '🧣':'Cashmere','🥜':'Cashew','🍝':'Pasta','🫙':'Gin',
-  '🍬':'Jelly bean','🍵':'Matcha','🎋':'Matcha',
-  '🗾':'Muji','🍑':'Plum wine','💎':'Perfume','🥂':'Champagne',
-  '🍊':'Cognac','🐘':'Elephant pants','🫚':'Pineapple cake',
-  '🍸':'Singapore Sling','🎩':'Buckingham Palace',
+  // 일본
+  '로이스 생초콜릿':"Royce' Confect",
+  '도쿄 바나나':'Tokyo Banana',
+  '기타카트 초콜릿':'Kit Kat in Japan',
+  '말차 과자 세트':'Matcha',
+  '시세이도 스킨케어':'Shiseido',
+  '유카타·기모노 소품':'Yukata',
+  '무인양품(MUJI) 용품':'Muji',
+  '야마자키 위스키':'Yamazaki distillery',
+  '닷사이 사케':'Sake',
+  '우메슈(매실주)':'Umeshu',
+  // 프랑스
+  '라뒤레 마카롱':'Ladurée',
+  '발로나 초콜릿':'Valrhona',
+  '라로슈포제 선크림':'La Roche-Posay',
+  '로레알 립스틱':"L'Oréal",
+  '샤넬 미니 향수':'Chanel No. 5',
+  '에르메스 스카프(미니)':'Hermès',
+  '디종 머스터드':'Dijon mustard',
+  '보르도 레드 와인':'Bordeaux wine',
+  '모에 샹동 샴페인':'Moët & Chandon',
+  '꼬냑(헤네시)':'Hennessy',
+  // 미국
+  '젤리벨리 젤리빈':'Jelly Belly',
+  '씨즈캔디':"See's Candies",
+  '트레이더조 스낵':"Trader Joe's",
+  '키엘스 스킨케어':"Kiehl's",
+  '잭다니엘 테네시 위스키':"Jack Daniel's",
+  '버번 위스키(부커스)':'Bourbon whiskey',
+  '크래프트 맥주 세트':'Craft beer',
+  'MLB 굿즈':'New York Yankees',
+  'NBA 저지':'National Basketball Association',
+  '비타민 보충제':'Dietary supplement',
+  // 이탈리아
+  '페레로 로쉐':'Ferrero Rocher',
+  '프리미엄 파스타 세트':'Pasta',
+  '엑스트라버진 올리브오일':'Olive oil',
+  '일리 에스프레소 원두':'Illycaffè',
+  '무라노 유리 공예품':'Murano glass',
+  '키안티 클라시코':'Chianti Classico',
+  '리몬첼로':'Limoncello',
+  '그라파':'Grappa',
+  '가죽 지갑·벨트':'Leather goods',
+  // 태국
+  '망고 젤리·건망고':'Dried mango',
+  '쌈얀 인스턴트 라면':'Tom yum',
+  '카피바라 선크림':'Sunscreen',
+  '타이거밤':'Tiger Balm',
+  '타이 마사지 오일':'Thai massage',
+  '싱하 맥주':'Singha (beer)',
+  '코끼리 패턴 바지':'Thai fisherman pants',
+  // 베트남
+  'G7 드립백 커피':'Vietnamese iced coffee',
+  '캐슈넛(구운 견과류)':'Cashew',
+  '아오자이 소품':'Áo dài',
+  '핸드메이드 등롱':'Hội An',
+  '루아모이 쌀 막걸리':'Rice wine',
+  '비어 하노이':'Bia Hà Nội',
+  // 싱가포르
+  '머라이언 과자 세트':'Merlion',
+  '야쿤 카야 잼':'Ya Kun Kaya Toast',
+  '타이거 맥주':'Tiger Beer',
+  '싱가포르 슬링(진)':'Singapore Sling',
+  'SK-II 에센스':'SK-II',
+  '뉴발란스·나이키 한정판':'Sneakers',
+  '타이거밤 싱가포르판':'Tiger Balm',
+  '벵완솔 쿠키':'Bengawan Solo',
+  // 영국
+  '포트넘앤메이슨 홍차':'Fortnum & Mason',
+  '워커스 쇼트브레드':'Walkers Shortbread',
+  '캐드버리 초콜릿':'Cadbury',
+  '버버리 체크 머플러':'Burberry',
+  '영국 왕실 기념품':'Buckingham Palace',
+  '맥캘란 스카치 위스키':'The Macallan',
+  '기네스 스타우트':'Guinness',
+  '탱커레이 런던 드라이 진':'Tanqueray',
+  // 스위스
+  '린트 초콜릿':'Lindt',
+  '토블레론':'Toblerone',
+  '에멘탈 치즈':'Emmental cheese',
+  '빅토리녹스 나이프':'Victorinox',
+  '스와치 시계':'Swatch',
+  '뮤직박스':'Music box',
+  '압생트':'Absinthe',
 };
 
 /* 이모지 → 재고 사진 키워드 (Wikipedia 없을 때 폴백) */
@@ -501,11 +570,11 @@ const EMOJI_IMG = {
 
 const wikiCache = {};
 
-/* Wikipedia API로 실물 사진 일괄 로드 */
-async function fetchWikiImages(emojis) {
-  const needed = [...new Set(emojis)].filter(e => WIKI_TITLE[e] && !(e in wikiCache));
+/* Wikipedia API로 실물 사진 일괄 로드 (상품명 기반) */
+async function fetchWikiImages(names) {
+  const needed = [...new Set(names)].filter(n => WIKI_TITLE[n] && !(n in wikiCache));
   if (!needed.length) return;
-  const titles = needed.map(e => WIKI_TITLE[e]).join('|');
+  const titles = [...new Set(needed.map(n => WIKI_TITLE[n]))].join('|');
   try {
     const r = await fetch(
       `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(titles)}&prop=pageimages&format=json&pithumbsize=400&origin=*`
@@ -513,14 +582,16 @@ async function fetchWikiImages(emojis) {
     const data = await r.json();
     const norm = {};
     (data.query.normalized || []).forEach(n => { norm[n.to] = n.from; });
+    const imgByTitle = {};
     Object.values(data.query.pages).forEach(page => {
-      const fromTitle = norm[page.title] || page.title;
-      const emoji = needed.find(e => WIKI_TITLE[e] === fromTitle || WIKI_TITLE[e] === page.title);
-      wikiCache[emoji || ''] = page.thumbnail?.source || null;
+      const origTitle = norm[page.title] || page.title;
+      const img = page.thumbnail?.source || null;
+      imgByTitle[origTitle] = img;
+      imgByTitle[page.title] = img;
     });
-    needed.forEach(e => { if (!(e in wikiCache)) wikiCache[e] = null; });
+    needed.forEach(n => { wikiCache[n] = imgByTitle[WIKI_TITLE[n]] ?? null; });
   } catch(e) {
-    needed.forEach(e => { wikiCache[e] = null; });
+    needed.forEach(n => { wikiCache[n] = null; });
   }
 }
 
@@ -564,9 +635,9 @@ async function renderGifts() {
   grid.innerHTML = filtered.map(item => buildCard(item)).join('');
 
   /* 2단계: Wikipedia 실물 사진 로드 후 교체 */
-  await fetchWikiImages(filtered.map(i => i.emoji));
+  await fetchWikiImages(filtered.map(i => i.name));
   filtered.forEach(item => {
-    const wikiImg = wikiCache[item.emoji];
+    const wikiImg = wikiCache[item.name];
     if (wikiImg) {
       const lock = strHash(currentCountry + item.name);
       const card = document.getElementById(`gc-${lock}`);
