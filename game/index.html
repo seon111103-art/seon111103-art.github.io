@@ -193,19 +193,25 @@ async function fetchRSS(url) {
       const items = [...doc.querySelectorAll('item')];
       if (!items.length) throw new Error('no items');
       return items.slice(0, 20).map(item => {
-        // 썸네일 추출 시도
+        // 썸네일 추출 (localName으로 네임스페이스 무시)
         let thumb = null;
-        const media = item.querySelector('thumbnail') || item.querySelector('content');
-        if (media) thumb = media.getAttribute('url');
+        const els = [...item.querySelectorAll('*')];
+        const mediaEl = els.find(el => el.localName === 'thumbnail') ||
+                        els.find(el => el.localName === 'content' &&
+                          (el.getAttribute('medium') === 'image' || el.getAttribute('type')?.startsWith('image/')));
+        if (mediaEl) thumb = mediaEl.getAttribute('url');
         if (!thumb) {
-          const enc = item.querySelector('enclosure');
+          const enc = els.find(el => el.localName === 'enclosure');
           if (enc && enc.getAttribute('type')?.startsWith('image')) thumb = enc.getAttribute('url');
         }
         if (!thumb) {
-          const desc = item.querySelector('description')?.textContent || '';
-          const match = desc.match(/<img[^>]+src=["']([^"']+)["']/i);
+          const descEl = els.find(el => el.localName === 'encoded') ||
+                         els.find(el => el.localName === 'description');
+          const descText = descEl?.textContent || '';
+          const match = descText.match(/<img[^>]+src=["']([^"']+)["']/i);
           if (match) thumb = match[1];
         }
+        if (thumb && thumb.startsWith('http:')) thumb = 'https:' + thumb.slice(5);
         const rawDate = item.querySelector('pubDate')?.textContent || '';
         return {
           title: item.querySelector('title')?.textContent?.trim() || '제목 없음',
