@@ -49,7 +49,7 @@
     /* 헤더 */
     header{
       background:var(--header-grad);
-      padding:28px 20px 28px;text-align:center;position:relative;overflow:hidden;
+      padding:56px 20px 28px;text-align:center;position:relative;overflow:hidden;
     }
     .theme-toggle{
       position:absolute;top:14px;right:14px;
@@ -73,15 +73,17 @@
     header::before{content:'🌬️';font-size:70px;position:absolute;top:-5px;left:-10px;opacity:0.12;animation:fl 6s ease-in-out infinite;}
     header::after{content:'☁️';font-size:50px;position:absolute;bottom:5px;right:10px;opacity:0.15;animation:fl 9s ease-in-out infinite reverse;}
     @keyframes fl{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
-    .char-img{
-      width:130px;height:130px;object-fit:contain;
-      filter:drop-shadow(0 4px 14px rgba(0,0,0,0.25));
-      animation:char-bounce 2.6s ease-in-out infinite;
-      margin-bottom:4px;
+    .mascot-wrap{
+      display:flex;flex-direction:column;align-items:center;gap:0;
     }
-    @keyframes char-bounce{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-10px) rotate(2deg);}}
-    .logo{font-size:1.7rem;font-weight:900;color:#fff;letter-spacing:2px;}
-    .tagline{font-size:0.82rem;color:rgba(255,255,255,0.82);margin-top:4px;}
+    .mascot-img{
+      width:140px;height:140px;object-fit:contain;
+      filter:drop-shadow(0 4px 12px rgba(33,150,243,0.35));
+      animation:bounce 2.5s ease-in-out infinite;
+    }
+    @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+    .logo{font-size:2rem;font-weight:900;color:#fff;letter-spacing:2px;margin-top:6px;text-shadow:0 2px 8px rgba(0,0,0,0.15);}
+    .tagline{font-size:0.88rem;color:rgba(255,255,255,0.82);margin-top:6px;}
 
     main{max-width:700px;margin:0 auto;padding:20px 14px 80px;}
 
@@ -250,9 +252,11 @@
       <span class="toggle-moon">🌙</span>
     </span>
   </button>
-  <img class="char-img" src="character.png" alt="윈드홀리데이 캐릭터"/>
-  <div class="logo">🌬️ 윈드홀리데이</div>
-  <div class="tagline">바람처럼 떠나는 황금연휴</div>
+  <div class="mascot-wrap">
+    <img class="mascot-img" src="character.png" alt="윈드홀리데이 캐릭터"/>
+    <div class="logo">🌬️ 윈드홀리데이</div>
+    <p class="tagline">바람처럼 떠나는 황금연휴</p>
+  </div>
 </header>
 
 <main>
