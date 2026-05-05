@@ -4,152 +4,188 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>윈드홀리데이 | 바람처럼 떠나는 황금연휴</title>
-  <meta name="description" content="2025~2044년 황금연휴 미리보기, D-day 카운트다운, 연차 계산기"/>
+  <meta name="description" content="2025~2044년 황금연휴 달력, D-day 카운트다운, 연차 계산기"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     :root{
       --sky:#2196F3;--sky-light:#E3F2FD;--sky-dark:#1565C0;
-      --gold:#FF9800;--gold-light:#FFF3E0;
+      --gold:#FF9800;--gold-light:#FFF8E1;
       --red:#F44336;--red-light:#FFEBEE;
-      --green:#4CAF50;--green-light:#E8F5E9;
-      --bg:#EBF5FF;--card:#fff;
-      --text:#263238;--sub:#607D8B;
+      --purple:#9C27B0;--purple-light:#F3E5F5;
+      --bg:#F0F7FF;--card:#fff;
+      --text:#263238;--sub:#78909C;
       --border:#BBDEFB;
-      --shadow:0 4px 16px rgba(33,150,243,0.12);
+      --shadow:0 2px 12px rgba(33,150,243,0.10);
     }
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
     /* 헤더 */
     header{
       background:linear-gradient(135deg,#1565C0,#42A5F5);
-      padding:40px 20px 60px;text-align:center;position:relative;overflow:hidden;
+      padding:28px 20px 28px;text-align:center;position:relative;overflow:hidden;
     }
-    header::before{
-      content:'🌬️';font-size:80px;position:absolute;top:-10px;left:-20px;opacity:0.15;
-      animation:float 6s ease-in-out infinite;
-    }
-    header::after{
-      content:'☁️';font-size:60px;position:absolute;bottom:10px;right:10px;opacity:0.2;
-      animation:float 8s ease-in-out infinite reverse;
-    }
-    @keyframes float{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-15px) rotate(5deg);}}
-    .logo{font-size:2rem;font-weight:900;color:#fff;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,0.2);}
-    .tagline{font-size:0.88rem;color:rgba(255,255,255,0.85);margin-top:6px;}
+    header::before{content:'🌬️';font-size:70px;position:absolute;top:-5px;left:-10px;opacity:0.12;animation:fl 6s ease-in-out infinite;}
+    header::after{content:'☁️';font-size:50px;position:absolute;bottom:5px;right:10px;opacity:0.15;animation:fl 9s ease-in-out infinite reverse;}
+    @keyframes fl{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+    .logo{font-size:1.7rem;font-weight:900;color:#fff;letter-spacing:2px;}
+    .tagline{font-size:0.82rem;color:rgba(255,255,255,0.82);margin-top:4px;}
 
-    /* D-day 섹션 */
+    main{max-width:700px;margin:0 auto;padding:20px 14px 80px;}
+
+    /* ── 달력 영역 ── */
+    .cal-header{
+      display:flex;align-items:center;justify-content:space-between;
+      background:var(--card);border-radius:16px 16px 0 0;
+      padding:14px 18px;border:2px solid var(--border);border-bottom:none;
+    }
+    .cal-nav{
+      background:none;border:2px solid var(--border);border-radius:10px;
+      width:36px;height:36px;font-size:1.1rem;cursor:pointer;
+      color:var(--sky);transition:all 0.2s;display:flex;align-items:center;justify-content:center;
+    }
+    .cal-nav:hover{background:var(--sky-light);}
+    .cal-month-label{font-size:1.2rem;font-weight:900;color:var(--text);}
+    .cal-month-label span{color:var(--sky);}
+
+    .cal-dow{
+      display:grid;grid-template-columns:repeat(7,1fr);
+      background:var(--sky);
+      border-left:2px solid var(--border);border-right:2px solid var(--border);
+    }
+    .cal-dow div{
+      text-align:center;padding:8px 2px;font-size:0.75rem;font-weight:700;color:#fff;
+    }
+    .cal-dow div:first-child{color:#FFCDD2;}
+    .cal-dow div:last-child{color:#BBDEFB;}
+
+    .cal-grid{
+      display:grid;grid-template-columns:repeat(7,1fr);
+      border:2px solid var(--border);border-top:none;
+      border-radius:0 0 16px 16px;overflow:hidden;
+      background:var(--card);
+    }
+    .cal-cell{
+      min-height:70px;padding:6px 4px 4px;
+      border-right:1px solid #EEF2F7;border-bottom:1px solid #EEF2F7;
+      vertical-align:top;position:relative;
+    }
+    .cal-cell:nth-child(7n){border-right:none;}
+    .cal-cell.empty{background:#FAFCFF;}
+    .cal-cell.today{background:#E3F2FD;}
+    .cal-cell.golden-bg{background:linear-gradient(135deg,#FFFDE7,#FFF8E1);}
+    .cal-cell.super-bg{background:linear-gradient(135deg,#F3E5F5,#EDE7F6);}
+
+    .cal-num{
+      font-size:0.88rem;font-weight:700;display:block;
+      margin-bottom:3px;color:var(--text);line-height:1;
+    }
+    .cal-num.sun{color:var(--red);}
+    .cal-num.sat{color:var(--sky);}
+    .cal-num.holiday-day{color:var(--red);}
+    .today .cal-num{
+      background:var(--sky);color:#fff;
+      width:22px;height:22px;border-radius:50%;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    .cal-tag{
+      display:block;font-size:0.62rem;font-weight:700;
+      padding:1px 4px;border-radius:4px;margin-bottom:2px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      max-width:100%;
+    }
+    .cal-tag.holiday{background:#FFEBEE;color:#C62828;}
+    .cal-tag.sub{background:#E8F5E9;color:#2E7D32;}
+    .cal-tag.golden{background:#FFF3E0;color:#E65100;}
+
+    /* 이달의 황금연휴 요약 */
+    .month-summary{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+    .ms-card{
+      background:var(--card);border-radius:14px;
+      border:2px solid var(--border);padding:12px 16px;
+      display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);
+    }
+    .ms-card.golden{border-color:var(--gold);}
+    .ms-card.super{border-color:var(--purple);}
+    .ms-badge{
+      font-size:1.4rem;width:44px;height:44px;
+      border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background:var(--sky-light);flex-shrink:0;
+    }
+    .ms-badge.golden{background:var(--gold-light);}
+    .ms-badge.super{background:var(--purple-light);}
+    .ms-info{flex:1;}
+    .ms-title{font-size:0.9rem;font-weight:700;color:var(--text);}
+    .ms-date{font-size:0.75rem;color:var(--sub);margin-top:2px;}
+    .ms-days{
+      font-size:1.3rem;font-weight:900;color:var(--sky);
+      white-space:nowrap;
+    }
+    .ms-days.golden{color:#E65100;}
+    .ms-days.super{color:#6A1B9A;}
+
+    .section-title{
+      font-size:0.95rem;font-weight:700;color:var(--text);
+      margin:24px 0 10px;display:flex;align-items:center;gap:8px;
+    }
+
+    /* D-day */
     .dday-wrap{
-      max-width:500px;margin:-36px auto 0;
-      background:var(--card);border-radius:24px;
-      box-shadow:0 8px 32px rgba(33,150,243,0.18);
-      padding:24px 20px;position:relative;z-index:10;
+      background:linear-gradient(135deg,#1565C0,#42A5F5);
+      border-radius:18px;padding:20px;color:#fff;
+      box-shadow:0 4px 16px rgba(33,150,243,0.3);
+      display:flex;align-items:center;gap:16px;
     }
-    .dday-label{font-size:0.82rem;color:var(--sub);text-align:center;margin-bottom:4px;}
-    .dday-name{font-size:1.1rem;font-weight:700;color:var(--sky-dark);text-align:center;margin-bottom:12px;}
-    .dday-count{
-      font-size:3.5rem;font-weight:900;color:var(--sky);
-      text-align:center;line-height:1;
+    .dday-left{flex:1;}
+    .dday-label{font-size:0.78rem;opacity:0.85;margin-bottom:4px;}
+    .dday-name{font-size:1rem;font-weight:700;margin-bottom:2px;}
+    .dday-date{font-size:0.75rem;opacity:0.8;}
+    .dday-num{
+      font-size:2.8rem;font-weight:900;line-height:1;
+      text-align:right;white-space:nowrap;
     }
-    .dday-count span{font-size:1.4rem;font-weight:700;}
-    .dday-info{
-      display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap;
-    }
-    .dday-badge{
-      background:var(--sky-light);color:var(--sky-dark);
-      border-radius:20px;padding:4px 12px;font-size:0.78rem;font-weight:700;
-    }
-    .dday-badge.gold{background:var(--gold-light);color:#E65100;}
-
-    /* 탭 */
-    main{max-width:700px;margin:0 auto;padding:28px 16px 80px;}
-    .section-title{font-size:1rem;font-weight:700;color:var(--text);margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
-
-    .year-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}
-    .year-bar::-webkit-scrollbar{display:none;}
-    .year-btn{
-      flex-shrink:0;padding:8px 18px;border-radius:20px;
-      border:2px solid var(--border);background:var(--card);
-      color:var(--sub);font-size:0.85rem;font-weight:700;cursor:pointer;
-      font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;white-space:nowrap;
-    }
-    .year-btn.active{background:var(--sky);border-color:var(--sky);color:#fff;}
-    .year-btn:hover:not(.active){border-color:var(--sky);color:var(--sky);}
-
-    /* 황금연휴 카드 */
-    .holiday-list{display:flex;flex-direction:column;gap:12px;}
-    .holiday-card{
-      background:var(--card);border-radius:16px;
-      border:2px solid var(--border);
-      padding:16px 18px;box-shadow:var(--shadow);
-    }
-    .holiday-card.golden{border-color:var(--gold);background:linear-gradient(135deg,#fff,#FFFDE7);}
-    .holiday-card.super{border-color:#9C27B0;background:linear-gradient(135deg,#fff,#F3E5F5);}
-    .hc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-    .hc-title{font-size:1rem;font-weight:700;color:var(--text);}
-    .hc-days{
-      font-size:0.8rem;font-weight:700;padding:3px 10px;border-radius:10px;
-      background:var(--sky-light);color:var(--sky-dark);
-    }
-    .hc-days.gold{background:var(--gold-light);color:#E65100;}
-    .hc-days.super{background:#F3E5F5;color:#6A1B9A;}
-    .hc-date{font-size:0.82rem;color:var(--sub);margin-bottom:8px;}
-    .hc-items{display:flex;flex-wrap:wrap;gap:6px;}
-    .hc-item{
-      font-size:0.75rem;padding:3px 10px;border-radius:10px;
-      background:var(--red-light);color:var(--red);font-weight:700;
-    }
-    .hc-item.weekend{background:#F5F5F5;color:#757575;}
-    .hc-item.sub{background:#E8F5E9;color:#2E7D32;}
-    .hc-tip{
-      margin-top:10px;padding:8px 12px;border-radius:10px;
-      background:var(--gold-light);font-size:0.78rem;color:#E65100;
-      display:flex;align-items:center;gap:6px;
-    }
+    .dday-num small{font-size:1rem;font-weight:700;}
 
     /* 연차 계산기 */
     .calc-box{
-      background:var(--card);border-radius:20px;
-      border:2px solid var(--border);padding:20px;
-      box-shadow:var(--shadow);
+      background:var(--card);border-radius:18px;
+      border:2px solid var(--border);padding:18px;box-shadow:var(--shadow);
     }
-    .calc-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
-    .calc-label{font-size:0.88rem;color:var(--sub);font-weight:700;white-space:nowrap;}
+    .calc-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+    .calc-label{font-size:0.85rem;color:var(--sub);font-weight:700;white-space:nowrap;}
     .calc-select{
-      flex:1;min-width:120px;padding:8px 12px;border-radius:10px;
+      flex:1;min-width:110px;padding:7px 10px;border-radius:10px;
       border:2px solid var(--border);background:var(--bg);
-      font-size:0.88rem;font-family:'Noto Sans KR',sans-serif;color:var(--text);
-      outline:none;
+      font-size:0.85rem;font-family:'Noto Sans KR',sans-serif;color:var(--text);outline:none;
     }
-    .calc-select:focus{border-color:var(--sky);}
-    .leave-btns{display:flex;gap:8px;flex-wrap:wrap;}
+    .leave-btns{display:flex;gap:6px;flex-wrap:wrap;}
     .leave-btn{
-      padding:8px 16px;border-radius:12px;border:2px solid var(--border);
-      background:var(--card);font-size:0.85rem;font-weight:700;cursor:pointer;
+      padding:7px 14px;border-radius:10px;border:2px solid var(--border);
+      background:var(--card);font-size:0.82rem;font-weight:700;cursor:pointer;
       font-family:'Noto Sans KR',sans-serif;color:var(--sub);transition:all 0.2s;
     }
     .leave-btn.active{background:var(--sky);border-color:var(--sky);color:#fff;}
-    .calc-result{margin-top:4px;}
     .result-item{
-      background:var(--sky-light);border-radius:12px;padding:12px 16px;
-      margin-bottom:8px;border-left:4px solid var(--sky);
+      background:var(--sky-light);border-radius:12px;padding:11px 14px;
+      margin-bottom:7px;border-left:4px solid var(--sky);
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
     }
     .result-item.gold{background:var(--gold-light);border-color:var(--gold);}
-    .result-name{font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:2px;}
-    .result-desc{font-size:0.78rem;color:var(--sub);}
-    .result-days{font-size:1.2rem;font-weight:900;color:var(--sky);float:right;}
-    .result-days.gold{color:#E65100;}
+    .ri-left{flex:1;}
+    .ri-name{font-size:0.85rem;font-weight:700;color:var(--text);}
+    .ri-desc{font-size:0.75rem;color:var(--sub);margin-top:2px;}
+    .ri-days{font-size:1.3rem;font-weight:900;color:var(--sky);white-space:nowrap;}
+    .ri-days.gold{color:#E65100;}
 
-    /* 푸터 */
-    footer{
-      text-align:center;padding:24px;font-size:0.78rem;color:var(--sub);
-      border-top:1px solid var(--border);
-    }
+    footer{text-align:center;padding:20px;font-size:0.75rem;color:var(--sub);border-top:1px solid var(--border);}
     footer a{color:var(--sky);text-decoration:none;}
 
-    @media(max-width:480px){
-      .dday-count{font-size:2.8rem;}
-      .logo{font-size:1.6rem;}
+    @media(max-width:400px){
+      .cal-cell{min-height:58px;padding:4px 2px 2px;}
+      .cal-num{font-size:0.78rem;}
+      .cal-tag{font-size:0.55rem;}
     }
   </style>
 </head>
@@ -161,87 +197,81 @@
 </header>
 
 <main>
-  <!-- 연도 탭 -->
-  <div class="section-title">📅 연도별 황금연휴</div>
-  <div class="year-bar" id="year-bar"></div>
+  <!-- 달력 -->
+  <div style="margin-top:4px;">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="moveMonth(-1)">‹</button>
+      <div class="cal-month-label" id="cal-title"></div>
+      <button class="cal-nav" onclick="moveMonth(1)">›</button>
+    </div>
+    <div class="cal-dow">
+      <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
 
-  <!-- 황금연휴 목록 -->
-  <div class="holiday-list" id="holiday-list" style="margin-top:16px;"></div>
+  <!-- 이달의 황금연휴 요약 -->
+  <div class="section-title">🏆 이달의 황금연휴</div>
+  <div class="month-summary" id="month-summary"></div>
 
   <!-- D-day -->
-  <div class="section-title" style="margin-top:32px;">⏰ 다음 황금연휴 D-day</div>
-  <div class="dday-wrap" id="dday-box" style="margin:0 0 8px;">
-    <div class="dday-label">다음 황금연휴까지</div>
-    <div class="dday-name" id="dday-name">-</div>
-    <div class="dday-count" id="dday-count"><span>D-</span><span id="dday-num">-</span></div>
-    <div class="dday-info" id="dday-info"></div>
+  <div class="section-title" style="margin-top:24px;">⏰ 다음 황금연휴까지</div>
+  <div class="dday-wrap">
+    <div class="dday-left">
+      <div class="dday-label">다음 황금연휴</div>
+      <div class="dday-name" id="dday-name">-</div>
+      <div class="dday-date" id="dday-date">-</div>
+    </div>
+    <div class="dday-num" id="dday-num"><small>D-</small>-</div>
   </div>
 
   <!-- 연차 계산기 -->
-  <div class="section-title" style="margin-top:32px;">🗓️ 연차 계산기</div>
+  <div class="section-title" style="margin-top:24px;">🗓️ 연차 계산기</div>
   <div class="calc-box">
     <div class="calc-row">
-      <span class="calc-label">연도 선택</span>
+      <span class="calc-label">연도</span>
       <select class="calc-select" id="calc-year" onchange="renderCalc()"></select>
     </div>
     <div class="calc-row">
-      <span class="calc-label">사용할 연차</span>
-      <div class="leave-btns" id="leave-btns">
-        <button class="leave-btn active" onclick="selectLeave(1)">1일</button>
-        <button class="leave-btn" onclick="selectLeave(2)">2일</button>
-        <button class="leave-btn" onclick="selectLeave(3)">3일</button>
-        <button class="leave-btn" onclick="selectLeave(5)">5일</button>
-        <button class="leave-btn" onclick="selectLeave(7)">7일</button>
+      <span class="calc-label">연차</span>
+      <div class="leave-btns">
+        <button class="leave-btn active" onclick="selectLeave(1,this)">1일</button>
+        <button class="leave-btn" onclick="selectLeave(2,this)">2일</button>
+        <button class="leave-btn" onclick="selectLeave(3,this)">3일</button>
+        <button class="leave-btn" onclick="selectLeave(5,this)">5일</button>
+        <button class="leave-btn" onclick="selectLeave(7,this)">7일</button>
       </div>
     </div>
-    <div class="calc-result" id="calc-result"></div>
+    <div id="calc-result"></div>
   </div>
 </main>
 
-<footer>
-  © 2026 윈드홀리데이 &nbsp;|&nbsp; <a href="/">꿀단지 홈</a>
-</footer>
+<footer>© 2026 윈드홀리데이 &nbsp;|&nbsp; <a href="/">꿀단지 홈</a></footer>
 
 <script>
-/* ──────────────────────────────────────────────
-   공휴일 데이터 (2025~2044)
-   형식: [월, 일, 이름]  / 음력 공휴일은 별도 배열
-────────────────────────────────────────────── */
-const FIXED = [
-  [1,1,'신정','🎉'],
-  [3,1,'삼일절','🇰🇷'],
-  [5,5,'어린이날','🧒'],
-  [6,6,'현충일','🎖️'],
-  [8,15,'광복절','🇰🇷'],
-  [10,3,'개천절','🇰🇷'],
-  [10,9,'한글날','🔤'],
-  [12,25,'크리스마스','🎄'],
-];
-
-// 음력 공휴일 [연도, 월, 일, 이름]
-const LUNAR = [
-  // 설날 연휴 (전날, 당일, 다음날)
-  [2025,1,28,'설날 연휴'],[2025,1,29,'설날'],[2025,1,30,'설날 연휴'],
-  [2026,2,16,'설날 연휴'],[2026,2,17,'설날'],[2026,2,18,'설날 연휴'],
-  [2027,2,5,'설날 연휴'],[2027,2,6,'설날'],[2027,2,7,'설날 연휴'],
-  [2028,1,25,'설날 연휴'],[2028,1,26,'설날'],[2028,1,27,'설날 연휴'],
-  [2029,2,12,'설날 연휴'],[2029,2,13,'설날'],[2029,2,14,'설날 연휴'],
-  [2030,2,2,'설날 연휴'],[2030,2,3,'설날'],[2030,2,4,'설날 연휴'],
-  [2031,1,22,'설날 연휴'],[2031,1,23,'설날'],[2031,1,24,'설날 연휴'],
-  [2032,2,10,'설날 연휴'],[2032,2,11,'설날'],[2032,2,12,'설날 연휴'],
-  [2033,1,30,'설날 연휴'],[2033,1,31,'설날'],[2033,2,1,'설날 연휴'],
-  [2034,2,18,'설날 연휴'],[2034,2,19,'설날'],[2034,2,20,'설날 연휴'],
-  [2035,2,7,'설날 연휴'],[2035,2,8,'설날'],[2035,2,9,'설날 연휴'],
-  [2036,1,27,'설날 연휴'],[2036,1,28,'설날'],[2036,1,29,'설날 연휴'],
-  [2037,2,14,'설날 연휴'],[2037,2,15,'설날'],[2037,2,16,'설날 연휴'],
-  [2038,2,3,'설날 연휴'],[2038,2,4,'설날'],[2038,2,5,'설날 연휴'],
-  [2039,1,23,'설날 연휴'],[2039,1,24,'설날'],[2039,1,25,'설날 연휴'],
-  [2040,2,11,'설날 연휴'],[2040,2,12,'설날'],[2040,2,13,'설날 연휴'],
-  [2041,1,31,'설날 연휴'],[2041,2,1,'설날'],[2041,2,2,'설날 연휴'],
-  [2042,1,21,'설날 연휴'],[2042,1,22,'설날'],[2042,1,23,'설날 연휴'],
-  [2043,2,9,'설날 연휴'],[2043,2,10,'설날'],[2043,2,11,'설날 연휴'],
-  [2044,1,29,'설날 연휴'],[2044,1,30,'설날'],[2044,1,31,'설날 연휴'],
-  // 석가탄신일
+/* ── 공휴일 데이터 ── */
+const FIXED=[[1,1,'신정'],[3,1,'삼일절'],[5,5,'어린이날'],[6,6,'현충일'],[8,15,'광복절'],[10,3,'개천절'],[10,9,'한글날'],[12,25,'크리스마스']];
+const LUNAR=[
+  [2025,1,28,'설날연휴'],[2025,1,29,'설날'],[2025,1,30,'설날연휴'],
+  [2026,2,16,'설날연휴'],[2026,2,17,'설날'],[2026,2,18,'설날연휴'],
+  [2027,2,5,'설날연휴'],[2027,2,6,'설날'],[2027,2,7,'설날연휴'],
+  [2028,1,25,'설날연휴'],[2028,1,26,'설날'],[2028,1,27,'설날연휴'],
+  [2029,2,12,'설날연휴'],[2029,2,13,'설날'],[2029,2,14,'설날연휴'],
+  [2030,2,2,'설날연휴'],[2030,2,3,'설날'],[2030,2,4,'설날연휴'],
+  [2031,1,22,'설날연휴'],[2031,1,23,'설날'],[2031,1,24,'설날연휴'],
+  [2032,2,10,'설날연휴'],[2032,2,11,'설날'],[2032,2,12,'설날연휴'],
+  [2033,1,30,'설날연휴'],[2033,1,31,'설날'],[2033,2,1,'설날연휴'],
+  [2034,2,18,'설날연휴'],[2034,2,19,'설날'],[2034,2,20,'설날연휴'],
+  [2035,2,7,'설날연휴'],[2035,2,8,'설날'],[2035,2,9,'설날연휴'],
+  [2036,1,27,'설날연휴'],[2036,1,28,'설날'],[2036,1,29,'설날연휴'],
+  [2037,2,14,'설날연휴'],[2037,2,15,'설날'],[2037,2,16,'설날연휴'],
+  [2038,2,3,'설날연휴'],[2038,2,4,'설날'],[2038,2,5,'설날연휴'],
+  [2039,1,23,'설날연휴'],[2039,1,24,'설날'],[2039,1,25,'설날연휴'],
+  [2040,2,11,'설날연휴'],[2040,2,12,'설날'],[2040,2,13,'설날연휴'],
+  [2041,1,31,'설날연휴'],[2041,2,1,'설날'],[2041,2,2,'설날연휴'],
+  [2042,1,21,'설날연휴'],[2042,1,22,'설날'],[2042,1,23,'설날연휴'],
+  [2043,2,9,'설날연휴'],[2043,2,10,'설날'],[2043,2,11,'설날연휴'],
+  [2044,1,29,'설날연휴'],[2044,1,30,'설날'],[2044,1,31,'설날연휴'],
   [2025,5,5,'석가탄신일'],[2026,5,24,'석가탄신일'],[2027,5,13,'석가탄신일'],
   [2028,5,2,'석가탄신일'],[2029,5,20,'석가탄신일'],[2030,5,9,'석가탄신일'],
   [2031,5,29,'석가탄신일'],[2032,5,17,'석가탄신일'],[2033,5,6,'석가탄신일'],
@@ -249,259 +279,235 @@ const LUNAR = [
   [2037,5,22,'석가탄신일'],[2038,5,11,'석가탄신일'],[2039,4,30,'석가탄신일'],
   [2040,5,18,'석가탄신일'],[2041,5,7,'석가탄신일'],[2042,4,27,'석가탄신일'],
   [2043,5,16,'석가탄신일'],[2044,5,4,'석가탄신일'],
-  // 추석 연휴 (전날, 당일, 다음날)
-  [2025,10,5,'추석 연휴'],[2025,10,6,'추석'],[2025,10,7,'추석 연휴'],
-  [2026,9,24,'추석 연휴'],[2026,9,25,'추석'],[2026,9,26,'추석 연휴'],
-  [2027,10,14,'추석 연휴'],[2027,10,15,'추석'],[2027,10,16,'추석 연휴'],
-  [2028,10,2,'추석 연휴'],[2028,10,3,'추석'],[2028,10,4,'추석 연휴'],
-  [2029,9,21,'추석 연휴'],[2029,9,22,'추석'],[2029,9,23,'추석 연휴'],
-  [2030,10,10,'추석 연휴'],[2030,10,11,'추석'],[2030,10,12,'추석 연휴'],
-  [2031,9,30,'추석 연휴'],[2031,10,1,'추석'],[2031,10,2,'추석 연휴'],
-  [2032,9,18,'추석 연휴'],[2032,9,19,'추석'],[2032,9,20,'추석 연휴'],
-  [2033,10,7,'추석 연휴'],[2033,10,8,'추석'],[2033,10,9,'추석 연휴'],
-  [2034,9,26,'추석 연휴'],[2034,9,27,'추석'],[2034,9,28,'추석 연휴'],
-  [2035,10,15,'추석 연휴'],[2035,10,16,'추석'],[2035,10,17,'추석 연휴'],
-  [2036,10,3,'추석 연휴'],[2036,10,4,'추석'],[2036,10,5,'추석 연휴'],
-  [2037,9,23,'추석 연휴'],[2037,9,24,'추석'],[2037,9,25,'추석 연휴'],
-  [2038,10,12,'추석 연휴'],[2038,10,13,'추석'],[2038,10,14,'추석 연휴'],
-  [2039,10,1,'추석 연휴'],[2039,10,2,'추석'],[2039,10,3,'추석 연휴'],
-  [2040,9,20,'추석 연휴'],[2040,9,21,'추석'],[2040,9,22,'추석 연휴'],
-  [2041,10,9,'추석 연휴'],[2041,10,10,'추석'],[2041,10,11,'추석 연휴'],
-  [2042,9,28,'추석 연휴'],[2042,9,29,'추석'],[2042,9,30,'추석 연휴'],
-  [2043,9,17,'추석 연휴'],[2043,9,18,'추석'],[2043,9,19,'추석 연휴'],
-  [2044,10,5,'추석 연휴'],[2044,10,6,'추석'],[2044,10,7,'추석 연휴'],
+  [2025,10,5,'추석연휴'],[2025,10,6,'추석'],[2025,10,7,'추석연휴'],
+  [2026,9,24,'추석연휴'],[2026,9,25,'추석'],[2026,9,26,'추석연휴'],
+  [2027,10,14,'추석연휴'],[2027,10,15,'추석'],[2027,10,16,'추석연휴'],
+  [2028,10,2,'추석연휴'],[2028,10,3,'추석'],[2028,10,4,'추석연휴'],
+  [2029,9,21,'추석연휴'],[2029,9,22,'추석'],[2029,9,23,'추석연휴'],
+  [2030,10,10,'추석연휴'],[2030,10,11,'추석'],[2030,10,12,'추석연휴'],
+  [2031,9,30,'추석연휴'],[2031,10,1,'추석'],[2031,10,2,'추석연휴'],
+  [2032,9,18,'추석연휴'],[2032,9,19,'추석'],[2032,9,20,'추석연휴'],
+  [2033,10,7,'추석연휴'],[2033,10,8,'추석'],[2033,10,9,'추석연휴'],
+  [2034,9,26,'추석연휴'],[2034,9,27,'추석'],[2034,9,28,'추석연휴'],
+  [2035,10,15,'추석연휴'],[2035,10,16,'추석'],[2035,10,17,'추석연휴'],
+  [2036,10,3,'추석연휴'],[2036,10,4,'추석'],[2036,10,5,'추석연휴'],
+  [2037,9,23,'추석연휴'],[2037,9,24,'추석'],[2037,9,25,'추석연휴'],
+  [2038,10,12,'추석연휴'],[2038,10,13,'추석'],[2038,10,14,'추석연휴'],
+  [2039,10,1,'추석연휴'],[2039,10,2,'추석'],[2039,10,3,'추석연휴'],
+  [2040,9,20,'추석연휴'],[2040,9,21,'추석'],[2040,9,22,'추석연휴'],
+  [2041,10,9,'추석연휴'],[2041,10,10,'추석'],[2041,10,11,'추석연휴'],
+  [2042,9,28,'추석연휴'],[2042,9,29,'추석'],[2042,9,30,'추석연휴'],
+  [2043,9,17,'추석연휴'],[2043,9,18,'추석'],[2043,9,19,'추석연휴'],
+  [2044,10,5,'추석연휴'],[2044,10,6,'추석'],[2044,10,7,'추석연휴'],
 ];
 
-const YEARS = Array.from({length:20},(_,i)=>2025+i);
-let currentYear = new Date().getFullYear();
-if(currentYear < 2025) currentYear = 2025;
-if(currentYear > 2044) currentYear = 2044;
-let selectedLeave = 1;
+const YEARS=Array.from({length:20},(_,i)=>2025+i);
+const today=new Date(); today.setHours(0,0,0,0);
+let curYear=today.getFullYear()<2025?2025:today.getFullYear()>2044?2044:today.getFullYear();
+let curMonth=today.getMonth();
+let selectedLeave=1;
 
-/* 날짜 키 */
-function dk(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function parseDate(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
-function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
-function fmtDate(d){ return (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+['일','월','화','수','목','금','토'][d.getDay()]+')';}
+function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseDate(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function fmtShort(d){return(d.getMonth()+1)+'월 '+d.getDate()+'일';}
+function fmtFull(d){return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일 ('+['일','월','화','수','목','금','토'][d.getDay()]+')';}
 
-/* 연도별 공휴일 맵 생성 */
 function getHolidayMap(year){
-  const map = {};
-  // 고정 공휴일
-  FIXED.forEach(([m,d,name,emoji])=>{
-    const key = year+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    if(!map[key]) map[key]=[];
-    map[key].push({name,emoji,type:'holiday'});
+  const map={};
+  FIXED.forEach(([m,d,name])=>{
+    const k=year+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(!map[k])map[k]=[];
+    map[k].push({name,type:'holiday'});
   });
-  // 음력 공휴일
   LUNAR.filter(r=>r[0]===year).forEach(([y,m,d,name])=>{
-    const key = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    if(!map[key]) map[key]=[];
-    const emoji = name.includes('설날')?'🏮':name.includes('추석')?'🌕':'🪷';
-    const exists = map[key].some(x=>x.name===name);
-    if(!exists) map[key].push({name,emoji,type:'holiday'});
+    const k=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(!map[k])map[k]=[];
+    if(!map[k].some(x=>x.name===name))map[k].push({name,type:'holiday'});
   });
-  // 대체공휴일 계산
-  const keys = Object.keys(map);
-  const subKeys = new Set();
-  keys.forEach(key=>{
-    const dt = parseDate(key);
-    const dow = dt.getDay();
-    if(dow===0){ // 일요일
-      let sub = addDays(dt,1);
-      while(map[dk(sub)] || subKeys.has(dk(sub)) || sub.getDay()===0 || sub.getDay()===6){
-        sub = addDays(sub,1);
-      }
-      const sk = dk(sub);
-      subKeys.add(sk);
-      if(!map[sk]) map[sk]=[];
-      map[sk].push({name:'대체공휴일',emoji:'📅',type:'sub'});
+  // 대체공휴일
+  const subKeys=new Set();
+  Object.keys(map).forEach(k=>{
+    const dt=parseDate(k);
+    if(dt.getDay()===0){
+      let s=addDays(dt,1);
+      while(map[dk(s)]||subKeys.has(dk(s))||s.getDay()===0||s.getDay()===6)s=addDays(s,1);
+      subKeys.add(dk(s));
+      if(!map[dk(s)])map[dk(s)]=[];
+      map[dk(s)].push({name:'대체공휴일',type:'sub'});
     }
   });
   return map;
 }
 
-/* 연속 쉬는날 클러스터 계산 */
-function getClusters(year, extraLeave=[]){
-  const map = getHolidayMap(year);
-  const leaveSet = new Set(extraLeave);
-  // 1년 전체 날짜 순회
-  const clusters = [];
-  let cluster = null;
-  const start = new Date(year,0,1);
-  const end = new Date(year,11,31);
-  for(let d=new Date(start); d<=end; d=addDays(d,1)){
-    const key = dk(d);
-    const dow = d.getDay();
-    const isWeekend = dow===0||dow===6;
-    const isHoliday = !!map[key];
-    const isLeave = leaveSet.has(key);
-    const isOff = isWeekend||isHoliday||isLeave;
+function getClusters(year,extraLeave=[]){
+  const map=getHolidayMap(year);
+  const leaveSet=new Set(extraLeave);
+  const clusters=[];
+  let cluster=null;
+  for(let d=new Date(year,0,1);d<=new Date(year,11,31);d=addDays(d,1)){
+    const k=dk(d),dow=d.getDay();
+    const isOff=dow===0||dow===6||!!map[k]||leaveSet.has(k);
     if(isOff){
-      if(!cluster) cluster={start:new Date(d),end:new Date(d),days:[],holidayCount:0,leaveCount:0};
+      if(!cluster)cluster={start:new Date(d),end:new Date(d),days:[]};
       else cluster.end=new Date(d);
-      const info = map[key]||[];
-      cluster.days.push({date:new Date(d),key,isWeekend,isHoliday,isLeave,info});
-      if(isHoliday) cluster.holidayCount++;
-      if(isLeave) cluster.leaveCount++;
+      cluster.days.push({date:new Date(d),k,isWeekend:dow===0||dow===6,info:map[k]||[]});
     } else {
-      if(cluster && cluster.days.length>=2) clusters.push(cluster);
+      if(cluster&&cluster.days.length>=3)clusters.push(cluster);
       cluster=null;
     }
   }
-  if(cluster && cluster.days.length>=2) clusters.push(cluster);
+  if(cluster&&cluster.days.length>=3)clusters.push(cluster);
   return clusters;
 }
 
-/* 황금연휴 등급 */
-function grade(days){
-  if(days>=7) return 'super';
-  if(days>=4) return 'golden';
-  return 'normal';
-}
-function gradeLabel(days){
-  if(days>=7) return '🏆 슈퍼황금연휴';
-  if(days>=5) return '🥇 황금연휴';
-  if(days>=4) return '🥈 황금연휴';
-  return '🥉 연휴';
-}
-
-/* 렌더링 */
-function renderYear(year){
-  currentYear = year;
-  document.querySelectorAll('.year-btn').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.year)===year);
+/* 달력 렌더 */
+function renderCalendar(){
+  const year=curYear, month=curMonth;
+  const map=getHolidayMap(year);
+  const clusters=getClusters(year);
+  // 황금연휴 날짜 셋
+  const goldenSet={}, superSet={};
+  clusters.forEach(c=>{
+    const len=c.days.length;
+    if(len>=7) c.days.forEach(d=>superSet[d.k]=true);
+    else if(len>=4) c.days.forEach(d=>goldenSet[d.k]=true);
   });
-  const clusters = getClusters(year);
-  const list = document.getElementById('holiday-list');
-  const significant = clusters.filter(c=>c.days.length>=3);
-  if(!significant.length){
-    list.innerHTML='<div style="text-align:center;color:var(--sub);padding:20px;">연휴 정보가 없습니다</div>';
-    return;
+
+  document.getElementById('cal-title').innerHTML=
+    `<span>${year}년</span> ${month+1}월`;
+
+  const first=new Date(year,month,1);
+  const last=new Date(year,month+1,0);
+  const startDow=first.getDay();
+  const todayK=dk(today);
+
+  let html='';
+  for(let i=0;i<startDow;i++) html+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=last.getDate();d++){
+    const dt=new Date(year,month,d);
+    const k=dk(dt);
+    const dow=dt.getDay();
+    const holidays=map[k]||[];
+    const isToday=k===todayK;
+    const isSuper=superSet[k];
+    const isGolden=goldenSet[k];
+    let cls='cal-cell';
+    if(isToday)cls+=' today';
+    else if(isSuper)cls+=' super-bg';
+    else if(isGolden)cls+=' golden-bg';
+    let numCls='cal-num';
+    if(holidays.length||dow===0)numCls+=' holiday-day';
+    else if(dow===6)numCls+=' sat';
+    const tags=holidays.map(h=>`<span class="cal-tag ${h.type==='sub'?'sub':'holiday'}">${h.name}</span>`).join('');
+    html+=`<div class="${cls}"><span class="${numCls}">${d}</span>${tags}</div>`;
   }
-  list.innerHTML = significant.map(c=>{
-    const len = c.days.length;
-    const g = grade(len);
-    const names = [];
-    c.days.forEach(d=>{
-      d.info.forEach(h=>{ if(!names.includes(h.emoji+' '+h.name)) names.push(h.emoji+' '+h.name); });
-    });
-    const dateStr = fmtDate(c.start)+' ~ '+fmtDate(c.end);
-    const badges = c.days.map(d=>{
-      if(d.isLeave) return `<span class="hc-item sub">연차</span>`;
-      if(d.isHoliday) return d.info.map(h=>`<span class="hc-item">${h.emoji} ${h.name}</span>`).join('');
-      return `<span class="hc-item weekend">${['일','월','화','수','목','금','토'][d.date.getDay()]}요일</span>`;
+  document.getElementById('cal-grid').innerHTML=html;
+
+  // 이달의 황금연휴 요약
+  const thisMonthClusters=clusters.filter(c=>{
+    return c.days.some(d=>d.date.getFullYear()===year&&d.date.getMonth()===month);
+  });
+  const sumEl=document.getElementById('month-summary');
+  if(!thisMonthClusters.length){
+    sumEl.innerHTML=`<div style="text-align:center;color:var(--sub);font-size:0.85rem;padding:12px;">이달 황금연휴 없음 😢</div>`;
+  } else {
+    sumEl.innerHTML=thisMonthClusters.map(c=>{
+      const len=c.days.length;
+      const g=len>=7?'super':len>=4?'golden':'';
+      const emoji=len>=7?'🏆':len>=4?'🥇':'🥉';
+      const label=len>=7?'슈퍼황금연휴':len>=4?'황금연휴':'연휴';
+      const names=[...new Set(c.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].slice(0,2).join(' · ');
+      return `<div class="ms-card ${g}">
+        <div class="ms-badge ${g}">${emoji}</div>
+        <div class="ms-info">
+          <div class="ms-title">${label} · ${names||'주말연계'}</div>
+          <div class="ms-date">${fmtShort(c.start)} ~ ${fmtShort(c.end)}</div>
+        </div>
+        <div class="ms-days ${g}">${len}일</div>
+      </div>`;
     }).join('');
-    const tip = c.leaveCount>0 ? `<div class="hc-tip">📝 연차 ${c.leaveCount}일로 ${len}일 연휴!</div>` : '';
-    return `
-    <div class="holiday-card ${g}">
-      <div class="hc-top">
-        <span class="hc-title">${gradeLabel(len)}</span>
-        <span class="hc-days ${g==='super'?'super':g==='golden'?'gold':''}">${len}일 연속</span>
-      </div>
-      <div class="hc-date">📅 ${dateStr}</div>
-      <div class="hc-items">${badges}</div>
-      ${tip}
-    </div>`;
-  }).join('');
-  renderCalc();
-}
-
-/* 연차 계산기 */
-function renderCalc(){
-  const year = parseInt(document.getElementById('calc-year').value);
-  const leave = selectedLeave;
-  const map = getHolidayMap(year);
-  // 모든 공휴일+주말 날짜 수집
-  const offDays = new Set();
-  const start = new Date(year,0,1);
-  const end = new Date(year,11,31);
-  for(let d=new Date(start);d<=end;d=addDays(d,1)){
-    const dow=d.getDay();
-    if(dow===0||dow===6||map[dk(d)]) offDays.add(dk(d));
   }
-  // 연차 조합으로 가장 긴 연휴 찾기
-  const results = [];
-  for(let d=new Date(start);d<=end;d=addDays(d,1)){
-    const key=dk(d);
-    if(offDays.has(key)) continue;
-    // 이 날부터 leave일 연차 사용
-    const leaveDays=[];
-    let cur=new Date(d);
-    let added=0;
-    while(added<leave){
-      if(!offDays.has(dk(cur))){
-        leaveDays.push(dk(cur));
-        added++;
-      }
-      cur=addDays(cur,1);
-    }
-    const clusters=getClusters(year,leaveDays);
-    const best=clusters.sort((a,b)=>b.days.length-a.days.length)[0];
-    if(best && best.days.length>=3){
-      results.push({leaveDays,cluster:best,total:best.days.length});
-    }
-  }
-  results.sort((a,b)=>b.total-a.total);
-  const seen=new Set();
-  const unique=results.filter(r=>{
-    const k=r.cluster.days[0].key;
-    if(seen.has(k)) return false;
-    seen.add(k); return true;
-  }).slice(0,5);
-
-  const el=document.getElementById('calc-result');
-  if(!unique.length){el.innerHTML='<p style="color:var(--sub);font-size:0.85rem;padding:8px 0;">추천 연휴 조합이 없습니다</p>';return;}
-  el.innerHTML=unique.map((r,i)=>`
-    <div class="result-item ${r.total>=5?'gold':''}">
-      <span class="result-days ${r.total>=5?'gold':''}">${r.total}일</span>
-      <div class="result-name">${fmtDate(r.cluster.start)} ~ ${fmtDate(r.cluster.end)}</div>
-      <div class="result-desc">연차 ${leave}일 사용 → ${r.total}일 연속 휴가 🎉</div>
-    </div>`).join('');
-}
-
-function selectLeave(n){
-  selectedLeave=n;
-  document.querySelectorAll('.leave-btn').forEach(b=>{
-    b.classList.toggle('active',parseInt(b.textContent)===n||b.textContent===n+'일');
-  });
-  renderCalc();
 }
 
 /* D-day */
 function renderDday(){
-  const today=new Date(); today.setHours(0,0,0,0);
-  // 오늘 이후 가장 가까운 황금연휴
   for(let y=today.getFullYear();y<=2044;y++){
-    const clusters=getClusters(y).filter(c=>c.days.length>=3);
-    for(const c of clusters){
-      if(c.start>=today){
-        const diff=Math.round((c.start-today)/(1000*60*60*24));
-        document.getElementById('dday-name').textContent=gradeLabel(c.days.length)+' ('+c.days.length+'일)';
-        document.getElementById('dday-num').textContent=diff===0?'DAY!':diff;
-        if(diff===0) document.querySelector('.dday-count span:first-child').textContent='';
-        const names=[...new Set(c.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))];
-        document.getElementById('dday-info').innerHTML=
-          `<span class="dday-badge">${fmtDate(c.start)} ~ ${fmtDate(c.end)}</span>`+
-          names.slice(0,2).map(n=>`<span class="dday-badge gold">${n}</span>`).join('');
-        return;
-      }
+    const clusters=getClusters(y).filter(c=>c.days.length>=3&&c.start>=today);
+    if(clusters.length){
+      const c=clusters[0];
+      const diff=Math.round((c.start-today)/(86400000));
+      const names=[...new Set(c.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].slice(0,2).join(' · ');
+      document.getElementById('dday-name').textContent=(c.days.length>=7?'슈퍼황금연휴':c.days.length>=4?'황금연휴':'연휴')+' '+c.days.length+'일';
+      document.getElementById('dday-date').textContent=fmtShort(c.start)+' ~ '+fmtShort(c.end)+(names?' · '+names:'');
+      const el=document.getElementById('dday-num');
+      el.innerHTML=diff===0?'<small>D-</small>DAY':`<small>D-</small>${diff}`;
+      return;
     }
   }
 }
 
-/* 초기화 */
-function init(){
-  // 연도 탭
-  const bar=document.getElementById('year-bar');
-  bar.innerHTML=YEARS.map(y=>`<button class="year-btn ${y===currentYear?'active':''}" data-year="${y}" onclick="renderYear(${y})">${y}년</button>`).join('');
-  // 연차 계산기 연도 셀렉트
-  const sel=document.getElementById('calc-year');
-  sel.innerHTML=YEARS.map(y=>`<option value="${y}" ${y===currentYear?'selected':''}>${y}년</option>`).join('');
-  renderDday();
-  renderYear(currentYear);
+/* 연차 계산기 */
+function renderCalc(){
+  const year=parseInt(document.getElementById('calc-year').value);
+  const leave=selectedLeave;
+  const map=getHolidayMap(year);
+  const offSet=new Set();
+  for(let d=new Date(year,0,1);d<=new Date(year,11,31);d=addDays(d,1)){
+    const dow=d.getDay();
+    if(dow===0||dow===6||map[dk(d)])offSet.add(dk(d));
+  }
+  const results=[];
+  for(let d=new Date(year,0,1);d<=new Date(year,11,31);d=addDays(d,1)){
+    if(offSet.has(dk(d)))continue;
+    const leaveDays=[];
+    let cur=new Date(d),added=0;
+    while(added<leave){
+      if(!offSet.has(dk(cur))){leaveDays.push(dk(cur));added++;}
+      cur=addDays(cur,1);
+    }
+    const clusters=getClusters(year,leaveDays);
+    const best=clusters.sort((a,b)=>b.days.length-a.days.length)[0];
+    if(best&&best.days.length>=3)results.push({leaveDays,cluster:best,total:best.days.length});
+  }
+  results.sort((a,b)=>b.total-a.total);
+  const seen=new Set();
+  const unique=results.filter(r=>{const k=r.cluster.days[0].k;if(seen.has(k))return false;seen.add(k);return true;}).slice(0,4);
+  const el=document.getElementById('calc-result');
+  if(!unique.length){el.innerHTML=`<p style="color:var(--sub);font-size:0.82rem;padding:4px 0;">추천 조합 없음</p>`;return;}
+  el.innerHTML=unique.map(r=>`
+    <div class="result-item ${r.total>=5?'gold':''}">
+      <div class="ri-left">
+        <div class="ri-name">${fmtShort(r.cluster.start)} ~ ${fmtShort(r.cluster.end)}</div>
+        <div class="ri-desc">연차 ${leave}일 → ${r.total}일 연속 휴가 🎉</div>
+      </div>
+      <div class="ri-days ${r.total>=5?'gold':''}">${r.total}일</div>
+    </div>`).join('');
 }
 
+function selectLeave(n,btn){
+  selectedLeave=n;
+  document.querySelectorAll('.leave-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalc();
+}
+
+function moveMonth(dir){
+  curMonth+=dir;
+  if(curMonth>11){curMonth=0;curYear++;}
+  if(curMonth<0){curMonth=11;curYear--;}
+  if(curYear<2025){curYear=2025;curMonth=0;}
+  if(curYear>2044){curYear=2044;curMonth=11;}
+  renderCalendar();
+}
+
+function init(){
+  const sel=document.getElementById('calc-year');
+  sel.innerHTML=YEARS.map(y=>`<option value="${y}" ${y===today.getFullYear()?'selected':''}>${y}년</option>`).join('');
+  renderCalendar();
+  renderDday();
+  renderCalc();
+}
 init();
 </script>
 </body>
