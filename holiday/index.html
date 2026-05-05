@@ -336,9 +336,13 @@
       <button class="leave-btn" onclick="selectLeave(5,this)">5일</button>
       <button class="leave-btn" onclick="selectLeave(7,this)">7일</button>
     </div>
-    <div class="calc-row" style="margin-bottom:14px;">
+    <div class="calc-row" style="margin-bottom:14px;gap:8px;">
       <span class="calc-label">연도</span>
-      <select class="calc-select" id="calc-year" onchange="renderCalc()"></select>
+      <select class="calc-select" id="calc-year" onchange="renderCalc()" style="flex:1;min-width:80px;"></select>
+      <span class="calc-label">월</span>
+      <select class="calc-select" id="calc-month" onchange="renderCalc()" style="flex:1;min-width:80px;">
+        <option value="-1">전체</option>
+      </select>
     </div>
     <div id="calc-result"></div>
   </div>
@@ -548,6 +552,7 @@ function renderDday(){
 /* 연차 계산기 */
 function renderCalc(){
   const year=parseInt(document.getElementById('calc-year').value);
+  const filterMonth=parseInt(document.getElementById('calc-month').value); // -1=전체
   const leave=selectedLeave;
   const map=getHolidayMap(year);
   const offSet=new Set();
@@ -570,7 +575,17 @@ function renderCalc(){
   }
   results.sort((a,b)=>b.total-a.total);
   const seen=new Set();
-  const unique=results.filter(r=>{const k=r.cluster.days[0].k;if(seen.has(k))return false;seen.add(k);return true;}).slice(0,4);
+  const unique=results.filter(r=>{
+    // 월 필터
+    if(filterMonth>=0){
+      const inMonth=r.cluster.days.some(d=>d.date.getMonth()===filterMonth);
+      if(!inMonth)return false;
+    }
+    const k=r.cluster.days[0].k;
+    if(seen.has(k))return false;
+    seen.add(k);
+    return true;
+  }).slice(0,4);
   const DOW=['일','월','화','수','목','금','토'];
   const leaveSet=new Set();
   unique.forEach(r=>r.leaveDays.forEach(k=>leaveSet.add(k)));
@@ -657,6 +672,9 @@ function init(){
   // 연차 계산기 년도 셀렉트
   const sel=document.getElementById('calc-year');
   sel.innerHTML=YEARS.map(y=>`<option value="${y}" ${y===today.getFullYear()?'selected':''}>${y}년</option>`).join('');
+  // 연차 계산기 월 셀렉트
+  const calcMonthSel=document.getElementById('calc-month');
+  calcMonthSel.innerHTML=`<option value="-1">전체</option>`+Array.from({length:12},(_,i)=>`<option value="${i}">${i+1}월</option>`).join('');
   renderCalendar();
   renderDday();
   renderCalc();
