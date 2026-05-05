@@ -514,7 +514,10 @@ function renderCalendar(){
   });
   const sumEl=document.getElementById('month-summary');
   if(!thisMonthClusters.length){
-    sumEl.innerHTML=`<div style="text-align:center;color:var(--sub);font-size:0.85rem;padding:12px;">이달 황금연휴 없음 😢</div>`;
+    sumEl.innerHTML=`<div style="text-align:center;padding:8px 0;">
+      <img src="sad-character.png" alt="슬픈 캐릭터" style="width:110px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(33,150,243,0.2));animation:bounce 2.5s ease-in-out infinite;"/>
+      <div style="color:var(--sub);font-size:0.85rem;margin-top:6px;">이달 황금연휴 없음 😢</div>
+    </div>`;
   } else {
     sumEl.innerHTML=thisMonthClusters.map(c=>{
       const len=c.days.length;
