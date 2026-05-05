@@ -99,8 +99,20 @@
       color:var(--sky);transition:all 0.2s;display:flex;align-items:center;justify-content:center;
     }
     .cal-nav:hover{background:var(--sky-light);}
-    .cal-month-label{font-size:1.2rem;font-weight:900;color:var(--text);}
-    .cal-month-label span{color:var(--sky);}
+    .cal-month-label{display:flex;align-items:center;gap:2px;}
+    .cal-sel{
+      background:none;border:none;outline:none;cursor:pointer;
+      font-family:'Noto Sans KR',sans-serif;font-weight:900;
+      font-size:1.15rem;color:var(--text);
+      padding:5px 24px 5px 8px;border-radius:10px;
+      -webkit-appearance:none;appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M0 0l5.5 7L11 0z' fill='%232196F3'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 6px center;background-size:10px;
+      transition:background-color 0.18s;
+    }
+    .cal-sel:hover{background-color:var(--sky-light);}
+    .cal-sel.year-sel{color:var(--sky);}
+    .cal-sel.month-sel{color:var(--text);}
 
     .cal-dow{
       display:grid;grid-template-columns:repeat(7,1fr);
@@ -264,7 +276,10 @@
   <div style="margin-top:4px;">
     <div class="cal-header">
       <button class="cal-nav" onclick="moveMonth(-1)">‹</button>
-      <div class="cal-month-label" id="cal-title"></div>
+      <div class="cal-month-label">
+        <select class="cal-sel year-sel" id="cal-year-sel" onchange="jumpYear(this.value)"></select>
+        <select class="cal-sel month-sel" id="cal-month-sel" onchange="jumpMonth(this.value)"></select>
+      </div>
       <button class="cal-nav" onclick="moveMonth(1)">›</button>
     </div>
     <div class="cal-dow">
@@ -437,8 +452,8 @@ function renderCalendar(){
     else if(len>=4) c.days.forEach(d=>goldenSet[d.k]=true);
   });
 
-  document.getElementById('cal-title').innerHTML=
-    `<span>${year}년</span> ${month+1}월`;
+  document.getElementById('cal-year-sel').value=year;
+  document.getElementById('cal-month-sel').value=month;
 
   const first=new Date(year,month,1);
   const last=new Date(year,month+1,0);
@@ -555,6 +570,15 @@ function selectLeave(n,btn){
   renderCalc();
 }
 
+function jumpYear(y){
+  curYear=parseInt(y);
+  renderCalendar();
+}
+function jumpMonth(m){
+  curMonth=parseInt(m);
+  renderCalendar();
+}
+
 function moveMonth(dir){
   curMonth+=dir;
   if(curMonth>11){curMonth=0;curYear++;}
@@ -575,6 +599,13 @@ if(document.documentElement.classList.contains('dark')){
 }
 
 function init(){
+  // 달력 년도 셀렉트
+  const yearSel=document.getElementById('cal-year-sel');
+  yearSel.innerHTML=YEARS.map(y=>`<option value="${y}">${y}년</option>`).join('');
+  // 달력 월 셀렉트
+  const monthSel=document.getElementById('cal-month-sel');
+  monthSel.innerHTML=Array.from({length:12},(_,i)=>`<option value="${i}">${i+1}월</option>`).join('');
+  // 연차 계산기 년도 셀렉트
   const sel=document.getElementById('calc-year');
   sel.innerHTML=YEARS.map(y=>`<option value="${y}" ${y===today.getFullYear()?'selected':''}>${y}년</option>`).join('');
   renderCalendar();
