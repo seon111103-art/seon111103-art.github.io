@@ -13,19 +13,52 @@
       --sky:#2196F3;--sky-light:#E3F2FD;--sky-dark:#1565C0;
       --gold:#FF9800;--gold-light:#FFF8E1;
       --red:#F44336;--red-light:#FFEBEE;
-      --purple:#9C27B0;--purple-light:#F3E5F5;
+      --green-light:#E8F5E9;--green:#2E7D32;
+      --orange-light:#FFF3E0;--orange:#E65100;
+      --purple:#9C27B0;--purple-light:#F3E5F5;--purple-dark:#6A1B9A;
       --bg:#F0F7FF;--card:#fff;
       --text:#263238;--sub:#78909C;
       --border:#BBDEFB;
+      --cell-border:#EEF2F7;--cell-empty:#FAFCFF;
+      --golden-grad:linear-gradient(135deg,#FFFDE7,#FFF8E1);
+      --super-grad:linear-gradient(135deg,#F3E5F5,#EDE7F6);
+      --header-grad:linear-gradient(135deg,#1565C0,#42A5F5);
+      --dday-grad:linear-gradient(135deg,#1565C0,#42A5F5);
       --shadow:0 2px 12px rgba(33,150,243,0.10);
     }
-    body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    body.dark{
+      --sky:#42A5F5;--sky-light:#1A2A40;--sky-dark:#0D47A1;
+      --gold:#FFA726;--gold-light:#2A1800;
+      --red:#EF5350;--red-light:#2A0A0A;
+      --green-light:#0A2210;--green:#66BB6A;
+      --orange-light:#2A1500;--orange:#FF9800;
+      --purple:#CE93D8;--purple-light:#1A0A2A;--purple-dark:#CE93D8;
+      --bg:#0D1B2A;--card:#152035;
+      --text:#E3F0FF;--sub:#8BADC8;
+      --border:#1E3A5F;
+      --cell-border:#1A2E45;--cell-empty:#101F30;
+      --golden-grad:linear-gradient(135deg,#2A1800,#1F1200);
+      --super-grad:linear-gradient(135deg,#1A0A2A,#130820);
+      --header-grad:linear-gradient(135deg,#0A1E35,#1565C0);
+      --dday-grad:linear-gradient(135deg,#0A1E35,#1565C0);
+      --shadow:0 2px 12px rgba(0,0,0,0.4);
+    }
+    body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.25s,color 0.25s;}
 
     /* 헤더 */
     header{
-      background:linear-gradient(135deg,#1565C0,#42A5F5);
+      background:var(--header-grad);
       padding:28px 20px 28px;text-align:center;position:relative;overflow:hidden;
     }
+    .theme-toggle{
+      position:absolute;top:14px;right:14px;
+      background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.3);
+      border-radius:20px;padding:5px 12px;cursor:pointer;
+      color:#fff;font-size:0.78rem;font-weight:700;
+      font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;
+      backdrop-filter:blur(4px);
+    }
+    .theme-toggle:hover{background:rgba(255,255,255,0.25);}
     header::before{content:'🌬️';font-size:70px;position:absolute;top:-5px;left:-10px;opacity:0.12;animation:fl 6s ease-in-out infinite;}
     header::after{content:'☁️';font-size:50px;position:absolute;bottom:5px;right:10px;opacity:0.15;animation:fl 9s ease-in-out infinite reverse;}
     @keyframes fl{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
@@ -68,14 +101,14 @@
     }
     .cal-cell{
       min-height:70px;padding:6px 4px 4px;
-      border-right:1px solid #EEF2F7;border-bottom:1px solid #EEF2F7;
+      border-right:1px solid var(--cell-border);border-bottom:1px solid var(--cell-border);
       vertical-align:top;position:relative;
     }
     .cal-cell:nth-child(7n){border-right:none;}
-    .cal-cell.empty{background:#FAFCFF;}
-    .cal-cell.today{background:#E3F2FD;}
-    .cal-cell.golden-bg{background:linear-gradient(135deg,#FFFDE7,#FFF8E1);}
-    .cal-cell.super-bg{background:linear-gradient(135deg,#F3E5F5,#EDE7F6);}
+    .cal-cell.empty{background:var(--cell-empty);}
+    .cal-cell.today{background:var(--sky-light);}
+    .cal-cell.golden-bg{background:var(--golden-grad);}
+    .cal-cell.super-bg{background:var(--super-grad);}
 
     .cal-num{
       font-size:0.88rem;font-weight:700;display:block;
@@ -96,9 +129,9 @@
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
       max-width:100%;
     }
-    .cal-tag.holiday{background:#FFEBEE;color:#C62828;}
-    .cal-tag.sub{background:#E8F5E9;color:#2E7D32;}
-    .cal-tag.golden{background:#FFF3E0;color:#E65100;}
+    .cal-tag.holiday{background:var(--red-light);color:var(--red);}
+    .cal-tag.sub{background:var(--green-light);color:var(--green);}
+    .cal-tag.golden{background:var(--orange-light);color:var(--orange);}
 
     /* 이달의 황금연휴 요약 */
     .month-summary{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
@@ -123,8 +156,8 @@
       font-size:1.3rem;font-weight:900;color:var(--sky);
       white-space:nowrap;
     }
-    .ms-days.golden{color:#E65100;}
-    .ms-days.super{color:#6A1B9A;}
+    .ms-days.golden{color:var(--orange);}
+    .ms-days.super{color:var(--purple-dark);}
 
     .section-title{
       font-size:0.95rem;font-weight:700;color:var(--text);
@@ -133,9 +166,9 @@
 
     /* D-day */
     .dday-wrap{
-      background:linear-gradient(135deg,#1565C0,#42A5F5);
+      background:var(--dday-grad);
       border-radius:18px;padding:20px;color:#fff;
-      box-shadow:0 4px 16px rgba(33,150,243,0.3);
+      box-shadow:0 4px 16px rgba(33,150,243,0.2);
       display:flex;align-items:center;gap:16px;
     }
     .dday-left{flex:1;}
@@ -177,7 +210,7 @@
     .ri-name{font-size:0.85rem;font-weight:700;color:var(--text);}
     .ri-desc{font-size:0.75rem;color:var(--sub);margin-top:2px;}
     .ri-days{font-size:1.3rem;font-weight:900;color:var(--sky);white-space:nowrap;}
-    .ri-days.gold{color:#E65100;}
+    .ri-days.gold{color:var(--orange);}
 
     footer{text-align:center;padding:20px;font-size:0.75rem;color:var(--sub);border-top:1px solid var(--border);}
     footer a{color:var(--sky);text-decoration:none;}
@@ -192,6 +225,7 @@
 <body>
 
 <header>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 다크</button>
   <div class="logo">🌬️ 윈드홀리데이</div>
   <div class="tagline">바람처럼 떠나는 황금연휴</div>
 </header>
@@ -500,6 +534,18 @@ function moveMonth(dir){
   if(curYear>2044){curYear=2044;curMonth=11;}
   renderCalendar();
 }
+
+function toggleTheme(){
+  const isDark=document.body.classList.toggle('dark');
+  document.getElementById('theme-btn').textContent=isDark?'☀️ 라이트':'🌙 다크';
+  localStorage.setItem('wind-theme',isDark?'dark':'light');
+}
+(function(){
+  if(localStorage.getItem('wind-theme')==='dark'){
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent='☀️ 라이트';
+  }
+})();
 
 function init(){
   const sel=document.getElementById('calc-year');
