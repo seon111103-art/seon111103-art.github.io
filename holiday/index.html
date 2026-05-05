@@ -6,6 +6,7 @@
   <title>윈드홀리데이 | 바람처럼 떠나는 황금연휴</title>
   <meta name="description" content="2025~2044년 황금연휴 달력, D-day 카운트다운, 연차 계산기"/>
   <script>if(localStorage.getItem('wind-theme')==='dark')document.documentElement.classList.add('dark');</script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
@@ -519,6 +520,25 @@ function renderCalendar(){
       <div style="color:var(--sub);font-size:0.85rem;margin-top:6px;">이달 황금연휴 없음 😢</div>
     </div>`;
   } else {
+    // 폭죽 🎆
+    const hasSuper=thisMonthClusters.some(c=>c.days.length>=7);
+    const hasGolden=thisMonthClusters.some(c=>c.days.length>=4);
+    if(hasSuper){
+      // 슈퍼황금연휴: 양쪽에서 연속 폭죽
+      const end=Date.now()+2200;
+      (function fire(){
+        if(Date.now()>end)return;
+        confetti({particleCount:55,angle:60,spread:58,origin:{x:0,y:0.65},colors:['#FFD740','#FF6B6B','#42A5F5','#66BB6A','#CE93D8']});
+        confetti({particleCount:55,angle:120,spread:58,origin:{x:1,y:0.65},colors:['#FFD740','#FF6B6B','#42A5F5','#66BB6A','#CE93D8']});
+        setTimeout(fire,300);
+      })();
+    } else if(hasGolden){
+      // 황금연휴: 중앙 한 방
+      confetti({particleCount:90,spread:70,origin:{y:0.65},colors:['#FFD740','#FF9800','#42A5F5','#fff']});
+    } else {
+      // 일반 연휴: 가볍게
+      confetti({particleCount:45,spread:55,origin:{y:0.65}});
+    }
     sumEl.innerHTML=thisMonthClusters.map(c=>{
       const len=c.days.length;
       const g=len>=7?'super':len>=4?'golden':'';
