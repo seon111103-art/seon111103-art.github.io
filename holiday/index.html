@@ -232,17 +232,28 @@
       font-family:'Noto Sans KR',sans-serif;color:var(--sub);transition:all 0.2s;
     }
     .leave-btn.active{background:var(--sky);border-color:var(--sky);color:#fff;}
-    .result-item{
-      background:var(--sky-light);border-radius:12px;padding:11px 14px;
-      margin-bottom:7px;border-left:4px solid var(--sky);
-      display:flex;align-items:center;justify-content:space-between;gap:8px;
+    .calc-q-text{font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+    .calc-card{
+      background:var(--bg);border-radius:14px;padding:14px 16px;
+      margin-bottom:9px;border:2px solid var(--border);
+      display:flex;align-items:flex-start;gap:12px;
     }
-    .result-item.gold{background:var(--gold-light);border-color:var(--gold);}
-    .ri-left{flex:1;}
-    .ri-name{font-size:0.85rem;font-weight:700;color:var(--text);}
-    .ri-desc{font-size:0.75rem;color:var(--sub);margin-top:2px;}
-    .ri-days{font-size:1.3rem;font-weight:900;color:var(--sky);white-space:nowrap;}
-    .ri-days.gold{color:var(--orange);}
+    .calc-card.top{border-color:var(--gold);background:var(--gold-light);}
+    .calc-rank{
+      font-size:0.72rem;font-weight:900;color:var(--sky);
+      background:var(--sky-light);border-radius:8px;
+      padding:4px 8px;white-space:nowrap;flex-shrink:0;margin-top:2px;
+    }
+    .calc-rank.top{color:#E65100;background:var(--orange-light);}
+    .calc-total{font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+    .calc-total strong{font-size:1.5rem;font-weight:900;color:var(--sky);}
+    .calc-total.top strong{color:#E65100;}
+    .calc-info{font-size:0.82rem;color:var(--sub);margin-top:4px;line-height:1.7;}
+    .calc-leave-tag{
+      display:inline-block;background:var(--sky);color:#fff;
+      border-radius:6px;padding:1px 8px;font-size:0.78rem;font-weight:700;margin:1px 2px;
+    }
+    .calc-top .calc-leave-tag{background:#E65100;}
 
     footer{text-align:center;padding:20px;font-size:0.75rem;color:var(--sub);border-top:1px solid var(--border);}
     footer a{color:var(--sky);text-decoration:none;}
@@ -304,21 +315,19 @@
   </div>
 
   <!-- 연차 계산기 -->
-  <div class="section-title" style="margin-top:24px;">🗓️ 연차 계산기</div>
+  <div class="section-title" style="margin-top:24px;">🗓️ 연차 붙여쓰기 추천</div>
   <div class="calc-box">
-    <div class="calc-row">
+    <div class="calc-q-text">연차를 며칠 쓸 예정인가요?</div>
+    <div class="leave-btns" style="margin-bottom:14px;">
+      <button class="leave-btn active" onclick="selectLeave(1,this)">1일</button>
+      <button class="leave-btn" onclick="selectLeave(2,this)">2일</button>
+      <button class="leave-btn" onclick="selectLeave(3,this)">3일</button>
+      <button class="leave-btn" onclick="selectLeave(5,this)">5일</button>
+      <button class="leave-btn" onclick="selectLeave(7,this)">7일</button>
+    </div>
+    <div class="calc-row" style="margin-bottom:14px;">
       <span class="calc-label">연도</span>
       <select class="calc-select" id="calc-year" onchange="renderCalc()"></select>
-    </div>
-    <div class="calc-row">
-      <span class="calc-label">연차</span>
-      <div class="leave-btns">
-        <button class="leave-btn active" onclick="selectLeave(1,this)">1일</button>
-        <button class="leave-btn" onclick="selectLeave(2,this)">2일</button>
-        <button class="leave-btn" onclick="selectLeave(3,this)">3일</button>
-        <button class="leave-btn" onclick="selectLeave(5,this)">5일</button>
-        <button class="leave-btn" onclick="selectLeave(7,this)">7일</button>
-      </div>
     </div>
     <div id="calc-result"></div>
   </div>
@@ -551,16 +560,25 @@ function renderCalc(){
   results.sort((a,b)=>b.total-a.total);
   const seen=new Set();
   const unique=results.filter(r=>{const k=r.cluster.days[0].k;if(seen.has(k))return false;seen.add(k);return true;}).slice(0,4);
+  const DOW=['일','월','화','수','목','금','토'];
+  function fd(k){const d=parseDate(k);return `${fmtShort(d)}(${DOW[d.getDay()]})`;}
   const el=document.getElementById('calc-result');
-  if(!unique.length){el.innerHTML=`<p style="color:var(--sub);font-size:0.82rem;padding:4px 0;">추천 조합 없음</p>`;return;}
-  el.innerHTML=unique.map(r=>`
-    <div class="result-item ${r.total>=5?'gold':''}">
-      <div class="ri-left">
-        <div class="ri-name">${fmtShort(r.cluster.start)} ~ ${fmtShort(r.cluster.end)}</div>
-        <div class="ri-desc">연차 ${leave}일 → ${r.total}일 연속 휴가 🎉</div>
+  if(!unique.length){el.innerHTML=`<p style="color:var(--sub);font-size:0.82rem;padding:8px 0;">추천 조합 없음</p>`;return;}
+  el.innerHTML=unique.map((r,i)=>{
+    const isTop=i===0;
+    const leaveTags=r.leaveDays.map(k=>`<span class="calc-leave-tag">${fd(k)}</span>`).join('');
+    const holidays=[...new Set(r.cluster.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].join(' · ');
+    const ds=r.cluster.start, de=r.cluster.end;
+    return `<div class="calc-card ${isTop?'top':''}">
+      <div class="calc-rank ${isTop?'top':''}">${isTop?'🏆 1위':i+1+'위'}</div>
+      <div style="flex:1">
+        <div class="calc-total ${isTop?'top':''}">총 <strong>${r.total}일</strong> 연속 휴무!</div>
+        <div class="calc-info">📅 연차 쓰는 날: ${leaveTags}</div>
+        <div class="calc-info">🌴 ${fmtShort(ds)}(${DOW[ds.getDay()]}) ~ ${fmtShort(de)}(${DOW[de.getDay()]})</div>
+        ${holidays?`<div class="calc-info">✨ ${holidays} 포함</div>`:''}
       </div>
-      <div class="ri-days ${r.total>=5?'gold':''}">${r.total}일</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function selectLeave(n,btn){
