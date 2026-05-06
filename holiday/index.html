@@ -243,33 +243,33 @@
     .stat-compare{font-size:0.72rem;color:var(--sub);text-align:right;}
 
     /* 예매/검색 */
-    .sbox{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
-    .sbox-title{font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
-    .sbox-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
-    .sbox-field{display:flex;flex-direction:column;gap:4px;}
+    .sbox{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
+    .sbox-title{font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+    .sbox-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+    .sbox-field{display:flex;flex-direction:column;gap:3px;}
     .sbox-field.full{grid-column:1/-1;}
-    .sbox-label{font-size:0.7rem;font-weight:700;color:var(--sub);padding-left:2px;}
+    .sbox-label{font-size:0.65rem;font-weight:700;color:var(--sub);padding-left:2px;}
     .sbox-select,.sbox-input{
-      padding:9px 12px;border-radius:10px;border:2px solid var(--border);
-      background:var(--bg);color:var(--text);font-size:0.85rem;
+      padding:7px 9px;border-radius:9px;border:2px solid var(--border);
+      background:var(--bg);color:var(--text);font-size:0.8rem;
       font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;
       transition:border-color 0.18s;
     }
     .sbox-select:focus,.sbox-input:focus{border-color:var(--sky);}
     .sbox-btn{
-      width:100%;margin-top:6px;padding:12px;border-radius:12px;border:none;
-      background:var(--sky);color:#fff;font-size:0.92rem;font-weight:700;
+      width:100%;margin-top:6px;padding:11px;border-radius:11px;border:none;
+      background:var(--sky);color:#fff;font-size:0.88rem;font-weight:700;
       cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background 0.2s;
     }
     .sbox-btn:hover{background:var(--sky-dark);}
     .sbox-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
     .sbox-btn-sec{
-      padding:11px;border-radius:12px;border:2px solid var(--border);
-      background:var(--card);color:var(--text);font-size:0.85rem;font-weight:700;
+      padding:10px;border-radius:11px;border:2px solid var(--border);
+      background:var(--card);color:var(--text);font-size:0.82rem;font-weight:700;
       cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;
     }
     .sbox-btn-sec:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-light);}
-    .sbox-note{font-size:0.68rem;color:var(--sub);text-align:center;margin-top:8px;}
+    .sbox-note{font-size:0.65rem;color:var(--sub);text-align:center;margin-top:7px;}
 
     /* D-day */
     .dday-wrap{
@@ -1011,14 +1011,14 @@ function renderBookLinks(){
             </select>
           </div>
           <div class="sbox-field">
-            <span class="sbox-label">도착지 (직접 입력 or 목록 선택)</span>
+            <span class="sbox-label">도착지 (직접입력 가능)</span>
             <input class="sbox-input" list="air-dest-list" id="air-to" placeholder="도시명 또는 공항코드 입력"/>
             <datalist id="air-dest-list">
               ${airDests.map(d=>`<option value="${d.code}">${d.label}</option>`).join('')}
             </datalist>
           </div>
         </div>
-        <div class="sbox-row">
+        <div class="sbox-row" style="grid-template-columns:1fr 1fr auto;">
           <div class="sbox-field">
             <span class="sbox-label">출발일</span>
             <input class="sbox-input" type="date" id="air-dep" value="${sDate}"/>
@@ -1027,11 +1027,9 @@ function renderBookLinks(){
             <span class="sbox-label">귀국일</span>
             <input class="sbox-input" type="date" id="air-ret" value="${eDate}"/>
           </div>
-        </div>
-        <div class="sbox-row">
           <div class="sbox-field">
             <span class="sbox-label">인원</span>
-            <select class="sbox-select" id="air-pax">
+            <select class="sbox-select" id="air-pax" style="min-width:52px;">
               ${[1,2,3,4,5].map(n=>`<option value="${n}">${n}명</option>`).join('')}
             </select>
           </div>
