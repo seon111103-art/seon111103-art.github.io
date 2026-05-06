@@ -267,6 +267,53 @@
     }
     .dday-num small{font-size:1rem;font-weight:700;}
 
+    /* 여행 경비 계산기 */
+    .trip-wrap{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
+    .trip-people{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+    .trip-people-label{font-size:0.85rem;font-weight:700;color:var(--sub);white-space:nowrap;}
+    .trip-add-form{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+    .trip-cat-sel,.trip-name-inp,.trip-amt-inp{
+      padding:8px 10px;border-radius:10px;border:2px solid var(--border);
+      background:var(--bg);color:var(--text);font-size:0.82rem;
+      font-family:'Noto Sans KR',sans-serif;outline:none;
+    }
+    .trip-cat-sel{flex-shrink:0;}
+    .trip-name-inp{flex:1;min-width:80px;}
+    .trip-amt-inp{width:100px;flex-shrink:0;}
+    .trip-add-btn{
+      padding:8px 14px;border-radius:10px;border:none;background:var(--sky);
+      color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;
+      font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0;
+    }
+    .trip-items{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .trip-item{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:9px 12px;}
+    .trip-item-cat{font-size:1.1rem;flex-shrink:0;}
+    .trip-item-name{flex:1;font-size:0.85rem;font-weight:700;color:var(--text);}
+    .trip-item-amt{font-size:0.88rem;font-weight:900;color:var(--sky);white-space:nowrap;}
+    .trip-del-btn{background:none;border:none;cursor:pointer;color:var(--sub);font-size:1rem;padding:2px 4px;flex-shrink:0;}
+    .trip-total{background:var(--sky-light);border-radius:12px;padding:13px 16px;border-left:4px solid var(--sky);}
+    .trip-total.has-gold{background:var(--gold-light);border-color:var(--gold);}
+    .trip-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+    .trip-total-row:last-child{margin-bottom:0;}
+    .trip-total-label{font-size:0.82rem;color:var(--sub);}
+    .trip-total-num{font-size:1.3rem;font-weight:900;color:var(--sky);}
+    .trip-per-num{font-size:1.1rem;font-weight:900;color:#E65100;}
+    .trip-empty{text-align:center;color:var(--sub);font-size:0.82rem;padding:16px 0;}
+    .trip-save-badge{font-size:0.68rem;color:var(--green);background:var(--green-light);border-radius:6px;padding:2px 8px;margin-left:6px;font-weight:700;}
+    .trip-cnt-btn{
+      width:28px;height:28px;border-radius:8px;border:2px solid var(--border);
+      background:var(--bg);color:var(--text);font-size:1rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;
+    }
+    .trip-cnt-btn:hover{border-color:var(--sky);color:var(--sky);}
+    .trip-reset-btn{
+      margin-left:auto;padding:5px 12px;border-radius:10px;
+      border:2px solid var(--border);background:var(--bg);
+      color:var(--sub);font-size:0.75rem;font-weight:700;cursor:pointer;
+      font-family:'Noto Sans KR',sans-serif;
+    }
+    .trip-reset-btn:hover{border-color:var(--red);color:var(--red);}
+
     /* 연차 계산기 */
     .calc-box{
       background:var(--card);border-radius:18px;
@@ -405,6 +452,35 @@
       </select>
     </div>
     <div id="calc-result"></div>
+  </div>
+
+  <!-- 여행 경비 계산기 -->
+  <div class="section-title" style="margin-top:24px;">💰 여행 경비 계산기 <span class="trip-save-badge" id="trip-save-badge" style="display:none;">💾 자동저장됨</span></div>
+  <div class="trip-wrap">
+    <div class="trip-people">
+      <span class="trip-people-label">👥 인원:</span>
+      <button class="trip-cnt-btn" onclick="changePeople(-1)">−</button>
+      <span id="trip-people-num" style="font-weight:900;font-size:1rem;min-width:24px;text-align:center;">2</span>
+      <button class="trip-cnt-btn" onclick="changePeople(1)">+</button>
+      <span style="font-size:0.78rem;color:var(--sub);margin-left:4px;">명</span>
+      <button class="trip-reset-btn" onclick="resetTrip()">🗑️ 새로 작성하기</button>
+    </div>
+    <div class="trip-add-form">
+      <select class="trip-cat-sel" id="trip-cat">
+        <option value="✈️">✈️ 항공</option>
+        <option value="🏨">🏨 숙소</option>
+        <option value="🍽️">🍽️ 식비</option>
+        <option value="🚗">🚗 교통</option>
+        <option value="🎡">🎡 관광</option>
+        <option value="🛍️">🛍️ 쇼핑</option>
+        <option value="📦">📦 기타</option>
+      </select>
+      <input class="trip-name-inp" id="trip-name" type="text" placeholder="항목명 (예: 왕복항공)"/>
+      <input class="trip-amt-inp" id="trip-amt" type="number" placeholder="금액 (원)" min="0"/>
+      <button class="trip-add-btn" onclick="addTripItem()">+ 추가</button>
+    </div>
+    <div class="trip-items" id="trip-items"></div>
+    <div class="trip-total" id="trip-total"></div>
   </div>
 
   <!-- 바로 예매하기 -->
@@ -858,6 +934,93 @@ function copyDate(text){
   });
 }
 
+/* 여행 경비 계산기 */
+let travelItems=[], travelPeople=2;
+
+function saveTripData(){
+  localStorage.setItem('wind-trip-items', JSON.stringify(travelItems));
+  localStorage.setItem('wind-trip-people', String(travelPeople));
+  const badge=document.getElementById('trip-save-badge');
+  if(badge){
+    badge.style.display='';
+    clearTimeout(badge._t);
+    badge._t=setTimeout(()=>{badge.style.display='none';},2000);
+  }
+}
+
+function loadTripData(){
+  try{
+    const items=localStorage.getItem('wind-trip-items');
+    const people=localStorage.getItem('wind-trip-people');
+    if(items)travelItems=JSON.parse(items);
+    if(people)travelPeople=parseInt(people)||2;
+  }catch(e){}
+}
+
+function renderTripCalc(){
+  const numEl=document.getElementById('trip-people-num');
+  if(numEl)numEl.textContent=travelPeople;
+  const itemsEl=document.getElementById('trip-items');
+  if(!itemsEl)return;
+  if(!travelItems.length){
+    itemsEl.innerHTML=`<div class="trip-empty">항목을 추가하면 자동으로 저장돼요 💾</div>`;
+  } else {
+    itemsEl.innerHTML=travelItems.map((item,i)=>`
+      <div class="trip-item">
+        <span class="trip-item-cat">${item.cat}</span>
+        <span class="trip-item-name">${item.name}</span>
+        <span class="trip-item-amt">${item.amt.toLocaleString()}원</span>
+        <button class="trip-del-btn" onclick="deleteTripItem(${i})">✕</button>
+      </div>`).join('');
+  }
+  const total=travelItems.reduce((s,x)=>s+x.amt,0);
+  const totalEl=document.getElementById('trip-total');
+  if(totalEl){
+    const perPerson=travelPeople>0?Math.round(total/travelPeople):total;
+    totalEl.innerHTML=`
+      <div class="trip-total-row">
+        <span class="trip-total-label">총 합계</span>
+        <span class="trip-total-num">${total.toLocaleString()}원</span>
+      </div>
+      <div class="trip-total-row">
+        <span class="trip-total-label">1인당 (${travelPeople}명)</span>
+        <span class="trip-per-num">${perPerson.toLocaleString()}원</span>
+      </div>`;
+  }
+}
+
+function addTripItem(){
+  const cat=document.getElementById('trip-cat').value;
+  const name=document.getElementById('trip-name').value.trim();
+  const amt=parseInt(document.getElementById('trip-amt').value)||0;
+  if(!name||amt<=0){alert('항목명과 금액을 입력해주세요.');return;}
+  travelItems.push({cat,name,amt});
+  document.getElementById('trip-name').value='';
+  document.getElementById('trip-amt').value='';
+  saveTripData();
+  renderTripCalc();
+}
+
+function deleteTripItem(i){
+  travelItems.splice(i,1);
+  saveTripData();
+  renderTripCalc();
+}
+
+function changePeople(delta){
+  travelPeople=Math.max(1,travelPeople+delta);
+  saveTripData();
+  renderTripCalc();
+}
+
+function resetTrip(){
+  if(!confirm('여행 경비 목록을 전부 지울까요?'))return;
+  travelItems=[];
+  travelPeople=2;
+  saveTripData();
+  renderTripCalc();
+}
+
 function toggleTheme(){
   const isDark=document.body.classList.toggle('dark');
   document.documentElement.classList.toggle('dark',isDark);
@@ -881,10 +1044,12 @@ function init(){
   // 연차 계산기 월 셀렉트
   const calcMonthSel=document.getElementById('calc-month');
   calcMonthSel.innerHTML=`<option value="-1">전체</option>`+Array.from({length:12},(_,i)=>`<option value="${i}">${i+1}월</option>`).join('');
+  loadTripData();
   renderCalendar();
   renderStats();
   renderDday();
   renderCalc();
+  renderTripCalc();
   renderBookLinks();
 }
 init();
