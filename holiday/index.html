@@ -242,6 +242,23 @@
     .stat-holi-name.sub-holi{color:var(--green);}
     .stat-compare{font-size:0.72rem;color:var(--sub);text-align:right;}
 
+    /* 목적지 커스텀 드롭다운 */
+    .dest-wrap{position:relative;}
+    .dest-dropdown{
+      position:absolute;top:100%;left:0;right:0;z-index:300;
+      background:var(--card);border:2px solid var(--sky);border-top:none;
+      border-radius:0 0 10px 10px;max-height:180px;overflow-y:auto;
+      box-shadow:0 6px 16px rgba(33,150,243,0.18);
+    }
+    .dest-opt{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border);
+    }
+    .dest-opt:last-child{border-bottom:none;}
+    .dest-opt:hover,.dest-opt:active{background:var(--sky-light);}
+    .dest-opt-kr{font-size:0.82rem;font-weight:700;color:var(--text);}
+    .dest-opt-info{font-size:0.65rem;color:var(--sub);margin-left:6px;white-space:nowrap;}
+
     /* 예매/검색 */
     .sbox{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
     .sbox-title{font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
@@ -580,6 +597,147 @@ const LUNAR=[
   [2043,9,17,'추석연휴'],[2043,9,18,'추석'],[2043,9,19,'추석연휴'],
   [2044,10,5,'추석연휴'],[2044,10,6,'추석'],[2044,10,7,'추석연휴'],
 ];
+
+/* 목적지 데이터 */
+const DEST_LIST=[
+  {c:'anywhere',kr:'어디든',info:'최저가 탐색'},
+  // 일본
+  {c:'NRT',kr:'도쿄 나리타',info:'일본'},
+  {c:'HND',kr:'도쿄 하네다',info:'일본'},
+  {c:'KIX',kr:'오사카 간사이',info:'일본'},
+  {c:'ITM',kr:'오사카 이타미',info:'일본'},
+  {c:'FUK',kr:'후쿠오카',info:'일본'},
+  {c:'CTS',kr:'삿포로',info:'일본'},
+  {c:'OKA',kr:'오키나와',info:'일본'},
+  {c:'NGO',kr:'나고야',info:'일본'},
+  {c:'HIJ',kr:'히로시마',info:'일본'},
+  {c:'KMJ',kr:'구마모토',info:'일본'},
+  {c:'KOJ',kr:'가고시마',info:'일본'},
+  {c:'TAK',kr:'다카마쓰',info:'일본'},
+  // 베트남
+  {c:'SGN',kr:'호치민',info:'베트남'},
+  {c:'HAN',kr:'하노이',info:'베트남'},
+  {c:'DAD',kr:'다낭',info:'베트남'},
+  {c:'CXR',kr:'나트랑 나짱 냐짱',info:'베트남 캄란'},
+  {c:'PQC',kr:'푸꾸옥',info:'베트남'},
+  {c:'HPH',kr:'하이퐁',info:'베트남'},
+  // 태국
+  {c:'BKK',kr:'방콕 수완나품',info:'태국'},
+  {c:'DMK',kr:'방콕 돈므앙',info:'태국'},
+  {c:'HKT',kr:'푸켓',info:'태국'},
+  {c:'CNX',kr:'치앙마이',info:'태국'},
+  {c:'KBV',kr:'끄라비',info:'태국'},
+  {c:'USM',kr:'사무이',info:'태국'},
+  // 필리핀
+  {c:'MNL',kr:'마닐라',info:'필리핀'},
+  {c:'CEB',kr:'세부',info:'필리핀'},
+  {c:'MPH',kr:'보라카이 칼리보',info:'필리핀'},
+  {c:'KLO',kr:'보라카이 카티클란',info:'필리핀'},
+  {c:'DVO',kr:'다바오',info:'필리핀'},
+  // 대만·홍콩·마카오
+  {c:'TPE',kr:'타이페이',info:'대만'},
+  {c:'RMQ',kr:'타이중',info:'대만'},
+  {c:'KHH',kr:'가오슝',info:'대만'},
+  {c:'HKG',kr:'홍콩',info:'홍콩'},
+  {c:'MFM',kr:'마카오',info:'마카오'},
+  // 동남아 기타
+  {c:'SIN',kr:'싱가포르',info:'싱가포르'},
+  {c:'KUL',kr:'쿠알라룸푸르',info:'말레이시아'},
+  {c:'LGK',kr:'랑카위',info:'말레이시아'},
+  {c:'PEN',kr:'페낭',info:'말레이시아'},
+  {c:'DPS',kr:'발리',info:'인도네시아'},
+  {c:'CGK',kr:'자카르타',info:'인도네시아'},
+  {c:'LOP',kr:'롬복',info:'인도네시아'},
+  {c:'PNH',kr:'프놈펜',info:'캄보디아'},
+  {c:'REP',kr:'씨엠립 앙코르',info:'캄보디아'},
+  {c:'RGN',kr:'양곤',info:'미얀마'},
+  // 중앙아·남아시아
+  {c:'DEL',kr:'뉴델리',info:'인도'},
+  {c:'BOM',kr:'뭄바이',info:'인도'},
+  {c:'KTM',kr:'카트만두',info:'네팔'},
+  {c:'CMB',kr:'콜롬보',info:'스리랑카'},
+  // 중동
+  {c:'DXB',kr:'두바이',info:'UAE'},
+  {c:'AUH',kr:'아부다비',info:'UAE'},
+  {c:'DOH',kr:'도하',info:'카타르'},
+  // 오세아니아
+  {c:'SYD',kr:'시드니',info:'호주'},
+  {c:'MEL',kr:'멜버른',info:'호주'},
+  {c:'BNE',kr:'브리즈번',info:'호주'},
+  {c:'OOL',kr:'골드코스트',info:'호주'},
+  {c:'AKL',kr:'오클랜드',info:'뉴질랜드'},
+  {c:'NAN',kr:'피지',info:'피지'},
+  {c:'GUM',kr:'괌',info:'미국령 괌'},
+  {c:'GSN',kr:'사이판',info:'미국령 사이판'},
+  {c:'HNL',kr:'하와이 호놀룰루',info:'미국'},
+  // 미주
+  {c:'LAX',kr:'로스앤젤레스',info:'미국'},
+  {c:'SFO',kr:'샌프란시스코',info:'미국'},
+  {c:'JFK',kr:'뉴욕',info:'미국'},
+  {c:'SEA',kr:'시애틀',info:'미국'},
+  {c:'ORD',kr:'시카고',info:'미국'},
+  {c:'YVR',kr:'밴쿠버',info:'캐나다'},
+  {c:'YYZ',kr:'토론토',info:'캐나다'},
+  {c:'CUN',kr:'칸쿤',info:'멕시코'},
+  // 유럽
+  {c:'CDG',kr:'파리',info:'프랑스'},
+  {c:'LHR',kr:'런던 히드로',info:'영국'},
+  {c:'LGW',kr:'런던 개트윅',info:'영국'},
+  {c:'FRA',kr:'프랑크푸르트',info:'독일'},
+  {c:'MUC',kr:'뮌헨',info:'독일'},
+  {c:'AMS',kr:'암스테르담',info:'네덜란드'},
+  {c:'FCO',kr:'로마',info:'이탈리아'},
+  {c:'MXP',kr:'밀라노',info:'이탈리아'},
+  {c:'BCN',kr:'바르셀로나',info:'스페인'},
+  {c:'MAD',kr:'마드리드',info:'스페인'},
+  {c:'LIS',kr:'리스본',info:'포르투갈'},
+  {c:'OPO',kr:'포르토 포르투갈',info:'포르투갈'},
+  {c:'VIE',kr:'빈',info:'오스트리아'},
+  {c:'ZRH',kr:'취리히',info:'스위스'},
+  {c:'GVA',kr:'제네바',info:'스위스'},
+  {c:'PRG',kr:'프라하',info:'체코'},
+  {c:'BUD',kr:'부다페스트',info:'헝가리'},
+  {c:'WAW',kr:'바르샤바',info:'폴란드'},
+  {c:'CPH',kr:'코펜하겐',info:'덴마크'},
+  {c:'ARN',kr:'스톡홀름',info:'스웨덴'},
+  {c:'HEL',kr:'헬싱키',info:'핀란드'},
+  {c:'OSL',kr:'오슬로',info:'노르웨이'},
+  {c:'KEF',kr:'레이캬비크 아이슬란드',info:'아이슬란드'},
+  {c:'IST',kr:'이스탄불',info:'터키'},
+  {c:'ATH',kr:'아테네',info:'그리스'},
+  {c:'JTR',kr:'산토리니',info:'그리스'},
+  {c:'JMK',kr:'미코노스',info:'그리스'},
+  {c:'DBV',kr:'두브로브니크',info:'크로아티아'},
+  {c:'DUB',kr:'더블린',info:'아일랜드'},
+];
+
+function filterDests(val){
+  const dd=document.getElementById('dest-dropdown');
+  if(!dd)return;
+  const q=val.trim().toLowerCase().replace(/\s/g,'');
+  if(!q){dd.style.display='none';return;}
+  const hits=DEST_LIST.filter(d=>
+    d.c.toLowerCase().includes(q)||
+    d.kr.replace(/\s/g,'').toLowerCase().includes(q)||
+    d.info.replace(/\s/g,'').toLowerCase().includes(q)
+  ).slice(0,8);
+  if(!hits.length){dd.style.display='none';return;}
+  dd.innerHTML=hits.map(d=>`
+    <div class="dest-opt" onmousedown="selectDest('${d.c}','${d.kr}')">
+      <span class="dest-opt-kr">${d.kr}</span>
+      <span class="dest-opt-info">${d.info}${d.c!=='anywhere'?' · '+d.c:''}</span>
+    </div>`).join('');
+  dd.style.display='block';
+}
+
+function selectDest(code,kr){
+  const hidden=document.getElementById('air-to');
+  const search=document.getElementById('air-to-search');
+  const dd=document.getElementById('dest-dropdown');
+  if(hidden)hidden.value=code;
+  if(search)search.value=code==='anywhere'?'어디든':kr+' ('+code+')';
+  if(dd)dd.style.display='none';
+}
 
 const YEARS=Array.from({length:20},(_,i)=>2025+i);
 const today=new Date(); today.setHours(0,0,0,0);
@@ -942,59 +1100,6 @@ function renderBookLinks(){
   const sDate=`${s.getFullYear()}-${pad(s.getMonth()+1)}-${pad(s.getDate())}`;
   const eDate=`${e.getFullYear()}-${pad(e.getMonth()+1)}-${pad(e.getDate())}`;
 
-  const airDests=[
-    {code:'anywhere',label:'어디든 (최저가 탐색)'},
-    // 일본
-    {code:'NRT',label:'도쿄 나리타 (NRT)'},
-    {code:'HND',label:'도쿄 하네다 (HND)'},
-    {code:'KIX',label:'오사카 간사이 (KIX)'},
-    {code:'ITM',label:'오사카 이타미 (ITM)'},
-    {code:'FUK',label:'후쿠오카 (FUK)'},
-    {code:'CTS',label:'삿포로 (CTS)'},
-    {code:'OKA',label:'오키나와 (OKA)'},
-    {code:'NGO',label:'나고야 (NGO)'},
-    // 중화권·동남아
-    {code:'TPE',label:'타이페이 (TPE)'},
-    {code:'HKG',label:'홍콩 (HKG)'},
-    {code:'MFM',label:'마카오 (MFM)'},
-    {code:'SIN',label:'싱가포르 (SIN)'},
-    {code:'BKK',label:'방콕 수완나품 (BKK)'},
-    {code:'CNX',label:'치앙마이 (CNX)'},
-    {code:'DPS',label:'발리 (DPS)'},
-    {code:'KUL',label:'쿠알라룸푸르 (KUL)'},
-    {code:'MNL',label:'마닐라 (MNL)'},
-    {code:'CEB',label:'세부 (CEB)'},
-    {code:'SGN',label:'호치민 (SGN)'},
-    {code:'HAN',label:'하노이 (HAN)'},
-    {code:'DAD',label:'다낭 (DAD)'},
-    {code:'PNH',label:'프놈펜 (PNH)'},
-    {code:'REP',label:'씨엠립 (REP)'},
-    // 남아시아·중동
-    {code:'DEL',label:'뉴델리 (DEL)'},
-    {code:'DXB',label:'두바이 (DXB)'},
-    {code:'DOH',label:'도하 (DOH)'},
-    // 오세아니아
-    {code:'SYD',label:'시드니 (SYD)'},
-    {code:'MEL',label:'멜버른 (MEL)'},
-    {code:'AKL',label:'오클랜드 (AKL)'},
-    // 미주
-    {code:'LAX',label:'로스앤젤레스 (LAX)'},
-    {code:'SFO',label:'샌프란시스코 (SFO)'},
-    {code:'JFK',label:'뉴욕 (JFK)'},
-    {code:'SEA',label:'시애틀 (SEA)'},
-    {code:'YVR',label:'밴쿠버 (YVR)'},
-    // 유럽
-    {code:'CDG',label:'파리 (CDG)'},
-    {code:'LHR',label:'런던 히드로 (LHR)'},
-    {code:'FRA',label:'프랑크푸르트 (FRA)'},
-    {code:'AMS',label:'암스테르담 (AMS)'},
-    {code:'FCO',label:'로마 (FCO)'},
-    {code:'MXP',label:'밀라노 (MXP)'},
-    {code:'BCN',label:'바르셀로나 (BCN)'},
-    {code:'VIE',label:'빈 (VIE)'},
-    {code:'IST',label:'이스탄불 (IST)'},
-    {code:'ATH',label:'아테네 (ATH)'},
-  ];
   const trainStations=['서울','수서','영등포','수원','천안아산','오송','대전','김천구미','동대구','신경주','울산','부산','광주송정','목포','전주','여수엑스포','포항'];
 
   el.innerHTML=`
@@ -1010,12 +1115,16 @@ function renderBookLinks(){
               <option value="PUS">부산 (PUS)</option>
             </select>
           </div>
-          <div class="sbox-field">
-            <span class="sbox-label">도착지 (직접입력 가능)</span>
-            <input class="sbox-input" list="air-dest-list" id="air-to" placeholder="도시명 또는 공항코드 입력"/>
-            <datalist id="air-dest-list">
-              ${airDests.map(d=>`<option value="${d.code}">${d.label}</option>`).join('')}
-            </datalist>
+          <div class="sbox-field dest-wrap">
+            <span class="sbox-label">도착지</span>
+            <input class="sbox-input" type="text" id="air-to-search"
+              placeholder="도시명 입력 (예: 나트랑, 파리)"
+              autocomplete="off"
+              oninput="filterDests(this.value);document.getElementById('air-to').value=this.value;"
+              onfocus="filterDests(this.value)"
+              onblur="setTimeout(()=>{const d=document.getElementById('dest-dropdown');if(d)d.style.display='none';},150)"/>
+            <input type="hidden" id="air-to" value="anywhere"/>
+            <div class="dest-dropdown" id="dest-dropdown" style="display:none;"></div>
           </div>
         </div>
         <div class="sbox-row" style="grid-template-columns:1fr 1fr auto;">
@@ -1067,13 +1176,14 @@ function renderBookLinks(){
 
 function searchNaverFlight(){
   const from=document.getElementById('air-from').value;
-  const to=document.getElementById('air-to').value.trim().toUpperCase();
+  const raw=(document.getElementById('air-to')||{}).value||'';
+  const to=raw.trim().toUpperCase();
   const dep=document.getElementById('air-dep').value.replace(/-/g,'');
   const ret=document.getElementById('air-ret').value.replace(/-/g,'');
   const pax=document.getElementById('air-pax').value;
   if(!to){alert('도착지를 입력해주세요.');return;}
   if(!dep){alert('출발일을 선택해주세요.');return;}
-  const url=to==='ANYWHERE'
+  const url=to==='ANYWHERE'||to===''
     ?`https://flight.naver.com/flights/international/${from}-anywhere-${dep}?adult=${pax}`
     :`https://flight.naver.com/flights/international/${from}-${to}-${dep}/${to}-${from}-${ret}?adult=${pax}`;
   window.open(url,'_blank','noopener');
