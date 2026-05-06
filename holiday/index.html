@@ -939,20 +939,56 @@ function renderBookLinks(){
 
   const airDests=[
     {code:'anywhere',label:'어디든 (최저가 탐색)'},
+    // 일본
     {code:'NRT',label:'도쿄 나리타 (NRT)'},
     {code:'HND',label:'도쿄 하네다 (HND)'},
-    {code:'KIX',label:'오사카 (KIX)'},
+    {code:'KIX',label:'오사카 간사이 (KIX)'},
+    {code:'ITM',label:'오사카 이타미 (ITM)'},
+    {code:'FUK',label:'후쿠오카 (FUK)'},
     {code:'CTS',label:'삿포로 (CTS)'},
     {code:'OKA',label:'오키나와 (OKA)'},
+    {code:'NGO',label:'나고야 (NGO)'},
+    // 중화권·동남아
     {code:'TPE',label:'타이페이 (TPE)'},
     {code:'HKG',label:'홍콩 (HKG)'},
+    {code:'MFM',label:'마카오 (MFM)'},
     {code:'SIN',label:'싱가포르 (SIN)'},
-    {code:'BKK',label:'방콕 (BKK)'},
+    {code:'BKK',label:'방콕 수완나품 (BKK)'},
+    {code:'CNX',label:'치앙마이 (CNX)'},
     {code:'DPS',label:'발리 (DPS)'},
+    {code:'KUL',label:'쿠알라룸푸르 (KUL)'},
+    {code:'MNL',label:'마닐라 (MNL)'},
+    {code:'CEB',label:'세부 (CEB)'},
+    {code:'SGN',label:'호치민 (SGN)'},
+    {code:'HAN',label:'하노이 (HAN)'},
+    {code:'DAD',label:'다낭 (DAD)'},
+    {code:'PNH',label:'프놈펜 (PNH)'},
+    {code:'REP',label:'씨엠립 (REP)'},
+    // 남아시아·중동
+    {code:'DEL',label:'뉴델리 (DEL)'},
+    {code:'DXB',label:'두바이 (DXB)'},
+    {code:'DOH',label:'도하 (DOH)'},
+    // 오세아니아
     {code:'SYD',label:'시드니 (SYD)'},
+    {code:'MEL',label:'멜버른 (MEL)'},
+    {code:'AKL',label:'오클랜드 (AKL)'},
+    // 미주
     {code:'LAX',label:'로스앤젤레스 (LAX)'},
+    {code:'SFO',label:'샌프란시스코 (SFO)'},
+    {code:'JFK',label:'뉴욕 (JFK)'},
+    {code:'SEA',label:'시애틀 (SEA)'},
+    {code:'YVR',label:'밴쿠버 (YVR)'},
+    // 유럽
     {code:'CDG',label:'파리 (CDG)'},
-    {code:'LHR',label:'런던 (LHR)'},
+    {code:'LHR',label:'런던 히드로 (LHR)'},
+    {code:'FRA',label:'프랑크푸르트 (FRA)'},
+    {code:'AMS',label:'암스테르담 (AMS)'},
+    {code:'FCO',label:'로마 (FCO)'},
+    {code:'MXP',label:'밀라노 (MXP)'},
+    {code:'BCN',label:'바르셀로나 (BCN)'},
+    {code:'VIE',label:'빈 (VIE)'},
+    {code:'IST',label:'이스탄불 (IST)'},
+    {code:'ATH',label:'아테네 (ATH)'},
   ];
   const trainStations=['서울','수서','영등포','수원','천안아산','오송','대전','김천구미','동대구','신경주','울산','부산','광주송정','목포','전주','여수엑스포','포항'];
 
@@ -970,10 +1006,11 @@ function renderBookLinks(){
             </select>
           </div>
           <div class="sbox-field">
-            <span class="sbox-label">도착지</span>
-            <select class="sbox-select" id="air-to">
+            <span class="sbox-label">도착지 (직접 입력 or 목록 선택)</span>
+            <input class="sbox-input" list="air-dest-list" id="air-to" placeholder="도시명 또는 공항코드 입력"/>
+            <datalist id="air-dest-list">
               ${airDests.map(d=>`<option value="${d.code}">${d.label}</option>`).join('')}
-            </select>
+            </datalist>
           </div>
         </div>
         <div class="sbox-row">
@@ -1027,11 +1064,13 @@ function renderBookLinks(){
 
 function searchNaverFlight(){
   const from=document.getElementById('air-from').value;
-  const to=document.getElementById('air-to').value;
+  const to=document.getElementById('air-to').value.trim().toUpperCase();
   const dep=document.getElementById('air-dep').value.replace(/-/g,'');
   const ret=document.getElementById('air-ret').value.replace(/-/g,'');
   const pax=document.getElementById('air-pax').value;
-  const url=to==='anywhere'
+  if(!to){alert('도착지를 입력해주세요.');return;}
+  if(!dep){alert('출발일을 선택해주세요.');return;}
+  const url=to==='ANYWHERE'
     ?`https://flight.naver.com/flights/international/${from}-anywhere-${dep}?adult=${pax}`
     :`https://flight.naver.com/flights/international/${from}-${to}-${dep}/${to}-${from}-${ret}?adult=${pax}`;
   window.open(url,'_blank','noopener');
