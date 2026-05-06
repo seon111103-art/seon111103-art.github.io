@@ -80,7 +80,7 @@
       display:flex;flex-direction:column;align-items:center;gap:0;
     }
     .mascot-img{
-      width:140px;height:140px;object-fit:contain;
+      width:180px;height:180px;object-fit:contain;
       filter:drop-shadow(0 4px 12px rgba(33,150,243,0.35));
       animation:bounce 2.5s ease-in-out infinite;
     }
@@ -544,7 +544,7 @@ function renderCalendar(){
   const sumEl=document.getElementById('month-summary');
   if(!thisMonthClusters.length){
     sumEl.innerHTML=`<div style="text-align:center;padding:8px 0;">
-      <img src="sad-character.png" alt="슬픈 캐릭터" style="width:110px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(33,150,243,0.2));animation:bounce 2.5s ease-in-out infinite;"/>
+      <img src="sad-character.png" alt="슬픈 캐릭터" style="width:150px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(33,150,243,0.2));animation:bounce 2.5s ease-in-out infinite;"/>
       <div style="color:var(--sub);font-size:0.85rem;margin-top:6px;">이달 황금연휴 없음 😢</div>
     </div>`;
   } else {
