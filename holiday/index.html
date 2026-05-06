@@ -438,17 +438,6 @@
   <div class="section-title">🏆 이달의 황금연휴</div>
   <div class="month-summary" id="month-summary"></div>
 
-  <!-- 연도별 평일 공휴일 통계 -->
-  <div class="section-title" style="margin-top:24px;">📊 연도별 평일 공휴일</div>
-  <div class="stat-wrap">
-    <div class="stat-year-nav">
-      <button class="stat-nav-btn" onclick="moveStatYear(-1)">‹</button>
-      <select class="stat-year-sel" id="stat-year-sel" onchange="renderStatDetail(parseInt(this.value))"></select>
-      <button class="stat-nav-btn" onclick="moveStatYear(1)">›</button>
-    </div>
-    <div id="stat-detail"></div>
-  </div>
-
   <!-- D-day -->
   <div class="section-title" style="margin-top:24px;">⏰ 다음 황금연휴까지</div>
   <div class="dday-wrap">
@@ -458,6 +447,17 @@
       <div class="dday-date" id="dday-date">-</div>
     </div>
     <div class="dday-num" id="dday-num"><small>D-</small>-</div>
+  </div>
+
+  <!-- 연도별 평일 공휴일 통계 -->
+  <div class="section-title" style="margin-top:24px;">📊 연도별 평일 공휴일</div>
+  <div class="stat-wrap">
+    <div class="stat-year-nav">
+      <button class="stat-nav-btn" onclick="moveStatYear(-1)">‹</button>
+      <select class="stat-year-sel" id="stat-year-sel" onchange="renderStatDetail(parseInt(this.value))"></select>
+      <button class="stat-nav-btn" onclick="moveStatYear(1)">›</button>
+    </div>
+    <div id="stat-detail"></div>
   </div>
 
   <!-- 연차 계산기 -->
@@ -592,6 +592,11 @@ function parseDate(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function fmtShort(d){return(d.getMonth()+1)+'월 '+d.getDate()+'일';}
 function fmtFull(d){return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일 ('+['일','월','화','수','목','금','토'][d.getDay()]+')';}
+function fmtRange(s,e){
+  const sy=s.getFullYear(),ey=e.getFullYear();
+  const end=sy===ey?`${e.getMonth()+1}월 ${e.getDate()}일`:`${ey}년 ${e.getMonth()+1}월 ${e.getDate()}일`;
+  return `${sy}년 ${s.getMonth()+1}월 ${s.getDate()}일 ~ ${end}`;
+}
 
 function getHolidayMap(year){
   const map={};
@@ -724,7 +729,7 @@ function renderCalendar(){
         <div class="ms-badge ${g}">${emoji}</div>
         <div class="ms-info">
           <div class="ms-title">${label} · ${names||'주말연계'}</div>
-          <div class="ms-date">${fmtShort(c.start)} ~ ${fmtShort(c.end)}</div>
+          <div class="ms-date">${fmtRange(c.start,c.end)}</div>
         </div>
         <div class="ms-days ${g}">${len}일</div>
       </div>`;
@@ -811,7 +816,7 @@ function renderDday(){
       const diff=Math.round((c.start-today)/(86400000));
       const names=[...new Set(c.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].slice(0,2).join(' · ');
       document.getElementById('dday-name').textContent=(c.days.length>=7?'슈퍼황금연휴':c.days.length>=4?'황금연휴':'연휴')+' '+c.days.length+'일';
-      document.getElementById('dday-date').textContent=fmtShort(c.start)+' ~ '+fmtShort(c.end)+(names?' · '+names:'');
+      document.getElementById('dday-date').textContent=fmtRange(c.start,c.end)+(names?' · '+names:'');
       const el=document.getElementById('dday-num');
       el.innerHTML=diff===0?'<small>D-</small>DAY':`<small>D-</small>${diff}`;
       return;
