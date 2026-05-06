@@ -242,43 +242,34 @@
     .stat-holi-name.sub-holi{color:var(--green);}
     .stat-compare{font-size:0.72rem;color:var(--sub);text-align:right;}
 
-    /* 예매 링크 */
-    .usearch-section{background:var(--card);border-radius:16px;border:2px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
-    .usearch-section-title{font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-    .usearch-date-bar{
-      display:flex;align-items:center;justify-content:space-between;
-      background:var(--sky-light);border-radius:10px;padding:8px 12px;margin-bottom:12px;
+    /* 예매/검색 */
+    .sbox{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
+    .sbox-title{font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+    .sbox-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+    .sbox-field{display:flex;flex-direction:column;gap:4px;}
+    .sbox-field.full{grid-column:1/-1;}
+    .sbox-label{font-size:0.7rem;font-weight:700;color:var(--sub);padding-left:2px;}
+    .sbox-select,.sbox-input{
+      padding:9px 12px;border-radius:10px;border:2px solid var(--border);
+      background:var(--bg);color:var(--text);font-size:0.85rem;
+      font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;
+      transition:border-color 0.18s;
     }
-    .usearch-date-txt{font-size:0.88rem;font-weight:700;color:var(--sky);}
-    .usearch-date-lbl{font-size:0.68rem;color:var(--sub);}
-    .uresult-list{display:flex;flex-direction:column;gap:7px;}
-    .uresult-card{
-      display:flex;align-items:center;gap:12px;
-      background:var(--bg);border:2px solid var(--border);border-radius:12px;
-      padding:11px 14px;text-decoration:none;color:var(--text);
-      transition:all 0.2s;
+    .sbox-select:focus,.sbox-input:focus{border-color:var(--sky);}
+    .sbox-btn{
+      width:100%;margin-top:6px;padding:12px;border-radius:12px;border:none;
+      background:var(--sky);color:#fff;font-size:0.92rem;font-weight:700;
+      cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background 0.2s;
     }
-    .uresult-card:hover{border-color:var(--sky);transform:translateX(3px);box-shadow:0 3px 12px rgba(33,150,243,0.15);}
-    .uresult-icon{font-size:1.6rem;flex-shrink:0;line-height:1;}
-    .uresult-info{flex:1;}
-    .uresult-name{font-size:0.88rem;font-weight:700;}
-    .uresult-desc{font-size:0.7rem;color:var(--sub);margin-top:2px;}
-    .uresult-go{font-size:0.75rem;font-weight:700;color:var(--sky);white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:3px;}
-    .book-date-banner{
-      background:var(--dday-grad);border-radius:14px;padding:14px 16px;
-      color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:12px;
+    .sbox-btn:hover{background:var(--sky-dark);}
+    .sbox-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+    .sbox-btn-sec{
+      padding:11px;border-radius:12px;border:2px solid var(--border);
+      background:var(--card);color:var(--text);font-size:0.85rem;font-weight:700;
+      cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;
     }
-    .book-date-info{flex:1;}
-    .book-date-label{font-size:0.72rem;opacity:0.82;margin-bottom:2px;}
-    .book-date-range{font-size:1rem;font-weight:900;}
-    .book-date-days{font-size:0.78rem;opacity:0.85;margin-top:2px;}
-    .book-copy-btn{
-      background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);
-      border-radius:10px;padding:6px 12px;color:#fff;font-size:0.75rem;font-weight:700;
-      cursor:pointer;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;
-      transition:background 0.2s;
-    }
-    .book-copy-btn:hover{background:rgba(255,255,255,0.3);}
+    .sbox-btn-sec:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-light);}
+    .sbox-note{font-size:0.68rem;color:var(--sub);text-align:center;margin-top:8px;}
 
     /* D-day */
     .dday-wrap{
@@ -931,7 +922,7 @@ function moveMonth(dir){
   renderCalendar();
 }
 
-/* 예매 링크 */
+/* 예매/검색 */
 function renderBookLinks(){
   let target=null;
   for(let y=today.getFullYear();y<=2044;y++){
@@ -942,74 +933,117 @@ function renderBookLinks(){
   if(!target){el.innerHTML='';return;}
 
   const s=target.start, e=target.end;
-  const DOW=['일','월','화','수','목','금','토'];
   const pad=n=>String(n).padStart(2,'0');
-  const yy=s.getFullYear(),ym=pad(s.getMonth()+1),yd=pad(s.getDate());
-  const ey=e.getFullYear(),em=pad(e.getMonth()+1),ed=pad(e.getDate());
-  const sYMD=`${yy}${ym}${yd}`, eYMD=`${ey}${em}${ed}`;
-  const sYMD2=`${yy}-${ym}-${yd}`, eYMD2=`${ey}-${em}-${ed}`;
-  const sYY=`${String(yy).slice(2)}${ym}${yd}`, eYY=`${String(ey).slice(2)}${em}${ed}`;
-  const rangeText=`${s.getMonth()+1}/${s.getDate()}(${DOW[s.getDay()]}) ~ ${e.getMonth()+1}/${e.getDate()}(${DOW[e.getDay()]})`;
-  const totalDays=Math.round((e-s)/86400000)+1;
-  const names=[...new Set(target.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].slice(0,2).join(' · ');
-  const startLabel=`${s.getMonth()+1}/${s.getDate()}(${DOW[s.getDay()]})`;
-  const endLabel=`${e.getMonth()+1}/${e.getDate()}(${DOW[e.getDay()]})`;
+  const sDate=`${s.getFullYear()}-${pad(s.getMonth()+1)}-${pad(s.getDate())}`;
+  const eDate=`${e.getFullYear()}-${pad(e.getMonth()+1)}-${pad(e.getDate())}`;
 
-  const airSites=[
-    {icon:'🟢',name:'네이버 항공',desc:'국제선 최저가 비교',url:`https://flight.naver.com/flights/international/ICN-anywhere-${sYMD}/anywhere-ICN-${eYMD}?adult=1`},
-    {icon:'🔵',name:'스카이스캐너',desc:'전 세계 항공 검색',url:`https://www.skyscanner.co.kr/transport/flights/icn/anywhere/${sYY}/${eYY}/`},
-    {icon:'🟠',name:'인터파크 항공',desc:'특가 항공권 검색',url:`https://air.interpark.com/flight/international-flight?departureDate=${sYMD}&returnDate=${eYMD}`},
-    {icon:'🟡',name:'카약',desc:'항공+호텔 패키지',url:`https://www.kayak.co.kr/flights/ICN-anywhere/${sYMD2}/${eYMD2}/1adults`},
+  const airDests=[
+    {code:'anywhere',label:'어디든 (최저가 탐색)'},
+    {code:'NRT',label:'도쿄 나리타 (NRT)'},
+    {code:'HND',label:'도쿄 하네다 (HND)'},
+    {code:'KIX',label:'오사카 (KIX)'},
+    {code:'CTS',label:'삿포로 (CTS)'},
+    {code:'OKA',label:'오키나와 (OKA)'},
+    {code:'TPE',label:'타이페이 (TPE)'},
+    {code:'HKG',label:'홍콩 (HKG)'},
+    {code:'SIN',label:'싱가포르 (SIN)'},
+    {code:'BKK',label:'방콕 (BKK)'},
+    {code:'DPS',label:'발리 (DPS)'},
+    {code:'SYD',label:'시드니 (SYD)'},
+    {code:'LAX',label:'로스앤젤레스 (LAX)'},
+    {code:'CDG',label:'파리 (CDG)'},
+    {code:'LHR',label:'런던 (LHR)'},
   ];
-  const trainSites=[
-    {icon:'🚄',name:'코레일 KTX',desc:'고속철도 예매',url:`https://www.letskorail.com/ebizprd/EbizPrdTicketpr21100W.do?hidRsvDt=${sYMD}`},
-    {icon:'🔴',name:'SRT',desc:'수서고속철도 예매',url:'https://www.srail.or.kr/reservation/reservation-01.do'},
-  ];
-
-  const makeCards=sites=>sites.map(site=>`
-    <a class="uresult-card" href="${site.url}" target="_blank" rel="noopener">
-      <span class="uresult-icon">${site.icon}</span>
-      <div class="uresult-info">
-        <div class="uresult-name">${site.name}</div>
-        <div class="uresult-desc">${site.desc}</div>
-      </div>
-      <span class="uresult-go">바로가기 →</span>
-    </a>`).join('');
+  const trainStations=['서울','수서','영등포','수원','천안아산','오송','대전','김천구미','동대구','신경주','울산','부산','광주송정','목포','전주','여수엑스포','포항'];
 
   el.innerHTML=`
-    <div class="book-date-banner">
-      <div class="book-date-info">
-        <div class="book-date-label">🔍 자동 설정된 여행 날짜</div>
-        <div class="book-date-range">${rangeText}</div>
-        <div class="book-date-days">${totalDays}일 연속 휴무${names?' · '+names:''}</div>
-      </div>
-      <button class="book-copy-btn" onclick="copyDate('${rangeText}')">📋 복사</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div class="usearch-section">
-        <div class="usearch-section-title">✈️ 항공권 검색</div>
-        <div class="usearch-date-bar">
-          <span class="usearch-date-txt">📅 ${startLabel} 출발 · ${endLabel} 귀국</span>
-          <span class="usearch-date-lbl">날짜 자동 적용</span>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="sbox">
+        <div class="sbox-title">✈️ 항공권 검색</div>
+        <div class="sbox-row">
+          <div class="sbox-field">
+            <span class="sbox-label">출발 공항</span>
+            <select class="sbox-select" id="air-from">
+              <option value="ICN">인천 (ICN)</option>
+              <option value="GMP">김포 (GMP)</option>
+              <option value="PUS">부산 (PUS)</option>
+            </select>
+          </div>
+          <div class="sbox-field">
+            <span class="sbox-label">도착지</span>
+            <select class="sbox-select" id="air-to">
+              ${airDests.map(d=>`<option value="${d.code}">${d.label}</option>`).join('')}
+            </select>
+          </div>
         </div>
-        <div class="uresult-list">${makeCards(airSites)}</div>
-      </div>
-      <div class="usearch-section">
-        <div class="usearch-section-title">🚄 기차 검색</div>
-        <div class="usearch-date-bar">
-          <span class="usearch-date-txt">📅 ${startLabel} 출발</span>
-          <span class="usearch-date-lbl">출발일 자동 적용</span>
+        <div class="sbox-row">
+          <div class="sbox-field">
+            <span class="sbox-label">출발일</span>
+            <input class="sbox-input" type="date" id="air-dep" value="${sDate}"/>
+          </div>
+          <div class="sbox-field">
+            <span class="sbox-label">귀국일</span>
+            <input class="sbox-input" type="date" id="air-ret" value="${eDate}"/>
+          </div>
         </div>
-        <div class="uresult-list">${makeCards(trainSites)}</div>
+        <div class="sbox-row">
+          <div class="sbox-field">
+            <span class="sbox-label">인원</span>
+            <select class="sbox-select" id="air-pax">
+              ${[1,2,3,4,5].map(n=>`<option value="${n}">${n}명</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <button class="sbox-btn" onclick="searchNaverFlight()">🔍 네이버 항공 최저가 검색</button>
+        <div class="sbox-note">여러 항공사 가격을 한 번에 비교 후 원하는 항공권 선택</div>
+      </div>
+      <div class="sbox">
+        <div class="sbox-title">🚄 기차 예매</div>
+        <div class="sbox-row">
+          <div class="sbox-field">
+            <span class="sbox-label">출발역</span>
+            <select class="sbox-select" id="train-from">
+              ${trainStations.map(st=>`<option value="${st}" ${st==='서울'?'selected':''}>${st}</option>`).join('')}
+            </select>
+          </div>
+          <div class="sbox-field">
+            <span class="sbox-label">도착역</span>
+            <select class="sbox-select" id="train-to">
+              ${trainStations.map(st=>`<option value="${st}" ${st==='부산'?'selected':''}>${st}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="sbox-field" style="margin-bottom:6px;">
+          <span class="sbox-label">출발일</span>
+          <input class="sbox-input" type="date" id="train-dep" value="${sDate}"/>
+        </div>
+        <div class="sbox-btn-row">
+          <button class="sbox-btn-sec" onclick="searchKTX()">🚄 코레일 KTX</button>
+          <button class="sbox-btn-sec" onclick="searchSRT()">🔴 SRT</button>
+        </div>
       </div>
     </div>`;
 }
 
-function copyDate(text){
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=document.querySelector('.book-copy-btn');
-    if(btn){btn.textContent='✅ 복사됨';setTimeout(()=>{btn.textContent='📋 복사';},1500);}
-  });
+function searchNaverFlight(){
+  const from=document.getElementById('air-from').value;
+  const to=document.getElementById('air-to').value;
+  const dep=document.getElementById('air-dep').value.replace(/-/g,'');
+  const ret=document.getElementById('air-ret').value.replace(/-/g,'');
+  const pax=document.getElementById('air-pax').value;
+  const url=to==='anywhere'
+    ?`https://flight.naver.com/flights/international/${from}-anywhere-${dep}?adult=${pax}`
+    :`https://flight.naver.com/flights/international/${from}-${to}-${dep}/${to}-${from}-${ret}?adult=${pax}`;
+  window.open(url,'_blank','noopener');
+}
+
+function searchKTX(){
+  const dep=document.getElementById('train-dep').value.replace(/-/g,'');
+  window.open(`https://www.letskorail.com/ebizprd/EbizPrdTicketpr21100W.do?hidRsvDt=${dep}`,'_blank','noopener');
+}
+
+function searchSRT(){
+  window.open('https://www.srail.or.kr/reservation/reservation-01.do','_blank','noopener');
 }
 
 /* 여행 경비 계산기 */
