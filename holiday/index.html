@@ -301,17 +301,19 @@
     .trip-wrap{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
     .trip-people{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
     .trip-people-label{font-size:0.85rem;font-weight:700;color:var(--sub);white-space:nowrap;}
-    .trip-add-form{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+    .trip-add-form{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+    .trip-form-row{display:flex;gap:6px;}
     .trip-cat-sel,.trip-name-inp,.trip-amt-inp{
       padding:8px 10px;border-radius:10px;border:2px solid var(--border);
       background:var(--bg);color:var(--text);font-size:0.82rem;
       font-family:'Noto Sans KR',sans-serif;outline:none;
     }
     .trip-cat-sel{flex-shrink:0;}
-    .trip-name-inp{flex:1;min-width:80px;}
-    .trip-amt-inp{width:100px;flex-shrink:0;}
+    .trip-name-inp{flex:1;}
+    .trip-amt-inp{flex:1;}
+    .trip-name-inp::placeholder,.trip-amt-inp::placeholder{font-size:0.76rem;color:var(--sub);}
     .trip-add-btn{
-      padding:8px 14px;border-radius:10px;border:none;background:var(--sky);
+      padding:8px 16px;border-radius:10px;border:none;background:var(--sky);
       color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;
       font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0;
     }
@@ -503,18 +505,22 @@
       <button class="trip-reset-btn" onclick="resetTrip()">🗑️ 새로 작성하기</button>
     </div>
     <div class="trip-add-form">
-      <select class="trip-cat-sel" id="trip-cat">
-        <option value="✈️">✈️ 항공</option>
-        <option value="🏨">🏨 숙소</option>
-        <option value="🍽️">🍽️ 식비</option>
-        <option value="🚗">🚗 교통</option>
-        <option value="🎡">🎡 관광</option>
-        <option value="🛍️">🛍️ 쇼핑</option>
-        <option value="📦">📦 기타</option>
-      </select>
-      <input class="trip-name-inp" id="trip-name" type="text" placeholder="항목명 (예: 왕복항공)"/>
-      <input class="trip-amt-inp" id="trip-amt" type="number" placeholder="금액 (원)" min="0"/>
-      <button class="trip-add-btn" onclick="addTripItem()">+ 추가</button>
+      <div class="trip-form-row">
+        <select class="trip-cat-sel" id="trip-cat">
+          <option value="✈️">✈️ 항공</option>
+          <option value="🏨">🏨 숙소</option>
+          <option value="🍽️">🍽️ 식비</option>
+          <option value="🚗">🚗 교통</option>
+          <option value="🎡">🎡 관광</option>
+          <option value="🛍️">🛍️ 쇼핑</option>
+          <option value="📦">📦 기타</option>
+        </select>
+        <input class="trip-name-inp" id="trip-name" type="text" placeholder="항목명 (예: 왕복항공, 호텔 2박)"/>
+      </div>
+      <div class="trip-form-row">
+        <input class="trip-amt-inp" id="trip-amt" type="text" inputmode="numeric" placeholder="금액 입력 (예: 350,000)" oninput="this.value=fmtAmt(this.value)"/>
+        <button class="trip-add-btn" onclick="addTripItem()">+ 추가</button>
+      </div>
     </div>
     <div class="trip-items" id="trip-items"></div>
     <div class="trip-total" id="trip-total"></div>
@@ -1009,6 +1015,11 @@ function copyDate(text){
 /* 여행 경비 계산기 */
 let travelItems=[], travelPeople=2;
 
+function fmtAmt(val){
+  const digits=val.replace(/[^0-9]/g,'');
+  return digits?Number(digits).toLocaleString():'';
+}
+
 function saveTripData(){
   localStorage.setItem('wind-trip-items', JSON.stringify(travelItems));
   localStorage.setItem('wind-trip-people', String(travelPeople));
@@ -1064,7 +1075,7 @@ function renderTripCalc(){
 function addTripItem(){
   const cat=document.getElementById('trip-cat').value;
   const name=document.getElementById('trip-name').value.trim();
-  const amt=parseInt(document.getElementById('trip-amt').value)||0;
+  const amt=parseInt(document.getElementById('trip-amt').value.replace(/,/g,''))||0;
   if(!name||amt<=0){alert('항목명과 금액을 입력해주세요.');return;}
   travelItems.push({cat,name,amt});
   document.getElementById('trip-name').value='';
