@@ -199,6 +199,24 @@
       margin:24px 0 10px;display:flex;align-items:center;gap:8px;
     }
 
+    /* 연도별 통계 */
+    .stat-wrap{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
+    .stat-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+    .stat-row:last-child{margin-bottom:0;}
+    .stat-year{font-size:0.8rem;font-weight:700;color:var(--sub);min-width:44px;}
+    .stat-year.cur{color:var(--sky);}
+    .stat-count{font-size:1rem;font-weight:900;color:var(--sky);min-width:34px;text-align:right;}
+    .stat-count.best{color:#E65100;}
+    .stat-bar-wrap{flex:1;height:9px;background:var(--border);border-radius:5px;overflow:hidden;}
+    .stat-bar{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--sky),#90CAF9);}
+    .stat-bar.best{background:linear-gradient(90deg,#FF9800,#FFD740);}
+    .stat-bar.worst{background:linear-gradient(90deg,var(--red),#EF9A9A);}
+    .stat-sub{font-size:0.7rem;color:var(--sub);min-width:52px;text-align:right;}
+    .stat-tag{font-size:0.65rem;font-weight:700;border-radius:6px;padding:1px 6px;white-space:nowrap;}
+    .stat-tag.best{background:var(--orange-light);color:#E65100;}
+    .stat-tag.worst{background:var(--red-light);color:var(--red);}
+    .stat-tag.cur{background:var(--sky-light);color:var(--sky);}
+
     /* D-day */
     .dday-wrap{
       background:var(--dday-grad);
@@ -316,6 +334,10 @@
   <!-- 이달의 황금연휴 요약 -->
   <div class="section-title">🏆 이달의 황금연휴</div>
   <div class="month-summary" id="month-summary"></div>
+
+  <!-- 연도별 평일 공휴일 통계 -->
+  <div class="section-title" style="margin-top:24px;">📊 연도별 평일 공휴일</div>
+  <div class="stat-wrap" id="stat-list"></div>
 
   <!-- D-day -->
   <div class="section-title" style="margin-top:24px;">⏰ 다음 황금연휴까지</div>
@@ -563,6 +585,35 @@ function renderCalendar(){
   }
 }
 
+/* 연도별 평일 공휴일 통계 */
+function renderStats(){
+  const stats=YEARS.map(year=>{
+    const map=getHolidayMap(year);
+    let weekday=0,weekend=0;
+    Object.keys(map).forEach(k=>{
+      const dow=parseDate(k).getDay();
+      if(dow===0||dow===6)weekend++;else weekday++;
+    });
+    return{year,weekday,weekend};
+  });
+  const maxW=Math.max(...stats.map(s=>s.weekday));
+  const minW=Math.min(...stats.map(s=>s.weekday));
+  const curY=today.getFullYear();
+  document.getElementById('stat-list').innerHTML=stats.map(s=>{
+    const isBest=s.weekday===maxW, isWorst=s.weekday===minW, isCur=s.year===curY;
+    const pct=Math.round((s.weekday/maxW)*100);
+    const barCls=isBest?'best':isWorst?'worst':'';
+    const tag=isBest?`<span class="stat-tag best">최다 🎉</span>`:isWorst?`<span class="stat-tag worst">최소 😢</span>`:isCur?`<span class="stat-tag cur">올해</span>`:'';
+    return `<div class="stat-row">
+      <span class="stat-year ${isCur?'cur':''}">${s.year}</span>
+      <span class="stat-count ${isBest?'best':''}">${s.weekday}일</span>
+      <div class="stat-bar-wrap"><div class="stat-bar ${barCls}" style="width:${pct}%"></div></div>
+      <span class="stat-sub">주말 ${s.weekend}일</span>
+      ${tag}
+    </div>`;
+  }).join('');
+}
+
 /* D-day */
 function renderDday(){
   for(let y=today.getFullYear();y<=2044;y++){
@@ -707,6 +758,7 @@ function init(){
   const calcMonthSel=document.getElementById('calc-month');
   calcMonthSel.innerHTML=`<option value="-1">전체</option>`+Array.from({length:12},(_,i)=>`<option value="${i}">${i+1}월</option>`).join('');
   renderCalendar();
+  renderStats();
   renderDday();
   renderCalc();
 }
