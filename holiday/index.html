@@ -26,9 +26,13 @@
       --cell-border:#EEF2F7;--cell-empty:#FAFCFF;
       --golden-grad:linear-gradient(135deg,#FFFDE7,#FFF8E1);
       --super-grad:linear-gradient(135deg,#F3E5F5,#EDE7F6);
-      --header-grad:linear-gradient(135deg,#1565C0,#42A5F5);
-      --dday-grad:linear-gradient(135deg,#1565C0,#42A5F5);
+      --header-grad:linear-gradient(160deg,#0D47A1 0%,#1565C0 40%,#1976D2 70%,#42A5F5 100%);
+      --dday-grad:linear-gradient(135deg,#1565C0,#2196F3,#42A5F5);
       --shadow:0 2px 12px rgba(33,150,243,0.10);
+      --shadow-md:0 6px 24px rgba(33,150,243,0.16);
+      --shadow-lg:0 12px 40px rgba(33,150,243,0.22);
+      --transition:all 0.22s cubic-bezier(.4,0,.2,1);
+      --radius-lg:20px;
     }
     html.dark body,body.dark{
       --sky:#42A5F5;--sky-light:#1A2A40;--sky-dark:#0D47A1;
@@ -43,8 +47,8 @@
       --cell-border:#1A2E45;--cell-empty:#101F30;
       --golden-grad:linear-gradient(135deg,#2A1800,#1F1200);
       --super-grad:linear-gradient(135deg,#1A0A2A,#130820);
-      --header-grad:linear-gradient(135deg,#0A1E35,#1565C0);
-      --dday-grad:linear-gradient(135deg,#0A1E35,#1565C0);
+      --header-grad:linear-gradient(160deg,#040D1A 0%,#071629 40%,#0A1E35 70%,#1565C0 100%);
+      --dday-grad:linear-gradient(135deg,#071629,#0A1E35,#1565C0);
       --shadow:0 2px 12px rgba(0,0,0,0.4);
     }
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.25s,color 0.25s;}
@@ -52,7 +56,11 @@
     /* 헤더 */
     header{
       background:var(--header-grad);
-      padding:56px 20px 28px;text-align:center;position:relative;overflow:hidden;
+      padding:52px 20px 0;text-align:center;position:relative;overflow:hidden;
+    }
+    .header-wave{
+      display:block;width:calc(100% + 4px);height:48px;margin:16px -2px 0;
+      fill:var(--bg);transition:fill 0.25s;flex-shrink:0;position:relative;z-index:1;
     }
     .theme-toggle{
       position:absolute;top:14px;right:14px;
@@ -74,14 +82,14 @@
     body.dark .toggle-thumb,html.dark body .toggle-thumb{left:calc(100% - 26px);}
     .toggle-sun,.toggle-moon{font-size:0.82rem;line-height:1;z-index:1;user-select:none;}
     header::before{content:'🌬️';font-size:70px;position:absolute;top:-5px;left:-10px;opacity:0.12;animation:fl 6s ease-in-out infinite;}
-    header::after{content:'☁️';font-size:50px;position:absolute;bottom:5px;right:10px;opacity:0.15;animation:fl 9s ease-in-out infinite reverse;}
+    header::after{content:'☁️';font-size:50px;position:absolute;bottom:52px;right:10px;opacity:0.15;animation:fl 9s ease-in-out infinite reverse;}
     @keyframes fl{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
     .mascot-wrap{
       display:flex;flex-direction:column;align-items:center;gap:0;
     }
     .mascot-img{
-      width:180px;height:180px;object-fit:contain;
-      filter:drop-shadow(0 4px 12px rgba(33,150,243,0.35));
+      width:190px;height:190px;object-fit:contain;
+      filter:drop-shadow(0 6px 20px rgba(33,150,243,0.5));
       animation:bounce 2.5s ease-in-out infinite;
     }
     @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
@@ -99,9 +107,9 @@
     .cal-nav{
       background:none;border:2px solid var(--border);border-radius:10px;
       width:36px;height:36px;font-size:1.1rem;cursor:pointer;
-      color:var(--sky);transition:all 0.2s;display:flex;align-items:center;justify-content:center;
+      color:var(--sky);transition:var(--transition);display:flex;align-items:center;justify-content:center;
     }
-    .cal-nav:hover{background:var(--sky-light);}
+    .cal-nav:hover{background:var(--sky-light);border-color:var(--sky);transform:scale(1.08);}
     .cal-month-label{display:flex;align-items:center;gap:2px;}
     .cal-sel{
       background:none;border:none;outline:none;cursor:pointer;
@@ -154,8 +162,9 @@
     .cal-num.holiday-day{color:var(--red);}
     .today .cal-num{
       background:var(--sky);color:#fff;
-      width:22px;height:22px;border-radius:50%;
+      width:24px;height:24px;border-radius:50%;
       display:inline-flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 8px rgba(33,150,243,0.4);
     }
 
     .cal-tag{
@@ -171,15 +180,17 @@
     /* 이달의 황금연휴 요약 */
     .month-summary{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
     .ms-card{
-      background:var(--card);border-radius:14px;
-      border:2px solid var(--border);padding:12px 16px;
+      background:var(--card);border-radius:16px;
+      border:2px solid var(--border);padding:14px 16px;
       display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);
+      transition:var(--transition);
     }
+    .ms-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
     .ms-card.golden{border-color:var(--gold);}
     .ms-card.super{border-color:var(--purple);}
     .ms-badge{
-      font-size:1.4rem;width:44px;height:44px;
-      border-radius:12px;display:flex;align-items:center;justify-content:center;
+      font-size:1.5rem;width:48px;height:48px;
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
       background:var(--sky-light);flex-shrink:0;
     }
     .ms-badge.golden{background:var(--gold-light);}
@@ -195,19 +206,26 @@
     .ms-days.super{color:var(--purple-dark);}
 
     .section-title{
-      font-size:0.95rem;font-weight:700;color:var(--text);
-      margin:24px 0 10px;display:flex;align-items:center;gap:8px;
+      font-size:1rem;font-weight:900;color:var(--text);
+      margin:28px 0 12px;display:flex;align-items:center;gap:8px;
+      padding-left:14px;position:relative;
+    }
+    .section-title::before{
+      content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+      width:4px;height:1.1em;border-radius:2px;
+      background:linear-gradient(180deg,var(--sky),#90CAF9);
     }
 
     /* 연도별 통계 */
-    .stat-wrap{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
+    .stat-wrap{background:var(--card);border-radius:var(--radius-lg);border:2px solid var(--border);padding:18px 20px;box-shadow:var(--shadow);transition:var(--transition);}
+    .stat-wrap:hover{box-shadow:var(--shadow-md);}
     .stat-year-nav{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px;}
     .stat-nav-btn{
       background:none;border:2px solid var(--border);border-radius:10px;
       width:36px;height:36px;font-size:1.1rem;cursor:pointer;
       color:var(--sky);display:flex;align-items:center;justify-content:center;transition:all 0.2s;
     }
-    .stat-nav-btn:hover{background:var(--sky-light);}
+    .stat-nav-btn:hover{background:var(--sky-light);border-color:var(--sky);transform:scale(1.08);}
     .stat-year-sel{
       background:none;border:none;outline:none;cursor:pointer;
       font-family:'Noto Sans KR',sans-serif;font-weight:900;
@@ -236,7 +254,8 @@
     .stat-tag.cur{background:var(--sky-light);color:var(--sky);}
     .stat-holi-group-title{font-size:0.75rem;font-weight:700;color:var(--sub);margin:10px 0 6px;}
     .stat-holi-list{display:flex;flex-direction:column;gap:4px;}
-    .stat-holi-item{display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg);border-radius:8px;}
+    .stat-holi-item{display:flex;align-items:center;gap:10px;padding:7px 10px;background:var(--bg);border-radius:8px;transition:background 0.15s;}
+    .stat-holi-item:hover{background:var(--sky-light);}
     .stat-holi-date{font-size:0.8rem;font-weight:700;color:var(--sky);min-width:80px;flex-shrink:0;}
     .stat-holi-name{font-size:0.8rem;color:var(--text);}
     .stat-holi-name.sub-holi{color:var(--green);}
@@ -260,7 +279,8 @@
     .dest-opt-info{font-size:0.65rem;color:var(--sub);margin-left:6px;white-space:nowrap;}
 
     /* 예매/검색 */
-    .sbox{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
+    .sbox{background:var(--card);border-radius:var(--radius-lg);border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);transition:var(--transition);}
+    .sbox:hover{box-shadow:var(--shadow-md);}
     .sbox-title{font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
     .sbox-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
     .sbox-field{display:flex;flex-direction:column;gap:3px;}
@@ -272,41 +292,64 @@
       font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;
       transition:border-color 0.18s;
     }
-    .sbox-select:focus,.sbox-input:focus{border-color:var(--sky);}
+    .sbox-select:focus,.sbox-input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(33,150,243,0.12);}
     .sbox-btn{
-      width:100%;margin-top:6px;padding:11px;border-radius:11px;border:none;
-      background:var(--sky);color:#fff;font-size:0.88rem;font-weight:700;
-      cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background 0.2s;
+      width:100%;margin-top:6px;padding:12px;border-radius:12px;border:none;
+      background:var(--sky);color:#fff;font-size:0.9rem;font-weight:700;
+      cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:var(--transition);
+      box-shadow:0 4px 14px rgba(33,150,243,0.30);
     }
-    .sbox-btn:hover{background:var(--sky-dark);}
+    .sbox-btn:hover{background:var(--sky-dark);transform:translateY(-1px);box-shadow:0 6px 20px rgba(33,150,243,0.38);}
+    .sbox-btn:active{transform:translateY(0);}
     .sbox-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
     .sbox-btn-sec{
       padding:10px;border-radius:11px;border:2px solid var(--border);
       background:var(--card);color:var(--text);font-size:0.82rem;font-weight:700;
       cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;
     }
-    .sbox-btn-sec:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-light);}
+    .sbox-btn-sec:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-light);transform:translateY(-1px);}
+    .sbox-btn-ktx{border-left:4px solid #003DA5;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .sbox-btn-ktx:hover{border-left-color:#003DA5 !important;border-color:#003DA5 !important;color:#003DA5 !important;background:#EEF3FF !important;}
+    .sbox-btn-srt{border-left:4px solid #8B0000;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .sbox-btn-srt:hover{border-left-color:#8B0000 !important;border-color:#8B0000 !important;color:#8B0000 !important;background:#FFF0F0 !important;}
+    .train-favicon{width:16px;height:16px;object-fit:contain;border-radius:3px;}
     .sbox-note{font-size:0.65rem;color:var(--sub);text-align:center;margin-top:7px;}
 
     /* D-day */
     .dday-wrap{
       background:var(--dday-grad);
-      border-radius:18px;padding:20px;color:#fff;
-      box-shadow:0 4px 16px rgba(33,150,243,0.2);
+      border-radius:var(--radius-lg);padding:24px 20px;color:#fff;
+      box-shadow:0 6px 28px rgba(33,150,243,0.28);
       display:flex;align-items:center;gap:16px;
+      position:relative;overflow:hidden;
+      transition:var(--transition);
     }
-    .dday-left{flex:1;}
-    .dday-label{font-size:0.78rem;opacity:0.85;margin-bottom:4px;}
-    .dday-name{font-size:1rem;font-weight:700;margin-bottom:2px;}
+    .dday-wrap:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgba(33,150,243,0.36);}
+    .dday-wrap::before{
+      content:'';position:absolute;right:-40px;top:-40px;
+      width:140px;height:140px;border-radius:50%;
+      background:rgba(255,255,255,0.06);pointer-events:none;
+    }
+    .dday-wrap::after{
+      content:'';position:absolute;right:60px;bottom:-30px;
+      width:80px;height:80px;border-radius:50%;
+      background:rgba(255,255,255,0.04);pointer-events:none;
+    }
+    .dday-left{flex:1;position:relative;z-index:1;}
+    .dday-label{font-size:0.78rem;opacity:0.85;margin-bottom:6px;letter-spacing:0.5px;}
+    .dday-name{font-size:1.05rem;font-weight:700;margin-bottom:3px;}
     .dday-date{font-size:0.75rem;opacity:0.8;}
     .dday-num{
-      font-size:2.8rem;font-weight:900;line-height:1;
+      font-size:3.4rem;font-weight:900;line-height:1;
       text-align:right;white-space:nowrap;
+      text-shadow:0 2px 16px rgba(0,0,0,0.15);
+      position:relative;z-index:1;
     }
-    .dday-num small{font-size:1rem;font-weight:700;}
+    .dday-num small{font-size:1.1rem;font-weight:700;opacity:0.85;}
 
     /* 여행 경비 계산기 */
-    .trip-wrap{background:var(--card);border-radius:18px;border:2px solid var(--border);padding:16px 18px;box-shadow:var(--shadow);}
+    .trip-wrap{background:var(--card);border-radius:var(--radius-lg);border:2px solid var(--border);padding:18px 20px;box-shadow:var(--shadow);transition:var(--transition);}
+    .trip-wrap:hover{box-shadow:var(--shadow-md);}
     .trip-people{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
     .trip-people-label{font-size:0.85rem;font-weight:700;color:var(--sub);white-space:nowrap;}
     .trip-add-form{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
@@ -324,13 +367,17 @@
       padding:8px 16px;border-radius:10px;border:none;background:var(--sky);
       color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;
       font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0;
+      transition:var(--transition);box-shadow:0 2px 8px rgba(33,150,243,0.25);
     }
+    .trip-add-btn:hover{background:var(--sky-dark);transform:translateY(-1px);}
     .trip-items{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-    .trip-item{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:9px 12px;}
+    .trip-item{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:10px 12px;transition:background 0.15s;}
+    .trip-item:hover{background:var(--sky-light);}
     .trip-item-cat{font-size:1.1rem;flex-shrink:0;}
     .trip-item-name{flex:1;font-size:0.85rem;font-weight:700;color:var(--text);}
     .trip-item-amt{font-size:0.88rem;font-weight:900;color:var(--sky);white-space:nowrap;}
-    .trip-del-btn{background:none;border:none;cursor:pointer;color:var(--sub);font-size:1rem;padding:2px 4px;flex-shrink:0;}
+    .trip-del-btn{background:none;border:none;cursor:pointer;color:var(--sub);font-size:1rem;padding:2px 4px;flex-shrink:0;transition:color 0.15s;}
+    .trip-del-btn:hover{color:var(--red);}
     .trip-total{background:var(--sky-light);border-radius:12px;padding:13px 16px;border-left:4px solid var(--sky);}
     .trip-total.has-gold{background:var(--gold-light);border-color:var(--gold);}
     .trip-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
@@ -356,9 +403,11 @@
 
     /* 연차 계산기 */
     .calc-box{
-      background:var(--card);border-radius:18px;
-      border:2px solid var(--border);padding:18px;box-shadow:var(--shadow);
+      background:var(--card);border-radius:var(--radius-lg);
+      border:2px solid var(--border);padding:18px 20px;box-shadow:var(--shadow);
+      transition:var(--transition);
     }
+    .calc-box:hover{box-shadow:var(--shadow-md);}
     .calc-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
     .calc-label{font-size:0.85rem;color:var(--sub);font-weight:700;white-space:nowrap;}
     .calc-select{
@@ -372,13 +421,15 @@
       background:var(--card);font-size:0.82rem;font-weight:700;cursor:pointer;
       font-family:'Noto Sans KR',sans-serif;color:var(--sub);transition:all 0.2s;
     }
-    .leave-btn.active{background:var(--sky);border-color:var(--sky);color:#fff;}
+    .leave-btn.active{background:var(--sky);border-color:var(--sky);color:#fff;box-shadow:0 4px 12px rgba(33,150,243,0.28);}
     .calc-q-text{font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;}
     .calc-card{
       background:var(--card);border-radius:16px;padding:16px;
       margin-bottom:10px;border:2px solid var(--border);
+      transition:var(--transition);
     }
-    .calc-card.top{border-color:var(--gold);}
+    .calc-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+    .calc-card.top{border-color:var(--gold);background:linear-gradient(135deg,rgba(255,152,0,0.04),rgba(255,255,255,0));}
     .calc-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
     .calc-rank{
       font-size:0.75rem;font-weight:900;color:var(--sky);
@@ -402,12 +453,17 @@
     .day-cell .dc-dow{font-size:0.68rem;margin-top:2px;font-weight:700;}
     .day-cell .dc-type{font-size:0.6rem;margin-top:3px;line-height:1.2;word-break:keep-all;}
     .day-cell.dc-wknd{background:var(--sky-light);color:var(--sky);}
-    .day-cell.dc-leave{background:var(--sky);color:#fff;}
+    .day-cell.dc-leave{background:var(--sky);color:#fff;box-shadow:0 2px 8px rgba(33,150,243,0.3);}
     .day-cell.dc-holi{background:var(--red-light);color:var(--red);}
     .day-cell.dc-sub{background:var(--green-light);color:var(--green);}
     .calc-period{font-size:0.78rem;color:var(--sub);margin-top:8px;text-align:center;}
 
-    footer{text-align:center;padding:20px;font-size:0.75rem;color:var(--sub);border-top:1px solid var(--border);}
+    footer{
+      text-align:center;padding:28px 20px;font-size:0.75rem;color:var(--sub);
+      border-top:2px solid var(--border);
+      background:linear-gradient(0deg,var(--sky-light),transparent);
+      transition:background 0.25s,border-color 0.25s;
+    }
     footer a{color:var(--sky);text-decoration:none;}
 
     @media(max-width:400px){
@@ -432,6 +488,9 @@
     <div class="logo">🌬️ 윈드홀리데이</div>
     <p class="tagline">바람처럼 떠나는 황금연휴</p>
   </div>
+  <svg class="header-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
+    <path d="M0,28 C180,48 360,8 540,28 C720,48 900,8 1080,28 C1260,48 1380,16 1440,28 L1440,48 L0,48 Z"/>
+  </svg>
 </header>
 
 <main>
@@ -1167,8 +1226,12 @@ function renderBookLinks(){
           <input class="sbox-input" type="date" id="train-dep" value="${sDate}"/>
         </div>
         <div class="sbox-btn-row">
-          <button class="sbox-btn-sec" onclick="searchKTX()">🚄 코레일 KTX</button>
-          <button class="sbox-btn-sec" onclick="searchSRT()">🔴 SRT</button>
+          <button class="sbox-btn-sec sbox-btn-ktx" onclick="searchKTX()">
+            <img src="https://www.korail.com/favicon.ico" class="train-favicon" onerror="this.style.display='none'"/> 코레일 KTX
+          </button>
+          <button class="sbox-btn-sec sbox-btn-srt" onclick="searchSRT()">
+            <img src="https://etk.srail.kr/favicon.ico" class="train-favicon" onerror="this.style.display='none'"/> SRT
+          </button>
         </div>
       </div>
     </div>`;
