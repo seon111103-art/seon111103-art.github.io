@@ -217,6 +217,24 @@
     .stat-tag.worst{background:var(--red-light);color:var(--red);}
     .stat-tag.cur{background:var(--sky-light);color:var(--sky);}
 
+    /* 예매 링크 */
+    .book-section{display:flex;flex-direction:column;gap:10px;}
+    .book-group-title{font-size:0.78rem;font-weight:700;color:var(--sub);margin-bottom:2px;padding-left:2px;}
+    .book-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .book-card{
+      display:flex;align-items:center;gap:10px;
+      background:var(--card);border:2px solid var(--border);border-radius:14px;
+      padding:12px 14px;text-decoration:none;color:var(--text);
+      transition:all 0.2s;box-shadow:var(--shadow);
+    }
+    .book-card:hover{border-color:var(--sky);transform:translateY(-2px);box-shadow:0 6px 20px rgba(33,150,243,0.18);}
+    .book-icon{font-size:1.6rem;line-height:1;flex-shrink:0;}
+    .book-name{font-size:0.82rem;font-weight:700;color:var(--text);}
+    .book-desc{font-size:0.68rem;color:var(--sub);margin-top:1px;}
+    .book-card.ktx{border-left:4px solid #003DA5;}
+    .book-card.srt{border-left:4px solid #C00;}
+    .book-card.air{border-left:4px solid var(--sky);}
+
     /* D-day */
     .dday-wrap{
       background:var(--dday-grad);
@@ -372,6 +390,45 @@
       </select>
     </div>
     <div id="calc-result"></div>
+  </div>
+
+  <!-- 바로 예매하기 -->
+  <div class="section-title" style="margin-top:24px;">🎫 바로 예매하기</div>
+  <div class="book-section">
+    <div>
+      <div class="book-group-title">✈️ 항공권</div>
+      <div class="book-grid">
+        <a class="book-card air" href="https://flight.naver.com" target="_blank" rel="noopener">
+          <span class="book-icon">🟢</span>
+          <div><div class="book-name">네이버 항공</div><div class="book-desc">최저가 항공권 비교</div></div>
+        </a>
+        <a class="book-card air" href="https://www.skyscanner.co.kr" target="_blank" rel="noopener">
+          <span class="book-icon">🔵</span>
+          <div><div class="book-name">스카이스캐너</div><div class="book-desc">전 세계 항공권 비교</div></div>
+        </a>
+        <a class="book-card air" href="https://air.interpark.com" target="_blank" rel="noopener">
+          <span class="book-icon">🟠</span>
+          <div><div class="book-name">인터파크 항공</div><div class="book-desc">특가 항공권</div></div>
+        </a>
+        <a class="book-card air" href="https://www.kayak.co.kr/flights" target="_blank" rel="noopener">
+          <span class="book-icon">🟡</span>
+          <div><div class="book-name">카약</div><div class="book-desc">항공+호텔 패키지</div></div>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="book-group-title">🚄 기차</div>
+      <div class="book-grid">
+        <a class="book-card ktx" href="https://www.letskorail.com" target="_blank" rel="noopener">
+          <span class="book-icon">🚄</span>
+          <div><div class="book-name">코레일 KTX</div><div class="book-desc">KTX·무궁화 예매</div></div>
+        </a>
+        <a class="book-card srt" href="https://www.srail.or.kr" target="_blank" rel="noopener">
+          <span class="book-icon">🔴</span>
+          <div><div class="book-name">SRT</div><div class="book-desc">수서고속철도 예매</div></div>
+        </a>
+      </div>
+    </div>
   </div>
 </main>
 
