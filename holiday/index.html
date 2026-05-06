@@ -234,6 +234,21 @@
     .book-card.ktx{border-left:4px solid #003DA5;}
     .book-card.srt{border-left:4px solid #C00;}
     .book-card.air{border-left:4px solid var(--sky);}
+    .book-date-banner{
+      background:var(--dday-grad);border-radius:14px;padding:14px 16px;
+      color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:12px;
+    }
+    .book-date-info{flex:1;}
+    .book-date-label{font-size:0.72rem;opacity:0.82;margin-bottom:2px;}
+    .book-date-range{font-size:1rem;font-weight:900;}
+    .book-date-days{font-size:0.78rem;opacity:0.85;margin-top:2px;}
+    .book-copy-btn{
+      background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);
+      border-radius:10px;padding:6px 12px;color:#fff;font-size:0.75rem;font-weight:700;
+      cursor:pointer;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;
+      transition:background 0.2s;
+    }
+    .book-copy-btn:hover{background:rgba(255,255,255,0.3);}
 
     /* D-day */
     .dday-wrap{
@@ -394,42 +409,7 @@
 
   <!-- 바로 예매하기 -->
   <div class="section-title" style="margin-top:24px;">🎫 바로 예매하기</div>
-  <div class="book-section">
-    <div>
-      <div class="book-group-title">✈️ 항공권</div>
-      <div class="book-grid">
-        <a class="book-card air" href="https://flight.naver.com" target="_blank" rel="noopener">
-          <span class="book-icon">🟢</span>
-          <div><div class="book-name">네이버 항공</div><div class="book-desc">최저가 항공권 비교</div></div>
-        </a>
-        <a class="book-card air" href="https://www.skyscanner.co.kr" target="_blank" rel="noopener">
-          <span class="book-icon">🔵</span>
-          <div><div class="book-name">스카이스캐너</div><div class="book-desc">전 세계 항공권 비교</div></div>
-        </a>
-        <a class="book-card air" href="https://air.interpark.com" target="_blank" rel="noopener">
-          <span class="book-icon">🟠</span>
-          <div><div class="book-name">인터파크 항공</div><div class="book-desc">특가 항공권</div></div>
-        </a>
-        <a class="book-card air" href="https://www.kayak.co.kr/flights" target="_blank" rel="noopener">
-          <span class="book-icon">🟡</span>
-          <div><div class="book-name">카약</div><div class="book-desc">항공+호텔 패키지</div></div>
-        </a>
-      </div>
-    </div>
-    <div>
-      <div class="book-group-title">🚄 기차</div>
-      <div class="book-grid">
-        <a class="book-card ktx" href="https://www.letskorail.com" target="_blank" rel="noopener">
-          <span class="book-icon">🚄</span>
-          <div><div class="book-name">코레일 KTX</div><div class="book-desc">KTX·무궁화 예매</div></div>
-        </a>
-        <a class="book-card srt" href="https://www.srail.or.kr" target="_blank" rel="noopener">
-          <span class="book-icon">🔴</span>
-          <div><div class="book-name">SRT</div><div class="book-desc">수서고속철도 예매</div></div>
-        </a>
-      </div>
-    </div>
-  </div>
+  <div id="book-section"></div>
 </main>
 
 <footer>
@@ -791,6 +771,93 @@ function moveMonth(dir){
   renderCalendar();
 }
 
+/* 예매 링크 */
+function renderBookLinks(){
+  // 다음 황금연휴 찾기
+  let target=null;
+  for(let y=today.getFullYear();y<=2044;y++){
+    const cls=getClusters(y).filter(c=>c.days.length>=4&&c.start>=today);
+    if(cls.length){target=cls[0];break;}
+  }
+  const el=document.getElementById('book-section');
+  if(!target){el.innerHTML='';return;}
+
+  const s=target.start, e=target.end;
+  const DOW=['일','월','화','수','목','금','토'];
+  const pad=n=>String(n).padStart(2,'0');
+  const yy=s.getFullYear(),ym=pad(s.getMonth()+1),yd=pad(s.getDate());
+  const ey=e.getFullYear(),em=pad(e.getMonth()+1),ed=pad(e.getDate());
+  const sYMD=`${yy}${ym}${yd}`, eYMD=`${ey}${em}${ed}`;
+  const sYMD2=`${yy}-${ym}-${yd}`, eYMD2=`${ey}-${em}-${ed}`;
+  const sYY=`${String(yy).slice(2)}${ym}${yd}`, eYY=`${String(ey).slice(2)}${em}${ed}`;
+  const rangeText=`${s.getMonth()+1}/${s.getDate()}(${DOW[s.getDay()]}) ~ ${e.getMonth()+1}/${e.getDate()}(${DOW[e.getDay()]})`;
+  const totalDays=Math.round((e-s)/86400000)+1;
+  const names=[...new Set(target.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].slice(0,2).join(' · ');
+
+  // 날짜 포함 예매 URL
+  const urls={
+    naver:`https://flight.naver.com/flights/international/ICN-anywhere-${sYMD}/anywhere-ICN-${eYMD}?adult=1`,
+    sky:`https://www.skyscanner.co.kr/transport/flights/icn/anywhere/${sYY}/${eYY}/`,
+    interpark:`https://air.interpark.com/flight/international-flight?departureDate=${sYMD}&returnDate=${eYMD}`,
+    kayak:`https://www.kayak.co.kr/flights/ICN-anywhere/${sYMD2}/${eYMD2}/1adults`,
+    ktx:`https://www.letskorail.com/ebizprd/EbizPrdTicketpr21100W.do?hidRsvDt=${sYMD}`,
+    srt:`https://www.srail.or.kr/reservation/reservation-01.do`
+  };
+
+  el.innerHTML=`
+    <div class="book-section">
+      <div class="book-date-banner">
+        <div class="book-date-info">
+          <div class="book-date-label">🔍 자동 설정된 여행 날짜</div>
+          <div class="book-date-range">${rangeText}</div>
+          <div class="book-date-days">${totalDays}일 연속 휴무${names?' · '+names:''}</div>
+        </div>
+        <button class="book-copy-btn" onclick="copyDate('${rangeText}')">📋 복사</button>
+      </div>
+      <div style="margin-bottom:6px;">
+        <div class="book-group-title">✈️ 항공권 (날짜 자동 적용)</div>
+        <div class="book-grid">
+          <a class="book-card air" href="${urls.naver}" target="_blank" rel="noopener">
+            <span class="book-icon">🟢</span>
+            <div><div class="book-name">네이버 항공</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
+          </a>
+          <a class="book-card air" href="${urls.sky}" target="_blank" rel="noopener">
+            <span class="book-icon">🔵</span>
+            <div><div class="book-name">스카이스캐너</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
+          </a>
+          <a class="book-card air" href="${urls.interpark}" target="_blank" rel="noopener">
+            <span class="book-icon">🟠</span>
+            <div><div class="book-name">인터파크 항공</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
+          </a>
+          <a class="book-card air" href="${urls.kayak}" target="_blank" rel="noopener">
+            <span class="book-icon">🟡</span>
+            <div><div class="book-name">카약</div><div class="book-desc">항공+호텔 패키지</div></div>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="book-group-title">🚄 기차 (날짜 자동 적용)</div>
+        <div class="book-grid">
+          <a class="book-card ktx" href="${urls.ktx}" target="_blank" rel="noopener">
+            <span class="book-icon">🚄</span>
+            <div><div class="book-name">코레일 KTX</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 설정</div></div>
+          </a>
+          <a class="book-card srt" href="${urls.srt}" target="_blank" rel="noopener">
+            <span class="book-icon">🔴</span>
+            <div><div class="book-name">SRT</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
+          </a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function copyDate(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.querySelector('.book-copy-btn');
+    if(btn){btn.textContent='✅ 복사됨';setTimeout(()=>{btn.textContent='📋 복사';},1500);}
+  });
+}
+
 function toggleTheme(){
   const isDark=document.body.classList.toggle('dark');
   document.documentElement.classList.toggle('dark',isDark);
@@ -818,6 +885,7 @@ function init(){
   renderStats();
   renderDday();
   renderCalc();
+  renderBookLinks();
 }
 init();
 </script>
