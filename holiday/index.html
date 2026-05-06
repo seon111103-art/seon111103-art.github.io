@@ -243,22 +243,27 @@
     .stat-compare{font-size:0.72rem;color:var(--sub);text-align:right;}
 
     /* 예매 링크 */
-    .book-section{display:flex;flex-direction:column;gap:10px;}
-    .book-group-title{font-size:0.78rem;font-weight:700;color:var(--sub);margin-bottom:2px;padding-left:2px;}
-    .book-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-    .book-card{
-      display:flex;align-items:center;gap:10px;
-      background:var(--card);border:2px solid var(--border);border-radius:14px;
-      padding:12px 14px;text-decoration:none;color:var(--text);
-      transition:all 0.2s;box-shadow:var(--shadow);
+    .usearch-section{background:var(--card);border-radius:16px;border:2px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);}
+    .usearch-section-title{font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+    .usearch-date-bar{
+      display:flex;align-items:center;justify-content:space-between;
+      background:var(--sky-light);border-radius:10px;padding:8px 12px;margin-bottom:12px;
     }
-    .book-card:hover{border-color:var(--sky);transform:translateY(-2px);box-shadow:0 6px 20px rgba(33,150,243,0.18);}
-    .book-icon{font-size:1.6rem;line-height:1;flex-shrink:0;}
-    .book-name{font-size:0.82rem;font-weight:700;color:var(--text);}
-    .book-desc{font-size:0.68rem;color:var(--sub);margin-top:1px;}
-    .book-card.ktx{border-left:4px solid #003DA5;}
-    .book-card.srt{border-left:4px solid #C00;}
-    .book-card.air{border-left:4px solid var(--sky);}
+    .usearch-date-txt{font-size:0.88rem;font-weight:700;color:var(--sky);}
+    .usearch-date-lbl{font-size:0.68rem;color:var(--sub);}
+    .uresult-list{display:flex;flex-direction:column;gap:7px;}
+    .uresult-card{
+      display:flex;align-items:center;gap:12px;
+      background:var(--bg);border:2px solid var(--border);border-radius:12px;
+      padding:11px 14px;text-decoration:none;color:var(--text);
+      transition:all 0.2s;
+    }
+    .uresult-card:hover{border-color:var(--sky);transform:translateX(3px);box-shadow:0 3px 12px rgba(33,150,243,0.15);}
+    .uresult-icon{font-size:1.6rem;flex-shrink:0;line-height:1;}
+    .uresult-info{flex:1;}
+    .uresult-name{font-size:0.88rem;font-weight:700;}
+    .uresult-desc{font-size:0.7rem;color:var(--sub);margin-top:2px;}
+    .uresult-go{font-size:0.75rem;font-weight:700;color:var(--sky);white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:3px;}
     .book-date-banner{
       background:var(--dday-grad);border-radius:14px;padding:14px 16px;
       color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:12px;
@@ -922,7 +927,6 @@ function moveMonth(dir){
 
 /* 예매 링크 */
 function renderBookLinks(){
-  // 다음 황금연휴 찾기
   let target=null;
   for(let y=today.getFullYear();y<=2044;y++){
     const cls=getClusters(y).filter(c=>c.days.length>=4&&c.start>=today);
@@ -942,60 +946,55 @@ function renderBookLinks(){
   const rangeText=`${s.getMonth()+1}/${s.getDate()}(${DOW[s.getDay()]}) ~ ${e.getMonth()+1}/${e.getDate()}(${DOW[e.getDay()]})`;
   const totalDays=Math.round((e-s)/86400000)+1;
   const names=[...new Set(target.days.flatMap(d=>d.info.map(h=>h.name)).filter(Boolean))].slice(0,2).join(' · ');
+  const startLabel=`${s.getMonth()+1}/${s.getDate()}(${DOW[s.getDay()]})`;
+  const endLabel=`${e.getMonth()+1}/${e.getDate()}(${DOW[e.getDay()]})`;
 
-  // 날짜 포함 예매 URL
-  const urls={
-    naver:`https://flight.naver.com/flights/international/ICN-anywhere-${sYMD}/anywhere-ICN-${eYMD}?adult=1`,
-    sky:`https://www.skyscanner.co.kr/transport/flights/icn/anywhere/${sYY}/${eYY}/`,
-    interpark:`https://air.interpark.com/flight/international-flight?departureDate=${sYMD}&returnDate=${eYMD}`,
-    kayak:`https://www.kayak.co.kr/flights/ICN-anywhere/${sYMD2}/${eYMD2}/1adults`,
-    ktx:`https://www.letskorail.com/ebizprd/EbizPrdTicketpr21100W.do?hidRsvDt=${sYMD}`,
-    srt:`https://www.srail.or.kr/reservation/reservation-01.do`
-  };
+  const airSites=[
+    {icon:'🟢',name:'네이버 항공',desc:'국제선 최저가 비교',url:`https://flight.naver.com/flights/international/ICN-anywhere-${sYMD}/anywhere-ICN-${eYMD}?adult=1`},
+    {icon:'🔵',name:'스카이스캐너',desc:'전 세계 항공 검색',url:`https://www.skyscanner.co.kr/transport/flights/icn/anywhere/${sYY}/${eYY}/`},
+    {icon:'🟠',name:'인터파크 항공',desc:'특가 항공권 검색',url:`https://air.interpark.com/flight/international-flight?departureDate=${sYMD}&returnDate=${eYMD}`},
+    {icon:'🟡',name:'카약',desc:'항공+호텔 패키지',url:`https://www.kayak.co.kr/flights/ICN-anywhere/${sYMD2}/${eYMD2}/1adults`},
+  ];
+  const trainSites=[
+    {icon:'🚄',name:'코레일 KTX',desc:'고속철도 예매',url:`https://www.letskorail.com/ebizprd/EbizPrdTicketpr21100W.do?hidRsvDt=${sYMD}`},
+    {icon:'🔴',name:'SRT',desc:'수서고속철도 예매',url:'https://www.srail.or.kr/reservation/reservation-01.do'},
+  ];
+
+  const makeCards=sites=>sites.map(site=>`
+    <a class="uresult-card" href="${site.url}" target="_blank" rel="noopener">
+      <span class="uresult-icon">${site.icon}</span>
+      <div class="uresult-info">
+        <div class="uresult-name">${site.name}</div>
+        <div class="uresult-desc">${site.desc}</div>
+      </div>
+      <span class="uresult-go">바로가기 →</span>
+    </a>`).join('');
 
   el.innerHTML=`
-    <div class="book-section">
-      <div class="book-date-banner">
-        <div class="book-date-info">
-          <div class="book-date-label">🔍 자동 설정된 여행 날짜</div>
-          <div class="book-date-range">${rangeText}</div>
-          <div class="book-date-days">${totalDays}일 연속 휴무${names?' · '+names:''}</div>
-        </div>
-        <button class="book-copy-btn" onclick="copyDate('${rangeText}')">📋 복사</button>
+    <div class="book-date-banner">
+      <div class="book-date-info">
+        <div class="book-date-label">🔍 자동 설정된 여행 날짜</div>
+        <div class="book-date-range">${rangeText}</div>
+        <div class="book-date-days">${totalDays}일 연속 휴무${names?' · '+names:''}</div>
       </div>
-      <div style="margin-bottom:6px;">
-        <div class="book-group-title">✈️ 항공권 (날짜 자동 적용)</div>
-        <div class="book-grid">
-          <a class="book-card air" href="${urls.naver}" target="_blank" rel="noopener">
-            <span class="book-icon">🟢</span>
-            <div><div class="book-name">네이버 항공</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
-          </a>
-          <a class="book-card air" href="${urls.sky}" target="_blank" rel="noopener">
-            <span class="book-icon">🔵</span>
-            <div><div class="book-name">스카이스캐너</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
-          </a>
-          <a class="book-card air" href="${urls.interpark}" target="_blank" rel="noopener">
-            <span class="book-icon">🟠</span>
-            <div><div class="book-name">인터파크 항공</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
-          </a>
-          <a class="book-card air" href="${urls.kayak}" target="_blank" rel="noopener">
-            <span class="book-icon">🟡</span>
-            <div><div class="book-name">카약</div><div class="book-desc">항공+호텔 패키지</div></div>
-          </a>
+      <button class="book-copy-btn" onclick="copyDate('${rangeText}')">📋 복사</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="usearch-section">
+        <div class="usearch-section-title">✈️ 항공권 검색</div>
+        <div class="usearch-date-bar">
+          <span class="usearch-date-txt">📅 ${startLabel} 출발 · ${endLabel} 귀국</span>
+          <span class="usearch-date-lbl">날짜 자동 적용</span>
         </div>
+        <div class="uresult-list">${makeCards(airSites)}</div>
       </div>
-      <div>
-        <div class="book-group-title">🚄 기차 (날짜 자동 적용)</div>
-        <div class="book-grid">
-          <a class="book-card ktx" href="${urls.ktx}" target="_blank" rel="noopener">
-            <span class="book-icon">🚄</span>
-            <div><div class="book-name">코레일 KTX</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 설정</div></div>
-          </a>
-          <a class="book-card srt" href="${urls.srt}" target="_blank" rel="noopener">
-            <span class="book-icon">🔴</span>
-            <div><div class="book-name">SRT</div><div class="book-desc">${s.getMonth()+1}/${s.getDate()} 출발 검색</div></div>
-          </a>
+      <div class="usearch-section">
+        <div class="usearch-section-title">🚄 기차 검색</div>
+        <div class="usearch-date-bar">
+          <span class="usearch-date-txt">📅 ${startLabel} 출발</span>
+          <span class="usearch-date-lbl">출발일 자동 적용</span>
         </div>
+        <div class="uresult-list">${makeCards(trainSites)}</div>
       </div>
     </div>`;
 }
