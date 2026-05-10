@@ -5,4 +5,11 @@
     "package_name": "com.gguldanji.app",
     "sha256_cert_fingerprints": ["45:A3:39:2A:CE:D2:B6:95:63:27:CD:B6:9B:7F:CB:C4:83:74:CF:C0:33:B7:66:7F:39:F5:4A:59:18:8D:BA:15"]
   }
+},{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.windholiday.app",
+    "sha256_cert_fingerprints": ["E1:3C:2B:AF:68:C5:78:96:75:A9:6E:3B:79:CF:7C:6C:AE:AF:29:97:28:9F:1E:4F:B3:BB:2A:7A:72:8C:34:7D"]
+  }
 }]
