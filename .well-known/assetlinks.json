@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.gguldanji.honey",
+    "sha256_cert_fingerprints": ["45:A3:39:2A:CE:D2:B6:95:63:27:CD:B6:9B:7F:CB:C4:83:74:CF:C0:33:B7:66:7F:39:F5:4A:59:18:8D:BA:15"]
+  }
+}]
