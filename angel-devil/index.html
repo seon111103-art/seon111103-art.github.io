@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#1a6fc4"/>
+<title>소망구름</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1a6fc4;
+  --primary-light: #e3f2fd;
+  --devil-primary: #c62828;
+  --devil-dark: #1a0020;
+  --radius: 20px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.1);
+  --transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #daeeff 0%, #f0f9ff 100%);
+  transition: background 0.5s;
+}
+
+body.devil-mode {
+  background: linear-gradient(160deg, #1a0020 0%, #4a0010 100%);
+}
+
+/* ── Header ── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(135deg, #0a3d8f 0%, #1a6fc4 100%);
+  padding: 18px 20px 0;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  transition: background 0.5s;
+}
+
+body.devil-mode .header {
+  background: linear-gradient(135deg, #1a0020 0%, #7b0000 100%);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.app-title {
+  font-size: 21px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.app-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 2px;
+}
+
+.post-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,0.18);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 11px 8px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.65);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  border-radius: 12px 12px 0 0;
+  transition: var(--transition);
+  letter-spacing: -0.3px;
+}
+
+.tab-btn.active {
+  background: white;
+  color: var(--primary);
+}
+
+body.devil-mode .tab-btn.active {
+  color: var(--devil-primary);
+}
+
+/* ── Posts area ── */
+.posts-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 16px 110px;
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 70px 20px;
+  font-size: 15px;
+  color: #888;
+  line-height: 2;
+}
+
+body.devil-mode .loading,
+body.devil-mode .empty-state {
+  color: rgba(255,255,255,0.4);
+}
+
+/* ── Cloud Card ── */
+.cloud-card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 18px 18px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 16px rgba(26,111,196,0.1);
+  border: 2px solid rgba(26,111,196,0.07);
+  animation: fadeIn 0.35s ease;
+  position: relative;
+}
+
+body.devil-mode .cloud-card {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(198,40,40,0.25);
+}
+
+.card-type-icon {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.card-content {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #2c3e50;
+  word-break: break-word;
+  padding-top: 4px;
+}
+
+body.devil-mode .card-content {
+  color: rgba(255,255,255,0.9);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+body.devil-mode .card-footer {
+  border-top-color: rgba(255,255,255,0.08);
+}
+
+.card-time {
+  font-size: 12px;
+  color: #bbb;
+}
+
+body.devil-mode .card-time {
+  color: rgba(255,255,255,0.35);
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px;
+  background: #f5f5f5;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 20px;
+  font-size: 13px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  color: #888;
+}
+
+.like-btn:hover {
+  background: #fff0f0;
+  border-color: #ffaaaa;
+  transform: scale(1.05);
+}
+
+.like-btn.liked {
+  background: #fff0f0;
+  border-color: #ff7070;
+  color: #e53935;
+}
+
+body.devil-mode .like-btn {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.6);
+}
+
+body.devil-mode .like-btn.liked {
+  background: rgba(229,57,53,0.2);
+  border-color: #e53935;
+  color: #ff8a80;
+}
+
+/* ── FAB ── */
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 20px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1565c0, #42a5f5);
+  color: white;
+  font-size: 26px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(26,111,196,0.45);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+body.devil-mode .fab {
+  background: linear-gradient(135deg, #7b0000, #e53935);
+  box-shadow: 0 6px 24px rgba(198,40,40,0.45);
+}
+
+.fab:hover {
+  transform: translateY(-3px) scale(1.08);
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 22px 20px 40px;
+  animation: slideUp 0.32s cubic-bezier(.4,0,.2,1);
+}
+
+body.devil-mode .modal {
+  background: #180018;
+  color: white;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+body.devil-mode .modal-title {
+  color: white;
+}
+
+.modal-close {
+  background: #f0f0f0;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.modal-close:hover { background: #e0e0e0; }
+
+body.devil-mode .modal-close {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.mode-badge.angel { background: #e3f2fd; color: #1a6fc4; }
+.mode-badge.devil { background: rgba(198,40,40,0.15); color: #ff5252; }
+
+textarea {
+  width: 100%;
+  height: 130px;
+  padding: 14px;
+  border: 2px solid #e8e8e8;
+  border-radius: 14px;
+  font-size: 15px;
+  font-family: 'Noto Sans KR', sans-serif;
+  resize: none;
+  line-height: 1.7;
+  background: #fafafa;
+  transition: var(--transition);
+  color: #2c3e50;
+}
+
+textarea::placeholder { color: #bbb; }
+
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26,111,196,0.12);
+  background: white;
+}
+
+body.devil-mode textarea {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+  color: white;
+}
+
+body.devil-mode textarea:focus {
+  border-color: #e53935;
+  box-shadow: 0 0 0 3px rgba(229,57,53,0.2);
+}
+
+body.devil-mode textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+.char-count.over { color: #e53935; font-weight: 700; }
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #1565c0, #42a5f5);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: -0.3px;
+}
+
+body.devil-mode .submit-btn {
+  background: linear-gradient(135deg, #7b0000, #e53935);
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(26,111,196,0.35);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+
+/* ── Notice banner ── */
+.notice {
+  background: rgba(255,255,255,0.5);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 14px;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+body.devil-mode .notice {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="app-title" id="headerTitle">☁️ 소망구름</div>
+      <div class="app-sub">익명으로 마음을 나눠요</div>
+    </div>
+    <div class="post-count" id="postCount">불러오는 중</div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" id="angelTab" onclick="switchTab('angel')">☁️ 천사글</button>
+    <button class="tab-btn" id="devilTab" onclick="switchTab('devil')">😈 악마글</button>
+  </div>
+</div>
+
+<div class="posts-wrap">
+  <div class="notice" id="notice">☁️ 소망과 희망의 글을 나눠요 · 30일 후 자동 삭제</div>
+  <div id="posts"><div class="loading">불러오는 중... ☁️</div></div>
+</div>
+
+<button class="fab" onclick="openModal()">✏️</button>
+
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">마음을 적어요</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mode-badge angel" id="modeBadge">☁️ 천사글 모드</div>
+    <textarea id="postContent" placeholder="익명으로 글을 남겨요. 최대 200자." maxlength="200" oninput="updateCharCount()"></textarea>
+    <div class="char-count" id="charCount">0 / 200</div>
+    <button class="submit-btn" id="submitBtn" onclick="addPost()">올리기 ✨</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, increment, query, orderBy, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDp1bVcUbOcI3q4BJzBgBgwUQeSKKtVzlw",
+  authDomain: "angel-devil-cloud.firebaseapp.com",
+  projectId: "angel-devil-cloud",
+  storageBucket: "angel-devil-cloud.firebasestorage.app",
+  messagingSenderId: "791873961143",
+  appId: "1:791873961143:web:64debc9fe1883ac365a132"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ── 비속어 필터 ──
+const BAD_WORDS = [
+  '시발','씨발','씨팔','시팔','개새끼','개새','쌍놈','쌍년',
+  '병신','미친놈','미친년','존나','좆','씹','보지','자지',
+  '창녀','창년','지랄','뒤져','꺼져','닥쳐','개같은','개소리'
+];
+
+function filterProfanity(text) {
+  let out = text;
+  BAD_WORDS.forEach(w => {
+    const re = new RegExp(w, 'g');
+    out = out.replace(re, 'X'.repeat(w.length));
+  });
+  return out;
+}
+
+// ── 상태 ──
+let currentTab = 'angel';
+let likedPosts = JSON.parse(localStorage.getItem('liked') || '[]');
+
+// ── 시간 포맷 ──
+function timeAgo(date) {
+  const diff = Date.now() - date.getTime();
+  const m = Math.floor(diff / 60000);
+  const h = Math.floor(diff / 3600000);
+  const d = Math.floor(diff / 86400000);
+  if (m < 1)  return '방금 전';
+  if (m < 60) return `${m}분 전`;
+  if (h < 24) return `${h}시간 전`;
+  return `${d}일 전`;
+}
+
+// ── 글 불러오기 ──
+async function loadPosts() {
+  const postsDiv = document.getElementById('posts');
+  const icon = currentTab === 'angel' ? '☁️' : '🔥';
+  postsDiv.innerHTML = `<div class="loading">불러오는 중... ${icon}</div>`;
+
+  const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
+  const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+  try {
+    const q = query(collection(db, colName), orderBy('createdAt', 'desc'), limit(100));
+    const snap = await getDocs(q);
+
+    const posts = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.createdAt && data.createdAt.toDate() >= cutoff) {
+        posts.push({ id: d.id, ...data });
+      }
+    });
+
+    document.getElementById('postCount').textContent = `${posts.length}개의 글`;
+
+    if (posts.length === 0) {
+      postsDiv.innerHTML = `<div class="empty-state">${icon}<br><br>${
+        currentTab === 'angel'
+          ? '첫 번째 소망을<br>적어보세요!'
+          : '속 시원하게<br>털어놓으세요!'
+      }</div>`;
+      return;
+    }
+
+    postsDiv.innerHTML = '';
+    posts.forEach(p => postsDiv.appendChild(makeCard(p)));
+
+  } catch (e) {
+    console.error(e);
+    postsDiv.innerHTML = '<div class="empty-state">불러오기 실패.<br>새로고침 해주세요.</div>';
+  }
+}
+
+// ── 카드 생성 ──
+function makeCard(data) {
+  const div = document.createElement('div');
+  div.className = 'cloud-card';
+  const isLiked = likedPosts.includes(data.id);
+  const time = data.createdAt ? timeAgo(data.createdAt.toDate()) : '방금 전';
+  const icon = currentTab === 'angel' ? '☁️' : '🔥';
+
+  div.innerHTML = `
+    <div class="card-type-icon">${icon}</div>
+    <div class="card-content">${escHtml(data.content).replace(/\n/g,'<br>')}</div>
+    <div class="card-footer">
+      <span class="card-time">${time}</span>
+      <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${data.id}">
+        ${isLiked ? '❤️' : '🤍'} ${data.likes || 0}
+      </button>
+    </div>`;
+
+  div.querySelector('.like-btn').addEventListener('click', function() {
+    toggleLike(data.id, this);
+  });
+  return div;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── 좋아요 ──
+async function toggleLike(id, btn) {
+  if (likedPosts.includes(id)) return;
+  const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
+  try {
+    await updateDoc(doc(db, colName, id), { likes: increment(1) });
+    likedPosts.push(id);
+    localStorage.setItem('liked', JSON.stringify(likedPosts));
+    btn.classList.add('liked');
+    const n = parseInt(btn.textContent.replace(/\D/g,'')) + 1;
+    btn.innerHTML = `❤️ ${n}`;
+  } catch(e) { console.error(e); }
+}
+
+// ── 글 등록 ──
+async function addPost() {
+  const ta = document.getElementById('postContent');
+  const content = ta.value.trim();
+  if (!content) { alert('내용을 입력해주세요.'); return; }
+  if (content.length > 200) { alert('200자 이내로 작성해주세요.'); return; }
+
+  const filtered = filterProfanity(content);
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '등록 중...';
+
+  const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
+  try {
+    await addDoc(collection(db, colName), {
+      content: filtered,
+      likes: 0,
+      createdAt: serverTimestamp()
+    });
+    ta.value = '';
+    document.getElementById('charCount').textContent = '0 / 200';
+    closeModal();
+    await loadPosts();
+  } catch(e) {
+    alert('등록 실패. 다시 시도해주세요.');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '올리기 ✨';
+  }
+}
+
+// ── 탭 전환 ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('angelTab').classList.toggle('active', tab === 'angel');
+  document.getElementById('devilTab').classList.toggle('active', tab === 'devil');
+  document.body.className = tab === 'devil' ? 'devil-mode' : '';
+  document.getElementById('headerTitle').textContent = tab === 'angel' ? '☁️ 소망구름' : '😈 소망구름';
+  document.getElementById('notice').textContent = tab === 'angel'
+    ? '☁️ 소망과 희망의 글을 나눠요 · 30일 후 자동 삭제'
+    : '😈 욕이나 스트레스를 여기서 털어요 · 30일 후 자동 삭제';
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = tab === 'angel' ? '☁️ 천사글 모드' : '😈 악마글 모드';
+  badge.className = 'mode-badge ' + tab;
+  loadPosts();
+}
+
+// ── 모달 ──
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('postContent').focus(), 80);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function updateCharCount() {
+  const len = document.getElementById('postContent').value.length;
+  const el = document.getElementById('charCount');
+  el.textContent = `${len} / 200`;
+  el.className = 'char-count' + (len > 180 ? ' over' : '');
+}
+
+// ── 전역 바인딩 ──
+window.switchTab = switchTab;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.handleOverlayClick = handleOverlayClick;
+window.updateCharCount = updateCharCount;
+window.addPost = addPost;
+
+// ── 시작 ──
+loadPosts();
+</script>
+</body>
+</html>
