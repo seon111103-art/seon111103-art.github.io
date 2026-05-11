@@ -114,41 +114,21 @@ body {
   background: linear-gradient(160deg, #3d0000 0%, #7b0000 50%, #c62828 100%);
 }
 
-/* 구분선 */
-.split::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 5%;
-  height: 90%;
-  width: 1.5px;
-  background: rgba(255,255,255,0.12);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* 빛나는 배경 */
+/* 빛나는 배경 (마우스 따라다님) */
 .glow {
   position: absolute;
+  width: 380px; height: 380px;
   border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.35;
+  filter: blur(80px);
+  opacity: 0.45;
   pointer-events: none;
-}
-
-.angel-side .glow {
-  width: 280px; height: 280px;
-  background: #9c6fff;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
+  transition: top 0.08s ease-out, left 0.08s ease-out;
 }
 
-.devil-side .glow {
-  width: 280px; height: 280px;
-  background: #ff4444;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
+.angel-side .glow { background: #9c6fff; }
+.devil-side .glow  { background: #ff4444; }
 
 /* 콘텐츠 */
 .side-content {
@@ -274,6 +254,26 @@ for (let i = 0; i < 80; i++) {
   starsEl.appendChild(s);
 }
 
+// 마우스 커서 따라다니는 글로우
+document.querySelectorAll('.side').forEach(side => {
+  const glow = side.querySelector('.glow');
+  side.addEventListener('mousemove', (e) => {
+    const rect = side.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    glow.style.left = x + 'px';
+    glow.style.top  = y + 'px';
+    glow.style.transform = 'translate(-50%, -50%)';
+  });
+  // 터치 지원
+  side.addEventListener('touchmove', (e) => {
+    const rect = side.getBoundingClientRect();
+    const t = e.touches[0];
+    glow.style.left = (t.clientX - rect.left) + 'px';
+    glow.style.top  = (t.clientY - rect.top)  + 'px';
+    glow.style.transform = 'translate(-50%, -50%)';
+  }, { passive: true });
+});
 </script>
 </body>
 </html>
