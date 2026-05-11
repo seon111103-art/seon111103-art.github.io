@@ -108,8 +108,8 @@ body {
   content: '';
   position: absolute;
   left: 50%;
-  top: 10%;
-  height: 80%;
+  top: 22%;
+  height: 65%;
   width: 1.5px;
   background: rgba(255,255,255,0.12);
   pointer-events: none;
@@ -214,6 +214,27 @@ body {
 
 .angel-side .particle { background: rgba(156,111,255,0.2); }
 .devil-side .particle { background: rgba(255,68,68,0.2); }
+
+/* ── 네뷸라 캐릭터 ── */
+.nebula-char {
+  position: absolute;
+  width: 200px;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  filter: drop-shadow(0 0 28px rgba(180,120,255,0.75)) drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+  animation: charFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes charFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-12px); }
+}
+
+/* 캐릭터 공간 확보 */
+.side-content { padding-top: 90px; }
 </style>
 </head>
 <body>
@@ -229,6 +250,7 @@ body {
 
 <!-- 메인 스플릿 -->
 <div class="split">
+  <img class="nebula-char" src="nebula-char.png" alt="네뷸라 캐릭터"/>
 
   <!-- 천사글 (왼쪽) -->
   <a class="side angel-side" href="posts.html?tab=angel">
