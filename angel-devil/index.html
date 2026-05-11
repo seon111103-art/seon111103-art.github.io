@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#1a6fc4"/>
-<title>소망구름</title>
+<meta name="theme-color" content="#5c35cc"/>
+<title>네뷸라</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --primary: #1a6fc4;
-  --primary-light: #e3f2fd;
+  --primary: #5c35cc;
+  --primary-light: #ede7f6;
   --devil-primary: #c62828;
   --devil-dark: #1a0020;
   --radius: 20px;
@@ -23,7 +23,7 @@
 body {
   font-family: 'Noto Sans KR', sans-serif;
   min-height: 100vh;
-  background: linear-gradient(160deg, #daeeff 0%, #f0f9ff 100%);
+  background: linear-gradient(160deg, #e8e0f7 0%, #f3f0fc 100%);
   transition: background 0.5s;
 }
 
@@ -36,7 +36,7 @@ body.devil-mode {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: linear-gradient(135deg, #0a3d8f 0%, #1a6fc4 100%);
+  background: linear-gradient(135deg, #2d1275 0%, #5c35cc 100%);
   padding: 18px 20px 0;
   box-shadow: 0 2px 20px rgba(0,0,0,0.2);
   transition: background 0.5s;
@@ -131,8 +131,8 @@ body.devil-mode .empty-state {
   border-radius: 22px;
   padding: 18px 18px 14px;
   margin-bottom: 12px;
-  box-shadow: 0 3px 16px rgba(26,111,196,0.1);
-  border: 2px solid rgba(26,111,196,0.07);
+  box-shadow: 0 3px 16px rgba(92,53,204,0.1);
+  border: 2px solid rgba(92,53,204,0.07);
   animation: fadeIn 0.35s ease;
   position: relative;
 }
@@ -232,12 +232,12 @@ body.devil-mode .like-btn.liked {
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1565c0, #42a5f5);
+  background: linear-gradient(135deg, #2d1275, #7c4dcc);
   color: white;
   font-size: 26px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(26,111,196,0.45);
+  box-shadow: 0 6px 24px rgba(92,53,204,0.45);
   transition: var(--transition);
   display: flex;
   align-items: center;
@@ -332,7 +332,7 @@ body.devil-mode .modal-close {
   margin-bottom: 14px;
 }
 
-.mode-badge.angel { background: #e3f2fd; color: #1a6fc4; }
+.mode-badge.angel { background: #ede7f6; color: #5c35cc; }
 .mode-badge.devil { background: rgba(198,40,40,0.15); color: #ff5252; }
 
 textarea {
@@ -355,7 +355,7 @@ textarea::placeholder { color: #bbb; }
 textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26,111,196,0.12);
+  box-shadow: 0 0 0 3px rgba(92,53,204,0.12);
   background: white;
 }
 
@@ -385,7 +385,7 @@ body.devil-mode textarea::placeholder { color: rgba(255,255,255,0.3); }
 .submit-btn {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #1565c0, #42a5f5);
+  background: linear-gradient(135deg, #2d1275, #7c4dcc);
   color: white;
   border: none;
   border-radius: 14px;
@@ -403,7 +403,7 @@ body.devil-mode .submit-btn {
 
 .submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(26,111,196,0.35);
+  box-shadow: 0 6px 20px rgba(92,53,204,0.35);
 }
 
 .submit-btn:disabled {
@@ -451,20 +451,20 @@ body.devil-mode .notice {
 <div class="header">
   <div class="header-top">
     <div>
-      <div class="app-title" id="headerTitle">☁️ 소망구름</div>
-      <div class="app-sub">익명으로 마음을 나눠요</div>
+      <div class="app-title" id="headerTitle">🌌 네뷸라</div>
+      <div class="app-sub">안개 속에 피어나는 희망</div>
     </div>
     <div class="post-count" id="postCount">불러오는 중</div>
   </div>
   <div class="tabs">
-    <button class="tab-btn active" id="angelTab" onclick="switchTab('angel')">☁️ 천사글</button>
+    <button class="tab-btn active" id="angelTab" onclick="switchTab('angel')">🌌 천사글</button>
     <button class="tab-btn" id="devilTab" onclick="switchTab('devil')">😈 악마글</button>
   </div>
 </div>
 
 <div class="posts-wrap">
-  <div class="notice" id="notice">☁️ 소망과 희망의 글을 나눠요 · 30일 후 자동 삭제</div>
-  <div id="posts"><div class="loading">불러오는 중... ☁️</div></div>
+  <div class="notice" id="notice">🌌 네뷸라에 마음을 남겨요 · 30일 후 자동 삭제</div>
+  <div id="posts"><div class="loading">불러오는 중... 🌌</div></div>
 </div>
 
 <button class="fab" onclick="openModal()">✏️</button>
@@ -475,7 +475,7 @@ body.devil-mode .notice {
       <span class="modal-title">마음을 적어요</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="mode-badge angel" id="modeBadge">☁️ 천사글 모드</div>
+    <div class="mode-badge angel" id="modeBadge">🌌 천사글 모드</div>
     <textarea id="postContent" placeholder="익명으로 글을 남겨요. 최대 200자." maxlength="200" oninput="updateCharCount()"></textarea>
     <div class="char-count" id="charCount">0 / 200</div>
     <button class="submit-btn" id="submitBtn" onclick="addPost()">올리기 ✨</button>
@@ -533,7 +533,7 @@ function timeAgo(date) {
 // ── 글 불러오기 ──
 async function loadPosts() {
   const postsDiv = document.getElementById('posts');
-  const icon = currentTab === 'angel' ? '☁️' : '🔥';
+  const icon = currentTab === 'angel' ? '🌌' : '🔥';
   postsDiv.innerHTML = `<div class="loading">불러오는 중... ${icon}</div>`;
 
   const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
@@ -556,7 +556,7 @@ async function loadPosts() {
     if (posts.length === 0) {
       postsDiv.innerHTML = `<div class="empty-state">${icon}<br><br>${
         currentTab === 'angel'
-          ? '첫 번째 소망을<br>적어보세요!'
+          ? '첫 번째 희망을<br>적어보세요!'
           : '속 시원하게<br>털어놓으세요!'
       }</div>`;
       return;
@@ -577,7 +577,7 @@ function makeCard(data) {
   div.className = 'cloud-card';
   const isLiked = likedPosts.includes(data.id);
   const time = data.createdAt ? timeAgo(data.createdAt.toDate()) : '방금 전';
-  const icon = currentTab === 'angel' ? '☁️' : '🔥';
+  const icon = currentTab === 'angel' ? '🌌' : '🔥';
 
   div.innerHTML = `
     <div class="card-type-icon">${icon}</div>
@@ -651,12 +651,12 @@ function switchTab(tab) {
   document.getElementById('angelTab').classList.toggle('active', tab === 'angel');
   document.getElementById('devilTab').classList.toggle('active', tab === 'devil');
   document.body.className = tab === 'devil' ? 'devil-mode' : '';
-  document.getElementById('headerTitle').textContent = tab === 'angel' ? '☁️ 소망구름' : '😈 소망구름';
+  document.getElementById('headerTitle').textContent = tab === 'angel' ? '🌌 네뷸라' : '😈 네뷸라';
   document.getElementById('notice').textContent = tab === 'angel'
-    ? '☁️ 소망과 희망의 글을 나눠요 · 30일 후 자동 삭제'
+    ? '🌌 네뷸라에 마음을 남겨요 · 30일 후 자동 삭제'
     : '😈 욕이나 스트레스를 여기서 털어요 · 30일 후 자동 삭제';
   const badge = document.getElementById('modeBadge');
-  badge.textContent = tab === 'angel' ? '☁️ 천사글 모드' : '😈 악마글 모드';
+  badge.textContent = tab === 'angel' ? '🌌 천사글 모드' : '😈 악마글 모드';
   badge.className = 'mode-badge ' + tab;
   loadPosts();
 }
