@@ -114,31 +114,53 @@ body.devil-mode .header {
 /* Tabs */
 .tabs {
   display: flex;
-  gap: 6px;
+  justify-content: center;
+  gap: 24px;
+  padding-bottom: 10px;
 }
 
 .tab-btn {
-  flex: 1;
-  padding: 11px 8px;
+  background: none;
   border: none;
-  background: rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.65);
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'Noto Sans KR', sans-serif;
   cursor: pointer;
-  border-radius: 12px 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
   transition: var(--transition);
-  letter-spacing: -0.3px;
+  opacity: 0.45;
+  filter: grayscale(30%);
 }
 
 .tab-btn.active {
-  background: white;
-  color: var(--primary);
+  opacity: 1;
+  filter: none;
+  transform: translateY(-4px);
 }
 
-body.devil-mode .tab-btn.active {
-  color: var(--devil-primary);
+.tab-btn img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 10px rgba(0,0,0,0.25));
+  transition: var(--transition);
+}
+
+.tab-btn.active img {
+  filter: drop-shadow(0 4px 16px rgba(255,255,255,0.45));
+}
+
+.tab-btn span {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: -0.2px;
+}
+
+.tab-btn.active span {
+  color: #fff;
 }
 
 /* 탭 숨김 (단독 모드) */
@@ -627,8 +649,14 @@ body.devil-mode .confirm-text { color: #ff8a80; }
     </div>
   </div>
   <div class="tabs" id="tabs">
-    <button class="tab-btn active" id="angelTab" onclick="switchTab('angel')">✨ 천사</button>
-    <button class="tab-btn" id="devilTab" onclick="switchTab('devil')">😈 악마</button>
+    <button class="tab-btn active" id="angelTab" onclick="switchTab('angel')">
+      <img src="angel-char.png" alt="천사"/>
+      <span>천사</span>
+    </button>
+    <button class="tab-btn" id="devilTab" onclick="switchTab('devil')">
+      <img src="devil-char.png" alt="악마"/>
+      <span>악마</span>
+    </button>
   </div>
 </div>
 
