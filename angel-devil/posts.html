@@ -58,6 +58,20 @@ body.devil-mode .header {
   gap: 10px;
 }
 
+.header-char {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  animation: charFloat 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes charFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
 .back-btn {
   background: rgba(255,255,255,0.18);
   border: none;
@@ -485,6 +499,7 @@ body.devil-mode .notice {
   <div class="header-top">
     <div class="header-left">
       <button class="back-btn" onclick="history.back()">&#8592;</button>
+      <img class="header-char" id="headerChar" src="angel-char.png" alt="캐릭터"/>
       <div>
         <div class="app-title" id="headerTitle">✨ Nebula</div>
         <div class="app-sub" id="headerSub">희망과 소망을 익명으로 나눠요</div>
@@ -692,11 +707,15 @@ function switchTab(tab) {
     document.getElementById('headerSub').textContent = '희망과 소망을 익명으로 나눠요';
     document.getElementById('notice').textContent = '✨ Nebula에 글을 남겨요. 30일 후 자동 삭제';
     document.getElementById('modeBadge').textContent = '✨ 천사 모드';
+    document.getElementById('headerChar').src = 'angel-char.png';
+    document.getElementById('headerChar').alt = '천사 네뷸라';
   } else {
     document.getElementById('headerTitle').textContent = '😈 Nebula';
     document.getElementById('headerSub').textContent = '스트레스와 욕을 시원하게 털어요';
     document.getElementById('notice').textContent = '😈 악마 스트레스를 털어놔요. 30일 후 자동 삭제';
     document.getElementById('modeBadge').textContent = '😈 악마 모드';
+    document.getElementById('headerChar').src = 'devil-char.png';
+    document.getElementById('headerChar').alt = '악마 네뷸라';
   }
 
   const badge = document.getElementById('modeBadge');
