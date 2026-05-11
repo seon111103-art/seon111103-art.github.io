@@ -600,6 +600,13 @@ body.devil-mode .edit-btn { background: rgba(255,255,255,0.08); border-color: rg
 body.devil-mode .edit-btn:hover { background: rgba(92,53,204,0.3); border-color: #9c6fff; color: #fff; }
 body.devil-mode .delete-btn { background: rgba(229,57,53,0.1); border-color: rgba(229,57,53,0.3); }
 body.devil-mode .delete-btn:hover { background: #e53935; border-color: #e53935; color: #fff; }
+.confirm-text {
+  font-size: 12px;
+  color: #e53935;
+  font-weight: 700;
+  white-space: nowrap;
+}
+body.devil-mode .confirm-text { color: #ff8a80; }
 </style>
 </head>
 <body>
@@ -758,7 +765,6 @@ function makeCard(data) {
   const isLiked = likedPosts.includes(data.id);
   const time = data.createdAt ? timeAgo(data.createdAt.toDate()) : '방금 전';
   const icon = currentTab === 'angel' ? '✨' : '😈';
-
   const isMine = myPosts.includes(data.id);
 
   div.innerHTML = `
@@ -767,10 +773,7 @@ function makeCard(data) {
     <div class="card-footer">
       <span class="card-time">${time}</span>
       <div style="display:flex;align-items:center;gap:8px;">
-        ${isMine ? `<div class="my-actions">
-          <button class="action-btn edit-btn">수정</button>
-          <button class="action-btn delete-btn">삭제</button>
-        </div>` : ''}
+        ${isMine ? `<div class="my-actions"></div>` : ''}
         <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${data.id}">
           ${isLiked ? '❤️' : '🤍'} ${data.likes || 0}
         </button>
@@ -781,10 +784,28 @@ function makeCard(data) {
     toggleLike(data.id, this);
   });
   if (isMine) {
-    div.querySelector('.edit-btn').addEventListener('click', () => openEditModal(data.id, data.content));
-    div.querySelector('.delete-btn').addEventListener('click', () => deletePost(data.id));
+    renderMyActions(div, data.id, data.content);
   }
   return div;
+}
+
+function renderMyActions(cardEl, id, content) {
+  const actions = cardEl.querySelector('.my-actions');
+  actions.innerHTML = `
+    <button class="action-btn edit-btn">수정</button>
+    <button class="action-btn delete-btn">삭제</button>`;
+  actions.querySelector('.edit-btn').addEventListener('click', () => openEditModal(id, content));
+  actions.querySelector('.delete-btn').addEventListener('click', () => showDeleteConfirm(cardEl, id, content));
+}
+
+function showDeleteConfirm(cardEl, id, content) {
+  const actions = cardEl.querySelector('.my-actions');
+  actions.innerHTML = `
+    <span class="confirm-text">삭제할까요?</span>
+    <button class="action-btn delete-btn">확인</button>
+    <button class="action-btn edit-btn">취소</button>`;
+  actions.querySelector('.delete-btn').addEventListener('click', () => deletePost(id));
+  actions.querySelector('.edit-btn').addEventListener('click', () => renderMyActions(cardEl, id, content));
 }
 
 function escHtml(str) {
@@ -884,7 +905,6 @@ async function saveEdit() {
 
 // 삭제
 async function deletePost(id) {
-  if (!confirm('이 글을 삭제할까요?')) return;
   const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
   try {
     await deleteDoc(doc(db, colName, id));
@@ -892,8 +912,8 @@ async function deletePost(id) {
     localStorage.setItem('myPosts', JSON.stringify(myPosts));
     await loadPosts();
   } catch(e) {
-    alert('삭제 실패. 다시 시도해 주세요.');
-    console.error(e);
+    console.error('삭제 오류:', e);
+    alert('삭제 실패. Firebase 규칙을 확인해 주세요.');
   }
 }
 
@@ -902,7 +922,9 @@ function switchTab(tab) {
   currentTab = tab;
   document.getElementById('angelTab').classList.toggle('active', tab === 'angel');
   document.getElementById('devilTab').classList.toggle('active', tab === 'devil');
+  const isDark = document.body.classList.contains('dark');
   document.body.className = tab === 'devil' ? 'devil-mode' : '';
+  if (isDark) document.body.classList.add('dark');
 
   if (tab === 'angel') {
     document.getElementById('headerTitle').textContent = '✨ Nebula';
