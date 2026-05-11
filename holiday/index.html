@@ -473,6 +473,46 @@
       .cal-num{font-size:0.78rem;}
       .cal-tag{font-size:0.55rem;}
     }
+    .ad-inquiry {
+      background: linear-gradient(135deg, #e3f2fd, #f0f7ff);
+      border-top: 2px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      padding: 20px 16px;
+    }
+    .dark .ad-inquiry { background: linear-gradient(135deg, #0d2137, #0d1b2a); border-color: #1e3a5f; }
+    .ad-inquiry-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .ad-inquiry-icon { font-size: 28px; flex-shrink: 0; }
+    .ad-inquiry-text { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .ad-inquiry-text strong { font-size: 14px; font-weight: 900; color: var(--text); }
+    .dark .ad-inquiry-text strong { color: #e0e0e0; }
+    .ad-inquiry-text span { font-size: 12px; color: var(--sub); line-height: 1.6; }
+    .ad-inquiry-btn {
+      display: inline-block;
+      padding: 9px 18px;
+      background: var(--sky);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .ad-inquiry-btn:hover { background: var(--sky-dark); }
+    .site-footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      color: var(--sub);
+      font-family: 'Noto Sans KR', sans-serif;
+    }
   </style>
 </head>
 <body>
@@ -1390,5 +1430,20 @@ function init(){
 }
 init();
 </script>
+
+<section class="ad-inquiry">
+  <div class="ad-inquiry-inner">
+    <div class="ad-inquiry-icon">📢</div>
+    <div class="ad-inquiry-text">
+      <strong>광고 문의</strong>
+      <span>윈드홀리데이에 광고를 게재하고 싶으신가요?<br>아래 이메일로 연락 주세요!</span>
+    </div>
+    <a class="ad-inquiry-btn" href="mailto:seon111103@gmail.com">seon111103@gmail.com</a>
+  </div>
+</section>
+<footer class="site-footer">
+  © 2026 윈드홀리데이 · <a href="/privacy/" style="color:var(--sub);text-decoration:none;">개인정보처리방침</a>
+</footer>
+
 </body>
 </html>
