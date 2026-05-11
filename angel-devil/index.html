@@ -136,15 +136,16 @@ body {
 .angel-card .card-glow { background: #a0c0ff; }
 .devil-card .card-glow  { background: #ffb0c8; }
 
-.card-emoji {
-  font-size: 52px;
-  margin-bottom: 14px;
+.card-char {
+  width: 110px;
+  display: block;
+  margin: 0 auto 10px;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.25));
   animation: float 3s ease-in-out infinite;
 }
-.devil-card .card-emoji { animation-delay: -1.5s; }
+.devil-card .card-char { animation-delay: -1.5s; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
@@ -208,7 +209,7 @@ body {
 
   <a class="card angel-card" href="posts.html?tab=angel">
     <div class="card-glow"></div>
-    <span class="card-emoji">✨</span>
+    <img class="card-char" src="angel-char.png" alt="천사 네뷸라"/>
     <div class="card-title">천사글</div>
     <div class="card-desc">희망과 소망을<br>익명으로 나눠요</div>
     <div class="card-btn">들어가기 →</div>
@@ -216,7 +217,7 @@ body {
 
   <a class="card devil-card" href="posts.html?tab=devil">
     <div class="card-glow"></div>
-    <span class="card-emoji">😈</span>
+    <img class="card-char" src="devil-char.png" alt="악마 네뷸라"/>
     <div class="card-title">악마글</div>
     <div class="card-desc">스트레스와 욕을<br>시원하게 털어요</div>
     <div class="card-btn">들어가기 →</div>
