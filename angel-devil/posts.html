@@ -491,6 +491,39 @@ body.devil-mode .notice {
   background: rgba(255,255,255,0.06);
   color: rgba(255,255,255,0.4);
 }
+
+/* 내 글 액션 버튼 */
+.my-actions {
+  display: flex;
+  gap: 6px;
+}
+.action-btn {
+  padding: 4px 11px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  border: 1.5px solid;
+  transition: var(--transition);
+}
+.edit-btn {
+  background: #f5f5f5;
+  border-color: #ddd;
+  color: #555;
+}
+.edit-btn:hover { background: #e8e8ff; border-color: var(--primary); color: var(--primary); }
+.delete-btn {
+  background: #fff5f5;
+  border-color: #ffcccc;
+  color: #e53935;
+}
+.delete-btn:hover { background: #e53935; border-color: #e53935; color: #fff; }
+
+body.devil-mode .edit-btn { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+body.devil-mode .edit-btn:hover { background: rgba(92,53,204,0.3); border-color: #9c6fff; color: #fff; }
+body.devil-mode .delete-btn { background: rgba(229,57,53,0.1); border-color: rgba(229,57,53,0.3); }
+body.devil-mode .delete-btn:hover { background: #e53935; border-color: #e53935; color: #fff; }
 </style>
 </head>
 <body>
@@ -523,19 +556,19 @@ body.devil-mode .notice {
 <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">새 글 쓰기</span>
+      <span class="modal-title" id="modalTitle">새 글 쓰기</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="mode-badge angel" id="modeBadge">✨ 천사 모드</div>
     <textarea id="postContent" placeholder="익명으로 글을 남겨요. 최대 200자" maxlength="200" oninput="updateCharCount()"></textarea>
     <div class="char-count" id="charCount">0 / 200</div>
-    <button class="submit-btn" id="submitBtn" onclick="addPost()">올리기 →</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitPost()">올리기 →</button>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, increment, query, orderBy, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, increment, query, orderBy, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDp1bVcUbOcI3q4BJzBgBgwUQeSKKtVzlw",
@@ -567,6 +600,8 @@ function filterProfanity(text) {
 // 상태
 let currentTab = 'angel';
 let likedPosts = JSON.parse(localStorage.getItem('liked') || '[]');
+let myPosts = JSON.parse(localStorage.getItem('myPosts') || '[]');
+let editingPostId = null;
 
 // 시간 표시
 function timeAgo(date) {
@@ -629,19 +664,31 @@ function makeCard(data) {
   const time = data.createdAt ? timeAgo(data.createdAt.toDate()) : '방금 전';
   const icon = currentTab === 'angel' ? '✨' : '😈';
 
+  const isMine = myPosts.includes(data.id);
+
   div.innerHTML = `
     <div class="card-type-icon">${icon}</div>
     <div class="card-content">${escHtml(data.content).replace(/\n/g,'<br>')}</div>
     <div class="card-footer">
       <span class="card-time">${time}</span>
-      <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${data.id}">
-        ${isLiked ? '❤️' : '🤍'} ${data.likes || 0}
-      </button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        ${isMine ? `<div class="my-actions">
+          <button class="action-btn edit-btn">수정</button>
+          <button class="action-btn delete-btn">삭제</button>
+        </div>` : ''}
+        <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${data.id}">
+          ${isLiked ? '❤️' : '🤍'} ${data.likes || 0}
+        </button>
+      </div>
     </div>`;
 
   div.querySelector('.like-btn').addEventListener('click', function() {
     toggleLike(data.id, this);
   });
+  if (isMine) {
+    div.querySelector('.edit-btn').addEventListener('click', () => openEditModal(data.id, data.content));
+    div.querySelector('.delete-btn').addEventListener('click', () => deletePost(data.id));
+  }
   return div;
 }
 
@@ -677,11 +724,13 @@ async function addPost() {
 
   const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
   try {
-    await addDoc(collection(db, colName), {
+    const docRef = await addDoc(collection(db, colName), {
       content: filtered,
       likes: 0,
       createdAt: serverTimestamp()
     });
+    myPosts.push(docRef.id);
+    localStorage.setItem('myPosts', JSON.stringify(myPosts));
     ta.value = '';
     document.getElementById('charCount').textContent = '0 / 200';
     closeModal();
@@ -692,6 +741,64 @@ async function addPost() {
   } finally {
     btn.disabled = false;
     btn.textContent = '올리기 →';
+  }
+}
+
+// 새 글 / 수정 분기
+function submitPost() {
+  if (editingPostId) saveEdit();
+  else addPost();
+}
+
+// 수정 모달 열기
+function openEditModal(id, content) {
+  editingPostId = id;
+  document.getElementById('modalTitle').textContent = '글 수정';
+  document.getElementById('submitBtn').textContent = '수정 완료 →';
+  document.getElementById('postContent').value = content;
+  updateCharCount();
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('postContent').focus(), 80);
+}
+
+// 수정 저장
+async function saveEdit() {
+  const ta = document.getElementById('postContent');
+  const content = ta.value.trim();
+  if (!content) { alert('내용을 입력해 주세요.'); return; }
+  if (content.length > 200) { alert('200자 이내로 작성해 주세요.'); return; }
+
+  const filtered = filterProfanity(content);
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '수정 중..';
+
+  const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
+  try {
+    await updateDoc(doc(db, colName, editingPostId), { content: filtered });
+    closeModal();
+    await loadPosts();
+  } catch(e) {
+    alert('수정 실패. 다시 시도해 주세요.');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '수정 완료 →';
+  }
+}
+
+// 삭제
+async function deletePost(id) {
+  if (!confirm('이 글을 삭제할까요?')) return;
+  const colName = currentTab === 'angel' ? 'angel_posts' : 'devil_posts';
+  try {
+    await deleteDoc(doc(db, colName, id));
+    myPosts = myPosts.filter(p => p !== id);
+    localStorage.setItem('myPosts', JSON.stringify(myPosts));
+    await loadPosts();
+  } catch(e) {
+    alert('삭제 실패. 다시 시도해 주세요.');
+    console.error(e);
   }
 }
 
@@ -731,6 +838,11 @@ function openModal() {
 
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
+  editingPostId = null;
+  document.getElementById('modalTitle').textContent = '새 글 쓰기';
+  document.getElementById('submitBtn').textContent = '올리기 →';
+  document.getElementById('postContent').value = '';
+  document.getElementById('charCount').textContent = '0 / 200';
 }
 
 function handleOverlayClick(e) {
@@ -751,6 +863,7 @@ window.closeModal = closeModal;
 window.handleOverlayClick = handleOverlayClick;
 window.updateCharCount = updateCharCount;
 window.addPost = addPost;
+window.submitPost = submitPost;
 
 // 시작: URL 파라미터 처리
 const urlTab = new URLSearchParams(location.search).get('tab');
