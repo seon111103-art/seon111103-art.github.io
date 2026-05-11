@@ -492,6 +492,82 @@ body.devil-mode .notice {
   color: rgba(255,255,255,0.4);
 }
 
+/* ── 다크모드 (천사 모드 전용) ── */
+body.dark:not(.devil-mode) {
+  background: linear-gradient(160deg, #0d0a1e 0%, #18103a 100%);
+}
+body.dark:not(.devil-mode) .header {
+  background: linear-gradient(135deg, #090618 0%, #2a1870 100%);
+}
+body.dark:not(.devil-mode) .cloud-card {
+  background: #18103a;
+  border-color: rgba(100,70,210,0.22);
+  box-shadow: 0 3px 16px rgba(0,0,0,0.35);
+}
+body.dark:not(.devil-mode) .card-content { color: #d8d0f8; }
+body.dark:not(.devil-mode) .card-time   { color: rgba(200,185,255,0.38); }
+body.dark:not(.devil-mode) .card-footer { border-top-color: rgba(255,255,255,0.07); }
+body.dark:not(.devil-mode) .like-btn {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.55);
+}
+body.dark:not(.devil-mode) .like-btn.liked {
+  background: rgba(229,57,53,0.2);
+  border-color: #e53935;
+  color: #ff8a80;
+}
+body.dark:not(.devil-mode) .notice {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.38);
+}
+body.dark:not(.devil-mode) .loading,
+body.dark:not(.devil-mode) .empty-state { color: rgba(255,255,255,0.4); }
+body.dark:not(.devil-mode) .modal       { background: #130d28; }
+body.dark:not(.devil-mode) .modal-title { color: #fff; }
+body.dark:not(.devil-mode) .modal-close { background: rgba(255,255,255,0.12); color: #fff; }
+body.dark:not(.devil-mode) textarea {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+  color: #fff;
+}
+body.dark:not(.devil-mode) textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(92,53,204,0.22);
+}
+body.dark:not(.devil-mode) textarea::placeholder { color: rgba(255,255,255,0.28); }
+body.dark:not(.devil-mode) .edit-btn {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.7);
+}
+body.dark:not(.devil-mode) .edit-btn:hover  { background: rgba(92,53,204,0.3); border-color: #9c6fff; color: #fff; }
+body.dark:not(.devil-mode) .delete-btn      { background: rgba(229,57,53,0.1); border-color: rgba(229,57,53,0.3); }
+body.dark:not(.devil-mode) .delete-btn:hover{ background: #e53935; border-color: #e53935; color: #fff; }
+
+/* 테마 토글 버튼 */
+.theme-toggle-btn {
+  background: rgba(255,255,255,0.18);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.theme-toggle-btn:hover { background: rgba(255,255,255,0.3); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* 내 글 액션 버튼 */
 .my-actions {
   display: flex;
@@ -538,7 +614,10 @@ body.devil-mode .delete-btn:hover { background: #e53935; border-color: #e53935; 
         <div class="app-sub" id="headerSub">희망과 소망을 익명으로 나눠요</div>
       </div>
     </div>
-    <div class="post-count" id="postCount">불러오는 중...</div>
+    <div class="header-right">
+      <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+      <div class="post-count" id="postCount">불러오는 중...</div>
+    </div>
   </div>
   <div class="tabs" id="tabs">
     <button class="tab-btn active" id="angelTab" onclick="switchTab('angel')">✨ 천사</button>
@@ -596,6 +675,22 @@ function filterProfanity(text) {
   });
   return out;
 }
+
+// 테마 초기화
+(function() {
+  const saved = localStorage.getItem('nebula-theme');
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('nebula-theme', isDark ? 'dark' : 'light');
+}
+window.toggleTheme = toggleTheme;
 
 // 상태
 let currentTab = 'angel';

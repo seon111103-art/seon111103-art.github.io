@@ -25,6 +25,32 @@ body {
   padding: 32px 20px 40px;
 }
 
+/* ── 다크모드 ── */
+body.dark {
+  background: #0d0a1e;
+}
+body.dark .app-title { color: #c0b0ff; }
+body.dark .app-sub   { color: #6a5898; }
+
+.theme-btn {
+  position: fixed;
+  top: 16px; right: 16px;
+  background: rgba(255,255,255,0.18);
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #5540aa;
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  transition: all 0.22s;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+}
+body.dark .theme-btn { background: rgba(255,255,255,0.1); color: rgba(200,180,255,0.85); }
+.theme-btn:hover { background: rgba(255,255,255,0.32); }
+
 /* ── 배경 반짝이 ── */
 .sparkle {
   position: fixed;
@@ -194,6 +220,8 @@ body {
 </head>
 <body>
 
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 다크</button>
+
 <!-- 배경 반짝이 -->
 <div id="sparkles"></div>
 
@@ -226,6 +254,18 @@ body {
 </div>
 
 <script>
+// 테마
+const _saved = localStorage.getItem('nebula-theme');
+if (_saved === 'dark') {
+  document.body.classList.add('dark');
+  document.getElementById('themeBtn').textContent = '☀️ 라이트';
+}
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️ 라이트' : '🌙 다크';
+  localStorage.setItem('nebula-theme', isDark ? 'dark' : 'light');
+}
+
 // 배경 반짝이 생성
 const wrap = document.getElementById('sparkles');
 const colors = ['#c8d8ff','#d8c8ff','#ffc8e0','#c8eeff','#e8c8ff'];
