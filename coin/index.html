@@ -107,6 +107,18 @@
     .l-badge { background:var(--red); color:#fff; font-size:.66rem; padding:2px 8px; border-radius:10px; font-weight:600; }
     .coupang-notice { font-size:.72rem; color:var(--text-faint); margin-top:4px; text-align:center; }
 
+    /* 가이드 섹션 */
+    .guide-section{max-width:860px;margin:0 auto;padding:48px 20px 20px;}
+    .guide-section h2{font-size:1.15rem;font-weight:800;color:var(--primary);margin-bottom:28px;padding-bottom:12px;border-bottom:2px solid var(--border);}
+    .guide-article{margin-bottom:28px;}
+    .guide-article h3{font-size:.97rem;font-weight:700;color:var(--text);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--primary);}
+    .guide-article p{font-size:.86rem;line-height:1.9;color:var(--text-sub);margin-bottom:8px;}
+    .guide-table{width:100%;border-collapse:collapse;font-size:.83rem;margin-top:12px;}
+    .guide-table th{background:var(--bg-card);color:var(--text-sub);font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid var(--border);}
+    .guide-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-sub);}
+    .guide-table tr:last-child td{border-bottom:none;}
+    .guide-tip{background:var(--bg-card);border-radius:10px;padding:12px 16px;margin-top:10px;font-size:.84rem;color:var(--text-sub);line-height:1.75;border-left:3px solid var(--primary);}
+
     footer { text-align:center; padding:28px 20px; font-size:.78rem; color:var(--text-faint); border-top:1px solid var(--border); }
 
     @media(max-width:600px) {
@@ -193,6 +205,38 @@
   </div>
 
 </main>
+
+<section class="guide-section">
+  <h2>₿ 암호화폐 기초 완벽 가이드</h2>
+
+  <div class="guide-article">
+    <h3>비트코인(BTC)이란?</h3>
+    <p>비트코인은 2009년 사토시 나카모토가 만든 세계 최초의 암호화폐입니다. 중앙은행이나 정부의 통제 없이 블록체인 기술을 기반으로 운영되며, 총 발행량이 2,100만 개로 제한되어 있어 희소성을 가집니다. 현재 암호화폐 시장에서 가장 큰 시가총액을 차지하며 '디지털 금'으로 불리기도 합니다. 반감기(Halving)마다 채굴 보상이 절반으로 줄어들며, 역사적으로 반감기 이후 가격 상승 경향이 있었습니다.</p>
+  </div>
+
+  <div class="guide-article">
+    <h3>이더리움(ETH)이란?</h3>
+    <p>이더리움은 2015년 비탈릭 부테린이 개발한 스마트 컨트랙트 플랫폼입니다. 단순 결제 기능만 있는 비트코인과 달리, 탈중앙화 애플리케이션(DApp) 개발이 가능하며 NFT, DeFi(탈중앙화 금융) 등 다양한 분야에 활용됩니다. 2022년 '머지(Merge)' 업그레이드를 통해 작업증명(PoW)에서 지분증명(PoS)으로 전환하여 에너지 소비를 99% 이상 절감했습니다.</p>
+    <table class="guide-table">
+      <tr><th>구분</th><th>비트코인(BTC)</th><th>이더리움(ETH)</th></tr>
+      <tr><td>주요 목적</td><td>가치 저장, 결제</td><td>스마트 컨트랙트 플랫폼</td></tr>
+      <tr><td>발행량</td><td>2,100만 개 제한</td><td>연간 발행량 제한</td></tr>
+      <tr><td>합의 방식</td><td>작업증명(PoW)</td><td>지분증명(PoS)</td></tr>
+      <tr><td>주요 활용</td><td>투자, 결제</td><td>DeFi, NFT, DApp</td></tr>
+    </table>
+  </div>
+
+  <div class="guide-article">
+    <h3>암호화폐 투자 시 꼭 알아야 할 사항</h3>
+    <p>암호화폐는 높은 변동성을 가진 투자 자산으로, 단기간에 큰 수익을 낼 수 있지만 그만큼 손실 위험도 큽니다. ① 투자 금액은 잃어도 생활에 지장이 없는 여윳돈으로만 하세요. ② 여러 코인에 분산 투자하여 위험을 줄이세요. ③ 장기 투자 관점으로 접근하고 단기 가격 변동에 흔들리지 마세요. ④ 거래소는 금융당국에 등록된 공식 거래소(업비트, 빗썸, 코인원 등)를 이용하세요.</p>
+    <div class="guide-tip">⚠️ <strong>주의:</strong> 본 사이트의 시세 정보는 참고용입니다. 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</div>
+  </div>
+
+  <div class="guide-article">
+    <h3>업비트 거래소 이용 방법</h3>
+    <p>업비트는 카카오가 투자한 국내 최대 암호화폐 거래소입니다. 카카오 계정 또는 이메일로 가입 후 실명 인증을 완료하면 원화 입금 및 거래가 가능합니다. 200개 이상의 코인을 거래할 수 있으며 거래 수수료는 0.05%로 업계 최저 수준입니다. 모바일 앱과 PC 웹 모두 지원하며, 업비트 투자자 보호센터를 통해 사기 예방 정보도 제공합니다.</p>
+  </div>
+</section>
 
 <footer>
   <p>시세 정보는 업비트 기준이며 실제 거래 가격과 다를 수 있습니다. 투자 판단의 책임은 본인에게 있습니다.</p>
