@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>꿀단지 소개 | 재테크·게임·여행 정보 모음</title>
+  <meta name="description" content="꿀단지는 부동산·환율·코인·주식·게임·해외여행 정보를 무료로 제공하는 생활 정보 서비스입니다."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Noto Sans KR',sans-serif;background:#fffbf0;color:#3a2a00;line-height:1.8;}
+    header{background:#fff;border-bottom:2px solid #f0d890;padding:20px 24px;display:flex;align-items:center;gap:12px;}
+    header a{text-decoration:none;color:#f5a800;font-size:1.3rem;font-weight:700;}
+    header span{color:#8a7040;font-size:0.9rem;}
+    main{max-width:780px;margin:0 auto;padding:40px 20px 80px;}
+    h1{font-size:1.6rem;font-weight:700;color:#f5a800;margin-bottom:8px;}
+    .date{font-size:0.85rem;color:#8a7040;margin-bottom:36px;}
+    .section{margin-bottom:36px;}
+    h2{font-size:1.1rem;font-weight:700;color:#3a2a00;border-left:4px solid #f5a800;padding-left:12px;margin-bottom:14px;}
+    p{font-size:0.95rem;color:#5a4a20;margin-bottom:10px;}
+    .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+    .service-card{background:#fff;border:2px solid #f0d890;border-radius:14px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
+    .service-card .icon{font-size:1.5rem;flex-shrink:0;}
+    .service-card h3{font-size:0.95rem;font-weight:700;color:#3a2a00;margin-bottom:4px;}
+    .service-card p{font-size:0.82rem;color:#8a7040;margin:0;}
+    .value-list{list-style:none;padding:0;}
+    .value-list li{padding:10px 14px;background:#fff8e1;border-radius:10px;margin-bottom:8px;font-size:0.9rem;color:#5a4a20;}
+    .value-list li::before{content:"✓ ";color:#f5a800;font-weight:700;}
+    footer{text-align:center;padding:32px 20px;border-top:1px solid #f0d890;font-size:0.82rem;color:#8a7040;}
+    footer a{color:#f5a800;text-decoration:none;margin:0 8px;}
+    @media(max-width:480px){.service-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<header>
+  <a href="/">🍯 꿀단지</a>
+  <span>/ 서비스 소개</span>
+</header>
+<main>
+  <h1>꿀단지 소개</h1>
+  <p class="date">서비스 운영 시작: 2024년</p>
+
+  <div class="section">
+    <h2>꿀단지는 어떤 서비스인가요?</h2>
+    <p>꿀단지는 일상에서 필요한 재테크·생활 정보를 한곳에 모아 무료로 제공하는 생활 정보 서비스입니다.</p>
+    <p>복잡한 부동산 계산, 실시간 환율·코인·주식 정보, 최신 게임 뉴스, 해외여행 선물 정보까지 — 생활 속 '꿀 정보'가 필요할 때마다 꺼내 쓸 수 있는 서비스를 목표로 합니다.</p>
+    <p>모든 서비스는 광고 수익으로 운영되며, 이용자에게 별도 비용은 청구되지 않습니다.</p>
+  </div>
+
+  <div class="section">
+    <h2>제공 서비스</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <span class="icon">🏠</span>
+        <div>
+          <h3>부동산 계산기</h3>
+          <p>대출 상환, 전월세 전환, 취득세 등 4가지 계산기</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="icon">💱</span>
+        <div>
+          <h3>환전 계산기</h3>
+          <p>18개국 실시간 환율 기반 환전 금액 계산</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="icon">₿</span>
+        <div>
+          <h3>실시간 코인 시세</h3>
+          <p>비트코인 등 주요 암호화폐 20종 실시간 시세</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="icon">📈</span>
+        <div>
+          <h3>실시간 주식 차트</h3>
+          <p>미국·국내 주식 및 주요 지수 156종목</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="icon">🎮</span>
+        <div>
+          <h3>게임 최신 뉴스</h3>
+          <p>닌텐도·PS5·Xbox·PC 플랫폼 최신 게임 소식</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="icon">🎁</span>
+        <div>
+          <h3>해외 여행 선물북</h3>
+          <p>9개국 인기 선물 아이템 카테고리별 안내</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>서비스 운영 원칙</h2>
+    <ul class="value-list">
+      <li>모든 서비스는 완전 무료로 제공됩니다.</li>
+      <li>이용자의 개인정보를 직접 수집하거나 저장하지 않습니다.</li>
+      <li>실시간 데이터는 공개 API를 통해 제공되며, 투자 판단의 참고 자료로만 활용하세요.</li>
+      <li>광고는 Google AdSense 및 파트너사 광고 네트워크를 통해 제공됩니다.</li>
+      <li>콘텐츠는 지속적으로 업데이트되며, 오류 발견 시 신속히 수정합니다.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>운영자 정보</h2>
+    <p>서비스명: 꿀단지 (Gguldanji)</p>
+    <p>운영자: 개인 운영자 (대한민국)</p>
+    <p>이메일: <a href="mailto:seon111103@gmail.com" style="color:#f5a800;">seon111103@gmail.com</a></p>
+    <p>서비스 URL: <a href="https://seon111103-art.github.io" style="color:#f5a800;">https://seon111103-art.github.io</a></p>
+  </div>
+</main>
+<footer>
+  © 2026 꿀단지
+  <a href="/">홈</a>
+  <a href="/privacy/">개인정보처리방침</a>
+  <a href="/contact.html">연락처</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 메인 -->
+  <url><loc>https://seon111103-art.github.io/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://seon111103-art.github.io/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/privacy/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <!-- 부동산 -->
+  <url><loc>https://seon111103-art.github.io/realestate/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/realestate/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/realestate/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/realestate/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <!-- 환전 -->
+  <url><loc>https://seon111103-art.github.io/exchange/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/exchange/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/exchange/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/exchange/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <!-- 코인 -->
+  <url><loc>https://seon111103-art.github.io/coin/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/coin/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/coin/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/coin/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <!-- 주식 -->
+  <url><loc>https://seon111103-art.github.io/stock/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/stock/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/stock/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/stock/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <!-- 게임 -->
+  <url><loc>https://seon111103-art.github.io/game/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/game/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/game/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/game/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <!-- 선물 -->
+  <url><loc>https://seon111103-art.github.io/gift/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/gift/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/gift/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/gift/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <!-- 윈드홀리데이 -->
+  <url><loc>https://seon111103-art.github.io/holiday/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://seon111103-art.github.io/holiday/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://seon111103-art.github.io/holiday/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://seon111103-art.github.io/holiday/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+</urlset>
