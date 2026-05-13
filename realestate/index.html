@@ -194,18 +194,6 @@
     }
     .site-card:hover { border-color: var(--accent) !important; }
 
-    /* 가이드 섹션 */
-    .guide-section{max-width:860px;margin:0 auto;padding:48px 20px 20px;}
-    .guide-section h2{font-size:1.15rem;font-weight:800;color:var(--accent);margin-bottom:28px;padding-bottom:12px;border-bottom:2px solid var(--border);}
-    .guide-article{margin-bottom:28px;}
-    .guide-article h3{font-size:.97rem;font-weight:700;color:var(--text-main);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--accent);}
-    .guide-article p{font-size:.86rem;line-height:1.9;color:var(--text-sub);margin-bottom:8px;}
-    .guide-table{width:100%;border-collapse:collapse;font-size:.83rem;margin-top:12px;}
-    .guide-table th{background:var(--bg-input);color:var(--text-sub);font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid var(--border);}
-    .guide-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-sub);}
-    .guide-table tr:last-child td{border-bottom:none;}
-    .guide-tip{background:var(--bg-input);border-radius:10px;padding:12px 16px;margin-top:10px;font-size:.84rem;color:var(--text-sub);line-height:1.75;border-left:3px solid var(--accent);}
-
     footer {
       text-align: center; padding: 28px 20px;
       font-size: 0.78rem; color: var(--text-faint);
@@ -572,48 +560,6 @@
   </section>
 
 </main>
-
-<section class="guide-section">
-  <h2>📚 부동산 계산기 완벽 가이드</h2>
-
-  <div class="guide-article">
-    <h3>취득세란 무엇인가?</h3>
-    <p>취득세는 부동산(주택, 토지, 건물 등)을 취득할 때 납부하는 지방세입니다. 매매, 상속, 증여, 신축 등 모든 취득 방식에 부과되며, 주택의 경우 취득가액과 주택 수에 따라 세율이 달라집니다. 일반적으로 1주택자는 취득가액의 1~3%를 납부합니다.</p>
-    <table class="guide-table">
-      <tr><th>취득가액</th><th>세율 (1주택자)</th></tr>
-      <tr><td>6억원 이하</td><td>1%</td></tr>
-      <tr><td>6억원 초과 ~ 9억원 이하</td><td>1~3% (구간별 산출)</td></tr>
-      <tr><td>9억원 초과</td><td>3%</td></tr>
-    </table>
-    <div class="guide-tip">💡 <strong>팁:</strong> 생애최초 주택 구입자는 취득가액 12억원 이하 주택에 한해 취득세 감면 혜택을 받을 수 있습니다. 위택스(www.wetax.go.kr)에서 신청 가능합니다.</div>
-  </div>
-
-  <div class="guide-article">
-    <h3>대출 상환 방식 비교: 원금균등 vs 원리금균등</h3>
-    <p>주택담보대출 상환 방식에 따라 총 이자 부담이 크게 달라집니다. 원금균등상환은 매달 동일한 원금을 갚으므로 초기 부담이 크지만 총 이자가 적고, 원리금균등상환은 매달 납부액이 동일해 생활비 계획이 수월합니다.</p>
-    <table class="guide-table">
-      <tr><th>구분</th><th>원금균등상환</th><th>원리금균등상환</th></tr>
-      <tr><td>월 납부액</td><td>초기 많고 점점 감소</td><td>매달 동일</td></tr>
-      <tr><td>총 이자액</td><td>상대적으로 적음</td><td>상대적으로 많음</td></tr>
-      <tr><td>초기 부담</td><td>높음</td><td>낮음</td></tr>
-      <tr><td>추천 대상</td><td>초기 소득이 높은 경우</td><td>고정 지출 관리가 필요한 경우</td></tr>
-    </table>
-    <div class="guide-tip">💡 <strong>팁:</strong> 초기 상환 여력이 있다면 원금균등상환으로 총 이자 부담을 줄일 수 있습니다.</div>
-  </div>
-
-  <div class="guide-article">
-    <h3>전월세 전환율 이해하기</h3>
-    <p>전월세 전환율은 전세 보증금을 월세로 전환할 때 적용되는 비율입니다. 전환율이 4%라면, 전세 1억원을 월세로 전환할 경우 월 약 33만원(1억 × 4% ÷ 12개월)이 산출됩니다. 주택임대차보호법에 따라 법정 전월세 전환율은 한국은행 기준금리 + 2%포인트를 초과할 수 없습니다.</p>
-    <div class="guide-tip">💡 <strong>팁:</strong> 전월세 전환율이 낮을수록 세입자에게 유리합니다. 계약 전 해당 지역의 평균 전환율을 확인하고 협상에 활용하세요.</div>
-  </div>
-
-  <div class="guide-article">
-    <h3>월세 수익률 계산법</h3>
-    <p>임대 투자의 수익성을 판단하는 핵심 지표는 수익률입니다. 일반적으로 연 수익률 4% 이상이면 양호한 수준으로 평가됩니다.</p>
-    <p><strong>계산 공식:</strong> 연간 수익률(%) = (월세 × 12) ÷ (매매가 – 보증금) × 100</p>
-    <div class="guide-tip">💡 <strong>팁:</strong> 단순 수익률 외에도 공실률, 관리비, 재산세, 향후 시세 변동 등을 종합적으로 고려해야 실질적인 투자 판단이 가능합니다.</div>
-  </div>
-</section>
 
 <footer>
   <p>본 계산기는 참고용이며, 실제 금액과 다를 수 있습니다. 정확한 내용은 금융기관 또는 세무사에 문의하세요.</p>
