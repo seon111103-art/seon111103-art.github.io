@@ -120,6 +120,9 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 }
 .abv-badge{font-size:0.72rem;color:var(--sub);font-weight:700;}
 .card-icon{font-size:2rem;text-align:center;margin-bottom:8px;}
+.card-bottle{display:block;width:64px;height:108px;object-fit:contain;margin:0 auto 8px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.6));transition:transform 0.22s;}
+.w-card:hover .card-bottle{transform:scale(1.07) translateY(-2px);}
+.modal-bottle{display:none;max-width:90px;max-height:180px;object-fit:contain;margin:0 auto 12px;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.7));}
 .card-name-ko{font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.3;}
 .card-name-en{font-size:0.72rem;color:var(--sub);margin-bottom:8px;}
 .card-dist{font-size:0.75rem;color:var(--faint);margin-bottom:6px;}
@@ -332,6 +335,7 @@ footer a:hover{color:var(--gold);}
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
   <div class="modal" id="modal-body">
     <button class="modal-close" onclick="closeModal()">✕</button>
+    <img class="modal-bottle" id="m-bottle" src="" alt="" onerror="this.style.display='none';document.getElementById('m-icon').style.display='block'">
     <div class="modal-icon" id="m-icon"></div>
     <div class="modal-title" id="m-title"></div>
     <div class="modal-en" id="m-en"></div>
@@ -354,6 +358,43 @@ footer a:hover{color:var(--gold);}
 <script>
 const CTRY = {scotland:'🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드', ireland:'🇮🇪 아이리시', japan:'🇯🇵 일본', usa:'🇺🇸 미국'};
 const TYPE = {single_malt:'싱글몰트',blended:'블렌디드',bourbon:'버번',pot_still:'팟스틸',grain:'그레인'};
+const IMGS = {
+  1:'https://upload.wikimedia.org/wikipedia/commons/8/84/Glenfiddich12yo.jpg',
+  2:'https://upload.wikimedia.org/wikipedia/commons/f/fe/GlenfiddichSpecialReserve12Years.jpg',
+  3:'https://upload.wikimedia.org/wikipedia/commons/0/0e/Macallan_12.jpg',
+  4:'https://upload.wikimedia.org/wikipedia/commons/0/0e/Macallan_12.jpg',
+  5:'https://upload.wikimedia.org/wikipedia/commons/b/b0/The_Glenlivet_12.jpg',
+  6:'https://upload.wikimedia.org/wikipedia/commons/6/6a/Balvenie_Whisky_Doublewood_12_years_old.jpg',
+  7:'https://upload.wikimedia.org/wikipedia/commons/b/b2/Aberlour_single_malt_10_years_old.jpg',
+  8:'https://upload.wikimedia.org/wikipedia/commons/4/40/The_Dalmore_Port_Wood.jpg',
+  9:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Oban_Single_malt_Whisky_14_years_old.jpg',
+  10:'https://upload.wikimedia.org/wikipedia/commons/e/e7/Glenmorangie_10.jpg',
+  11:'https://upload.wikimedia.org/wikipedia/commons/a/af/Highland_Park_12_yo_new.png',
+  12:'https://upload.wikimedia.org/wikipedia/commons/1/13/Talisker_Single_Malt_Scotch_Whisky_10_years_old.jpg',
+  13:'https://upload.wikimedia.org/wikipedia/commons/c/cd/Laphroaig_10.jpg',
+  14:'https://upload.wikimedia.org/wikipedia/commons/b/b5/Ardbeg_10_years_old_whisky.jpg',
+  15:'https://upload.wikimedia.org/wikipedia/commons/4/4e/Lagavulin_Single_Malt_Scotch_Whisky_Aged_16_Years.jpg',
+  16:'https://upload.wikimedia.org/wikipedia/commons/c/c2/Bowmore_Single_Malt_Scotch_Whisky_12_years_old.jpg',
+  17:'https://upload.wikimedia.org/wikipedia/commons/2/21/Johnnie_Walker_Black_Label.jpg',
+  18:'https://upload.wikimedia.org/wikipedia/commons/2/29/Johnnie_Walker_-_Blue_label.JPG',
+  19:'https://upload.wikimedia.org/wikipedia/commons/f/f6/Chivas_regal_12yo.jpg',
+  20:'https://upload.wikimedia.org/wikipedia/commons/8/8d/Monkey_Shoulder_scotch_bottle.jpg',
+  21:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Jameson_Irish_Whiskey.JPG',
+  22:'https://upload.wikimedia.org/wikipedia/commons/c/c7/Redbreast_12_ans.JPG',
+  23:'https://upload.wikimedia.org/wikipedia/commons/c/c7/Redbreast_12_ans.JPG',
+  24:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Jameson_Irish_Whiskey.JPG',
+  25:'https://upload.wikimedia.org/wikipedia/commons/b/bf/Nikka_Whisky_From_The_Barrel_50cl_Bottle.jpg',
+  26:'https://upload.wikimedia.org/wikipedia/commons/0/0d/Hibiki_the_premium_blended_whisky_from_Japanese_distiller_Suntory.jpg',
+  27:'https://upload.wikimedia.org/wikipedia/commons/e/e4/The_Yamazaki_Single_Malt_Whisky_Aged_12_years.JPG',
+  28:'https://upload.wikimedia.org/wikipedia/commons/b/bf/Nikka_Whisky_From_The_Barrel_50cl_Bottle.jpg',
+  29:'https://upload.wikimedia.org/wikipedia/commons/0/0d/Hibiki_the_premium_blended_whisky_from_Japanese_distiller_Suntory.jpg',
+  30:'https://upload.wikimedia.org/wikipedia/commons/e/e0/Buffalo_Trace.JPG',
+  31:'https://upload.wikimedia.org/wikipedia/commons/a/a1/Woodford_Reserve_2016.png',
+  32:'https://upload.wikimedia.org/wikipedia/commons/b/b7/Maker%27s_Mark.jpg',
+  33:'https://upload.wikimedia.org/wikipedia/commons/0/0d/Bulleit_Bourbon_Frontier_Whiskey.jpg',
+  34:'https://upload.wikimedia.org/wikipedia/commons/7/78/WildTurkeyBottle_no1.jpg',
+  35:'https://upload.wikimedia.org/wikipedia/commons/4/42/Knob_creek_bottle.jpg',
+};
 const ICON = {scotland:'🏔️',ireland:'🍀',japan:'⛩️',usa:'🤠'};
 
 const WHISKIES = [
@@ -443,7 +484,7 @@ function renderGuide() {
         <span class="country-badge">${CTRY[w.country]}</span>
         <span class="abv-badge">${w.abv}%</span>
       </div>
-      <div class="card-icon">${ICON[w.country]}</div>
+      ${IMGS[w.id] ? `<img class="card-bottle" src="${IMGS[w.id]}" alt="${w.ko}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="card-icon" style="display:none">${ICON[w.country]}</div>` : `<div class="card-icon">${ICON[w.country]}</div>`}
       <div class="card-name-ko">${w.ko}</div>
       <div class="card-name-en">${w.name}</div>
       <div class="card-dist">📍 ${w.dist} · ${w.region}</div>
@@ -468,7 +509,18 @@ function smokyLabel(v) {
 function openModal(id) {
   const w = WHISKIES.find(x => x.id === id);
   if (!w) return;
-  document.getElementById('m-icon').textContent = ICON[w.country];
+  const mBottle = document.getElementById('m-bottle');
+  const mIcon = document.getElementById('m-icon');
+  if (IMGS[w.id]) {
+    mBottle.src = IMGS[w.id];
+    mBottle.alt = w.ko;
+    mBottle.style.display = 'block';
+    mIcon.style.display = 'none';
+  } else {
+    mBottle.style.display = 'none';
+    mIcon.style.display = 'block';
+    mIcon.textContent = ICON[w.country];
+  }
   document.getElementById('m-title').textContent = w.ko;
   document.getElementById('m-en').textContent = `${w.name} · ${w.dist}`;
   document.getElementById('m-info').innerHTML = `
