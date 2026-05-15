@@ -49,11 +49,12 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 /* ─── 탭 ─── */
 .tabs{
   display:flex;justify-content:center;gap:6px;
-  padding:22px 16px 0;max-width:700px;margin:0 auto;
+  padding:22px 0 0;max-width:700px;margin:0 auto;
   overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
   flex-wrap:nowrap;
 }
 .tabs::-webkit-scrollbar{display:none;}
+.tabs::before,.tabs::after{content:'';display:block;min-width:16px;flex:none;}
 .tab-btn{
   flex:none;white-space:nowrap;
   padding:10px 20px;border:1.5px solid var(--border);border-radius:30px;
@@ -291,6 +292,27 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .brew-tag{font-size:0.61rem;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--card2);color:var(--gold);border:1px solid var(--border);}
 .brew-country-list{padding-left:14px;font-size:0.71rem;color:var(--sub);line-height:1.9;margin:0;}
 .brew-country-list strong{color:var(--gold);}
+/* ─── 하이볼 카드 ─── */
+.highball-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:12px;}
+.hb-section{padding:14px 16px;border-bottom:1px solid var(--border);}
+.hb-section:last-child{border-bottom:none;}
+.hb-section-title{font-size:0.68rem;font-weight:900;color:var(--gold-dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
+.hb-ingredient{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:0.8rem;border-bottom:1px dashed var(--border);}
+.hb-ingredient:last-child{border-bottom:none;}
+.hb-icon{font-size:1.2rem;width:24px;text-align:center;flex-shrink:0;}
+.hb-name{flex:1;font-weight:700;color:var(--text);}
+.hb-amount{color:var(--gold);font-weight:900;font-size:0.78rem;white-space:nowrap;}
+.hb-step{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:0.79rem;color:var(--sub);line-height:1.6;border-bottom:1px dashed var(--border);}
+.hb-step:last-child{border-bottom:none;}
+.hb-step-num{width:22px;height:22px;background:var(--gold);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:900;flex-shrink:0;margin-top:1px;}
+.hb-tip{display:flex;align-items:flex-start;gap:8px;font-size:0.78rem;color:var(--sub);line-height:1.5;padding:4px 0;}
+.hb-tip::before{content:'✓';color:var(--gold);font-weight:900;flex-shrink:0;}
+.hb-recommend{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.hb-rec{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 8px;text-align:center;transition:var(--tr);}
+.hb-rec:hover{border-color:var(--gold-dim);box-shadow:var(--shadow);}
+.hb-rec-flag{font-size:1.5rem;margin-bottom:4px;}
+.hb-rec-name{font-size:0.72rem;font-weight:900;color:var(--text);margin-bottom:3px;}
+.hb-rec-desc{font-size:0.66rem;color:var(--sub);line-height:1.5;}
 /* ─── 푸터 ─── */
 footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
 footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
@@ -620,45 +642,84 @@ footer a:hover{color:var(--gold);}
   <!-- 하이볼 레시피 -->
   <div class="brew-section">
     <div class="brew-section-title">🫧 완벽한 하이볼 만들기</div>
-    <div class="brew-countries">
-      <div class="brew-country" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px;">
-        <div style="text-align:center;">
-          <div style="font-size:1.6rem;margin-bottom:4px;">🧊</div>
-          <div style="font-size:0.72rem;font-weight:900;color:var(--text);">STEP 1</div>
-          <div style="font-size:0.7rem;color:var(--sub);margin-top:3px;line-height:1.5;">긴 잔에<br>얼음 가득</div>
+
+    <div class="highball-card">
+      <!-- 재료 -->
+      <div class="hb-section">
+        <div class="hb-section-title">🛒 재료 (1잔 기준)</div>
+        <div class="hb-ingredient">
+          <div class="hb-icon">🥃</div>
+          <div class="hb-name">위스키</div>
+          <div class="hb-amount">45ml (약 1.5온스)</div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:1.6rem;margin-bottom:4px;">🥃</div>
-          <div style="font-size:0.72rem;font-weight:900;color:var(--text);">STEP 2</div>
-          <div style="font-size:0.7rem;color:var(--sub);margin-top:3px;line-height:1.5;">위스키<br>45ml 붓기</div>
+        <div class="hb-ingredient">
+          <div class="hb-icon">🫧</div>
+          <div class="hb-name">탄산수 (차가운 것)</div>
+          <div class="hb-amount">135~150ml</div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:1.6rem;margin-bottom:4px;">🫧</div>
-          <div style="font-size:0.72rem;font-weight:900;color:var(--text);">STEP 3</div>
-          <div style="font-size:0.7rem;color:var(--sub);margin-top:3px;line-height:1.5;">탄산수<br>130~150ml</div>
+        <div class="hb-ingredient">
+          <div class="hb-icon">🧊</div>
+          <div class="hb-name">얼음 (클수록 좋음)</div>
+          <div class="hb-amount">가득</div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:1.6rem;margin-bottom:4px;">🥄</div>
-          <div style="font-size:0.72rem;font-weight:900;color:var(--text);">STEP 4</div>
-          <div style="font-size:0.7rem;color:var(--sub);margin-top:3px;line-height:1.5;">한 번만<br>가볍게 젓기</div>
+        <div class="hb-ingredient">
+          <div class="hb-icon">🍋</div>
+          <div class="hb-name">레몬 슬라이스</div>
+          <div class="hb-amount">선택 사항</div>
         </div>
+      </div>
+
+      <!-- 만드는 법 -->
+      <div class="hb-section">
+        <div class="hb-section-title">📋 만드는 법</div>
+        <div class="hb-step">
+          <div class="hb-step-num">1</div>
+          <div>긴 잔(하이볼 글라스)에 큰 얼음을 잔이 넘칠 만큼 가득 채운다. <strong style="color:var(--gold)">얼음이 많을수록 탄산이 오래 유지됩니다.</strong></div>
+        </div>
+        <div class="hb-step">
+          <div class="hb-step-num">2</div>
+          <div>위스키 45ml를 얼음 위에 천천히 붓는다. 얼음에 닿으면서 자연스럽게 차가워집니다.</div>
+        </div>
+        <div class="hb-step">
+          <div class="hb-step-num">3</div>
+          <div>차가운 탄산수를 <strong style="color:var(--gold)">잔 옆면을 타고</strong> 천천히 부어 탄산이 날아가지 않게 한다.</div>
+        </div>
+        <div class="hb-step">
+          <div class="hb-step-num">4</div>
+          <div>바 스푼(또는 긴 젓가락)으로 <strong style="color:var(--gold)">딱 한 번만</strong> 아래에서 위로 가볍게 젓는다. 강하게 젓으면 탄산이 빠집니다.</div>
+        </div>
+        <div class="hb-step">
+          <div class="hb-step-num">5</div>
+          <div>레몬 슬라이스를 잔 위에 올리거나 짜서 넣으면 완성. 만들자마자 바로 마셔야 가장 맛있습니다 🎉</div>
+        </div>
+      </div>
+
+      <!-- 핵심 팁 -->
+      <div class="hb-section">
+        <div class="hb-section-title">💡 핵심 팁</div>
+        <div class="hb-tip">위스키 : 탄산수 = <strong style="color:var(--gold)">1 : 3</strong> 이 황금 비율. 취향에 따라 1:4까지도 OK</div>
+        <div class="hb-tip">탄산수는 <strong style="color:var(--gold)">반드시 차갑게</strong> 보관. 따뜻한 탄산수는 김이 확 빠짐</div>
+        <div class="hb-tip">얼음은 <strong style="color:var(--gold)">크고 투명한 것</strong>이 좋음. 각얼음 1~2개 > 작은 얼음 여러 개</div>
+        <div class="hb-tip">처음엔 블렌디드(조니워커·시바스)나 일본 위스키(토키)로 시작하면 실패 없음</div>
       </div>
     </div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-      <div class="brew-type" style="text-align:center;padding:12px 8px;">
-        <div class="brew-type-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
-        <div class="brew-type-name" style="font-size:0.74rem;">조니워커 하이볼</div>
-        <div class="brew-type-desc" style="font-size:0.68rem;">블랙라벨 + 탄산수<br>레몬 슬라이스</div>
+
+    <!-- 추천 하이볼 -->
+    <div class="hb-recommend">
+      <div class="hb-rec">
+        <div class="hb-rec-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+        <div class="hb-rec-name">조니워커 블랙</div>
+        <div class="hb-rec-desc">탄산수 + 레몬<br>묵직하고 스모키</div>
       </div>
-      <div class="brew-type" style="text-align:center;padding:12px 8px;">
-        <div class="brew-type-icon">🇯🇵</div>
-        <div class="brew-type-name" style="font-size:0.74rem;">산토리 하이볼</div>
-        <div class="brew-type-desc" style="font-size:0.68rem;">토키/히비키 + 탄산수<br>레몬 트위스트</div>
+      <div class="hb-rec">
+        <div class="hb-rec-flag">🇯🇵</div>
+        <div class="hb-rec-name">산토리 토키</div>
+        <div class="hb-rec-desc">탄산수 + 레몬<br>가볍고 마시기 쉬움</div>
       </div>
-      <div class="brew-type" style="text-align:center;padding:12px 8px;">
-        <div class="brew-type-icon">🇺🇸</div>
-        <div class="brew-type-name" style="font-size:0.74rem;">버번 하이볼</div>
-        <div class="brew-type-desc" style="font-size:0.68rem;">버번 + 진저에일<br>라임 조각</div>
+      <div class="hb-rec">
+        <div class="hb-rec-flag">🇺🇸</div>
+        <div class="hb-rec-name">버번 하이볼</div>
+        <div class="hb-rec-desc">진저에일 + 라임<br>달콤하고 상큼</div>
       </div>
     </div>
   </div>
