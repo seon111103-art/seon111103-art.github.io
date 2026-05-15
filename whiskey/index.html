@@ -90,9 +90,9 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 }
 .w-card:hover::before{opacity:1;}
 /* 왼쪽: 병 이미지 */
-.card-left{flex:none;width:66px;display:flex;flex-direction:column;align-items:center;padding-top:4px;}
+.card-left{flex:none;width:66px;display:flex;flex-direction:column;align-items:center;padding-top:4px;background:#fff;border-radius:8px;}
 .card-icon{font-size:2rem;text-align:center;}
-.card-bottle{display:block;width:54px;height:94px;object-fit:contain;mix-blend-mode:multiply;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.6));transition:transform 0.22s;}
+.card-bottle{display:block;width:54px;height:94px;object-fit:contain;mix-blend-mode:multiply;filter:brightness(1.08) contrast(1.1) drop-shadow(0 3px 8px rgba(0,0,0,0.22));transition:transform 0.22s;}
 .w-card:hover .card-bottle{transform:scale(1.07) translateY(-2px);}
 /* 가운데: 위스키 정보 */
 .card-mid{flex:1;min-width:0;}
@@ -114,7 +114,7 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .t-track{flex:1;height:5px;background:var(--card3);border-radius:3px;overflow:hidden;}
 .t-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-dim),var(--gold));}
 .t-val{font-size:0.61rem;color:var(--gold);width:10px;flex:none;text-align:right;}
-.modal-bottle{display:none;max-width:90px;max-height:180px;object-fit:contain;margin:0 auto 12px;mix-blend-mode:multiply;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.7));}
+.modal-bottle{display:none;max-width:90px;max-height:180px;object-fit:contain;margin:0 auto 12px;mix-blend-mode:multiply;filter:brightness(1.08) contrast(1.1) drop-shadow(0 4px 12px rgba(0,0,0,0.25));}
 .no-result{text-align:center;color:var(--sub);padding:60px 20px;font-size:0.9rem;}
 
 /* ─── 테이스팅 탭 ─── */
