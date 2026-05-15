@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>이용 가이드 | 글렌우드 GLENWOOD</title>
+<meta name="description" content="글렌우드 위스키 도감 이용 가이드 — 도감, 테이스팅 노트, 가격 비교 사용 방법"/>
+<meta name="google-adsense-account" content="ca-pub-5695400087151759">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#120A00;--card:#1E1000;--card2:#2A1800;
+  --gold:#C9A84C;--gold-light:#F0D080;--gold-dim:#7A6030;
+  --text:#F0E0C0;--sub:#907050;--faint:#503A20;
+  --border:#3A2510;
+  --shadow:0 4px 20px rgba(0,0,0,0.6);
+  --radius:14px;--radius-lg:22px;
+  --tr:all 0.22s cubic-bezier(.4,0,.2,1);
+}
+html.light{
+  --bg:#FDF6EC;--card:#FFF8F0;--card2:#F5ECD8;
+  --gold:#9A6A10;--gold-light:#7A5008;--gold-dim:#B88830;
+  --text:#2A1800;--sub:#7A5830;--faint:#A07848;
+  --border:#E0C898;
+  --shadow:0 4px 20px rgba(100,60,0,0.12);
+}
+html.light header{background:linear-gradient(160deg,#8B4A00 0%,#B86800 40%,#D4880A 100%);}
+html.light h1,html.light .site-en{color:#FFF8E8 !important;}
+html.light .header-wave{fill:#FDF6EC;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.25s,color 0.25s;}
+
+.theme-toggle{
+  position:fixed;top:14px;right:14px;z-index:10000;
+  background:rgba(201,168,76,0.15);border:1.5px solid var(--gold-dim);
+  border-radius:20px;padding:6px 14px;cursor:pointer;
+  color:var(--gold);font-size:0.82rem;font-weight:700;
+  font-family:'Noto Sans KR',sans-serif;transition:var(--tr);
+}
+.theme-toggle:hover{background:rgba(201,168,76,0.25);}
+
+header{
+  background:linear-gradient(160deg,#080400 0%,#150900 40%,#2A1400 100%);
+  padding:54px 20px 0; text-align:center; position:relative; overflow:hidden;
+}
+.header-deco{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 20%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+h1{font-size:1.6rem;font-weight:900;color:var(--gold-light);letter-spacing:3px;}
+.site-en{font-size:0.68rem;letter-spacing:5px;color:var(--gold-dim);margin-top:4px;font-weight:700;}
+.back-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:18px;margin-bottom:28px;
+  background:rgba(201,168,76,0.12);border:1.5px solid var(--gold-dim);
+  border-radius:20px;padding:7px 16px;color:var(--gold);
+  font-size:0.82rem;font-weight:700;text-decoration:none;transition:var(--tr);
+}
+.back-btn:hover{background:rgba(201,168,76,0.22);}
+.header-wave{display:block;width:100%;height:40px;fill:var(--bg);}
+
+main{max-width:700px;margin:0 auto;padding:32px 16px 60px;}
+
+.section{margin-bottom:28px;}
+.section-title{
+  font-size:1.05rem;font-weight:900;color:var(--gold);
+  margin-bottom:14px;padding-left:14px;position:relative;
+}
+.section-title::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:4px;height:1em;border-radius:2px;background:var(--gold);
+}
+
+.guide-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;
+  box-shadow:var(--shadow);
+}
+.guide-card h3{
+  font-size:0.92rem;font-weight:700;color:var(--gold-light);
+  margin-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+.guide-card p{font-size:0.82rem;color:var(--sub);line-height:1.75;}
+.guide-card ul{font-size:0.82rem;color:var(--sub);line-height:1.75;padding-left:18px;margin-top:6px;}
+.guide-card ul li{margin-bottom:4px;}
+
+.badge{
+  display:inline-block;background:rgba(201,168,76,0.15);
+  border:1px solid var(--gold-dim);border-radius:8px;
+  padding:2px 9px;font-size:0.72rem;font-weight:700;color:var(--gold);
+}
+
+footer{text-align:center;padding:24px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
+footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
+footer a:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">☀️ 라이트</button>
+
+<header>
+  <div class="header-deco"></div>
+  <h1>📖 이용 가이드</h1>
+  <div class="site-en">G L E N W O O D</div>
+  <a class="back-btn" href="/whiskey/">← 글렌우드로 돌아가기</a>
+  <svg class="header-wave" viewBox="0 0 1440 40" preserveAspectRatio="none">
+    <path d="M0,20 C360,40 1080,0 1440,20 L1440,40 L0,40 Z"/>
+  </svg>
+</header>
+
+<main>
+
+  <div class="section">
+    <div class="section-title">글렌우드란?</div>
+    <div class="guide-card">
+      <h3>🥃 글렌우드 소개</h3>
+      <p>
+        글렌우드(GLENWOOD)는 전세계 35종 위스키의 정보를 한눈에 볼 수 있는 위스키 도감 서비스입니다.<br><br>
+        <em>Glen</em>(글렌) — 위스키가 태어나는 스코틀랜드의 깊은 계곡,<br>
+        <em>Wood</em>(우드) — 풍미를 완성하는 오크나무통에서 이름을 따왔습니다.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3가지 탭 사용법</div>
+
+    <div class="guide-card">
+      <h3><span class="badge">📖 도감</span> &nbsp;위스키 도감</h3>
+      <p>스코틀랜드·아이리시·일본·미국 위스키 35종을 카드 형식으로 한눈에 확인할 수 있습니다.</p>
+      <ul>
+        <li>상단 검색창에서 위스키 이름으로 빠르게 검색</li>
+        <li>🏴·🇮🇪·🇯🇵·🇺🇸 필터로 나라별 분류</li>
+        <li>카드 클릭 → 상세 정보 모달 팝업</li>
+        <li>상세 모달에서 생산지·도수·빈티지·특징·추천 음용법 확인</li>
+      </ul>
+    </div>
+
+    <div class="guide-card">
+      <h3><span class="badge">🎯 테이스팅</span> &nbsp;테이스팅 노트</h3>
+      <p>위스키마다 6가지 맛 특성을 레이더 차트로 시각화한 탭입니다.</p>
+      <ul>
+        <li>향기 / 달콤함 / 스모키 / 스파이시 / 과일향 / 오크 — 6개 축 평가</li>
+        <li>각 축은 0~10점 척도</li>
+        <li>차트 아래 테이스팅 문장과 추천 글라스 정보 제공</li>
+        <li>좌우 화살표로 위스키 전환 가능</li>
+      </ul>
+    </div>
+
+    <div class="guide-card">
+      <h3><span class="badge">💰 가격</span> &nbsp;국내 가격 비교</h3>
+      <p>35종 위스키의 국내 유통 가격을 한눈에 비교할 수 있는 탭입니다.</p>
+      <ul>
+        <li>가격 기준: 국내 주요 마트·면세점 참고가 (750ml 기준)</li>
+        <li>나라별 필터로 원하는 카테고리만 보기</li>
+        <li>가격은 시장 상황에 따라 변동될 수 있으며, 참고용입니다</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">알아두세요</div>
+    <div class="guide-card">
+      <h3>⚠️ 가격 정보 안내</h3>
+      <p>글렌우드의 가격 정보는 <strong>참고용</strong>으로 제공됩니다. 실제 판매 가격은 판매처·시기·환율에 따라 다를 수 있습니다. 정확한 가격은 해당 판매처에서 직접 확인해 주세요.</p>
+    </div>
+    <div class="guide-card">
+      <h3>🌙 다크 / ☀️ 라이트 모드</h3>
+      <p>우측 상단 버튼으로 다크 모드와 라이트 모드를 전환할 수 있습니다. 설정은 기기에 저장됩니다.</p>
+    </div>
+    <div class="guide-card">
+      <h3>📱 모바일 최적화</h3>
+      <p>글렌우드는 스마트폰, 태블릿, PC 모든 환경에서 최적화되어 있습니다. 별도 앱 설치 없이 브라우저에서 바로 이용하세요.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">문의 및 피드백</div>
+    <div class="guide-card">
+      <h3>✉️ 연락처</h3>
+      <p>오류 신고, 위스키 추가 요청, 가격 정보 수정 요청 등은 아래로 문의해 주세요.<br><br>
+      <strong style="color:var(--gold);">seon111103@gmail.com</strong></p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 꿀단지 · 글렌우드(GLENWOOD)
+  <a href="/whiskey/privacy.html">개인정보처리방침</a>
+  <a href="/whiskey/terms.html">이용약관</a>
+  <a href="/">꿀단지 홈</a>
+</footer>
+
+<script>
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light');
+  document.getElementById('theme-btn').textContent = isLight ? '🌙 다크' : '☀️ 라이트';
+  localStorage.setItem('glenwood-theme', isLight ? 'light' : 'dark');
+}
+(function(){
+  const saved = localStorage.getItem('glenwood-theme');
+  if (saved === 'light') {
+    document.documentElement.classList.add('light');
+    document.getElementById('theme-btn').textContent = '🌙 다크';
+  }
+})();
+</script>
+</body>
+</html>
