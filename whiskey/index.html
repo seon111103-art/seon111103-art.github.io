@@ -39,21 +39,24 @@ header{
 .header-icon{font-size:3.2rem;margin-bottom:10px;filter:drop-shadow(0 0 16px rgba(150,100,10,0.3));}
 h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-spacing:4px;}
 .site-en{font-size:0.72rem;letter-spacing:6px;color:var(--gold-dim);margin-top:4px;font-weight:700;text-transform:uppercase;}
-.site-meaning{font-size:0.78rem;color:var(--sub);margin-top:8px;line-height:1.6;}
+.site-meaning{font-size:0.76rem;color:var(--sub);margin-top:10px;line-height:2;}
 .site-meaning em{color:var(--gold);font-style:normal;font-weight:700;}
-.site-sub{font-size:0.82rem;color:var(--faint);margin-top:14px;margin-bottom:28px;letter-spacing:1px;}
+.site-tags{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:12px;margin-bottom:26px;}
+.site-tags span{font-size:0.73rem;color:var(--faint);background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:4px 11px;white-space:nowrap;}
+.site-sub{display:none;}
 .header-wave{display:none;}
 
 /* ─── 탭 ─── */
 .tabs{
-  display:flex;gap:6px;padding:24px 16px 0;
-  max-width:700px;margin:0 auto;
+  display:flex;justify-content:center;gap:6px;
+  padding:22px 16px 0;max-width:700px;margin:0 auto;
   overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  flex-wrap:nowrap;
 }
 .tabs::-webkit-scrollbar{display:none;}
 .tab-btn{
   flex:none;white-space:nowrap;
-  padding:10px 18px;border:1.5px solid var(--border);border-radius:30px;
+  padding:10px 20px;border:1.5px solid var(--border);border-radius:30px;
   background:var(--card);color:var(--sub);font-size:0.86rem;font-weight:700;
   cursor:pointer;transition:var(--tr);font-family:'Noto Sans KR',sans-serif;
 }
@@ -314,9 +317,13 @@ footer a:hover{color:var(--gold);}
   <h1 class="site-title">글렌우드</h1>
   <p class="site-en">G L E N W O O D</p>
   <p class="site-meaning">
-    <em>Glen</em> — 위스키가 태어나는 스코틀랜드 깊은 계곡&nbsp;&nbsp;·&nbsp;&nbsp;<em>Wood</em> — 풍미를 완성하는 오크나무통
+    <em>Glen</em> — 스코틀랜드 깊은 계곡&nbsp;&nbsp;·&nbsp;&nbsp;<em>Wood</em> — 오크나무통
   </p>
-  <p class="site-sub">전세계 35종 위스키 · 테이스팅 노트 · 국내 가격 비교</p>
+  <div class="site-tags">
+    <span>🥃 35종 위스키</span>
+    <span>📊 테이스팅 노트</span>
+    <span>💰 국내 가격 비교</span>
+  </div>
   <svg class="header-wave" viewBox="0 0 1440 40" preserveAspectRatio="none">
     <path d="M0,24 C360,40 1080,8 1440,24 L1440,40 L0,40 Z"/>
   </svg>
