@@ -244,7 +244,6 @@ footer a:hover{color:var(--gold);}
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('guide')">📖 도감</button>
-  <button class="tab-btn" onclick="switchTab('tasting')">🥃 테이스팅</button>
   <button class="tab-btn" onclick="switchTab('price')">💰 가격</button>
 </div>
 
@@ -271,27 +270,6 @@ footer a:hover{color:var(--gold);}
   <div class="whiskey-grid" id="guide-grid"></div>
 </div>
 
-<!-- ─── 테이스팅 탭 ─── -->
-<div id="tab-tasting" class="tab-content">
-  <div class="tasting-selectors">
-    <div class="select-wrap">
-      <label>위스키 A</label>
-      <select class="w-select" id="sel-a" onchange="renderTasting()"></select>
-    </div>
-    <div class="select-wrap">
-      <label>위스키 B (비교)</label>
-      <select class="w-select" id="sel-b" onchange="renderTasting()">
-        <option value="">— 선택 안함 —</option>
-      </select>
-    </div>
-  </div>
-  <div class="chart-wrap">
-    <div class="chart-title" id="chart-title">테이스팅 레이더</div>
-    <div class="chart-container"><canvas id="radar-chart"></canvas></div>
-  </div>
-  <div id="tasting-info-a"></div>
-  <div id="tasting-info-b"></div>
-</div>
 
 <!-- ─── 가격 탭 ─── -->
 <div id="tab-price" class="tab-content">
@@ -431,17 +409,16 @@ const WHISKIES = [
 // ─── 상태 ───
 let filterCountry = 'all', filterType = 'all';
 let priceSort = 'name';
-let radarChart = null, modalRadarChart = null;
+let modalRadarChart = null;
 
 // ─── 탭 전환 ───
 function switchTab(t) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    const names = ['guide','tasting','price'];
+    const names = ['guide','price'];
     b.classList.toggle('active', names[i] === t);
   });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
-  if (t === 'tasting') initTasting();
   if (t === 'price') renderPrice();
 }
 
@@ -551,62 +528,6 @@ function closeModal(e) {
     document.getElementById('modal-bg').classList.remove('open');
 }
 
-// ─── 테이스팅 탭 ───
-function initTasting() {
-  const selA = document.getElementById('sel-a');
-  const selB = document.getElementById('sel-b');
-  if (selA.options.length > 0) return;
-  WHISKIES.forEach(w => {
-    const o1 = new Option(w.ko, w.id);
-    const o2 = new Option(w.ko, w.id);
-    selA.add(o1); selB.add(o2);
-  });
-  renderTasting();
-}
-
-function renderTasting() {
-  const idA = parseInt(document.getElementById('sel-a').value);
-  const idB = parseInt(document.getElementById('sel-b').value) || null;
-  const wA = WHISKIES.find(x => x.id === idA);
-  const wB = idB ? WHISKIES.find(x => x.id === idB) : null;
-
-  document.getElementById('chart-title').textContent = wB
-    ? `${wA.ko} vs ${wB.ko}`
-    : `${wA.ko} 테이스팅 노트`;
-
-  if (radarChart) radarChart.destroy();
-  const ctx = document.getElementById('radar-chart').getContext('2d');
-  if (wB) {
-    radarChart = buildRadar(ctx,
-      [wA, wB],
-      ['rgba(201,168,76,0.2)', 'rgba(100,180,255,0.2)'],
-      ['#C9A84C', '#64B4FF']
-    );
-  } else {
-    radarChart = buildRadar(ctx, [wA], ['rgba(201,168,76,0.25)'], ['#C9A84C']);
-  }
-
-  document.getElementById('tasting-info-a').innerHTML = tastingInfoHTML(wA, '#C9A84C');
-  document.getElementById('tasting-info-b').innerHTML = wB ? tastingInfoHTML(wB, '#64B4FF') : '';
-}
-
-function tastingInfoHTML(w, color) {
-  return `
-    <div class="chart-wrap" style="border-color:${color}33;margin-bottom:10px;">
-      <div class="chart-title" style="color:${color}">${w.ko}</div>
-      <div class="info-row">
-        <div class="info-pill"><span>도수</span> <strong style="color:${color}">${w.abv}%</strong></div>
-        ${w.age ? `<div class="info-pill"><span>숙성</span> <strong style="color:${color}">${w.age}년</strong></div>` : ''}
-        <div class="info-pill"><span>지역</span> <strong style="color:${color}">${w.region}</strong></div>
-      </div>
-      <div class="notes-grid">
-        <div class="note-card"><div class="note-label" style="color:${color}">🌿 아로마</div><div class="note-text">${w.notes.ar}</div></div>
-        <div class="note-card"><div class="note-label" style="color:${color}">👅 테이스트</div><div class="note-text">${w.notes.ta}</div></div>
-        <div class="note-card full"><div class="note-label" style="color:${color}">🌊 피니시</div><div class="note-text">${w.notes.fi}</div></div>
-      </div>
-    </div>
-  `;
-}
 
 function buildRadar(ctx, whiskies, bgColors, borderColors) {
   const labels = ['향기','달콤함','스모키','스파이시','과일향','오크'];
