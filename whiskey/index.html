@@ -223,10 +223,13 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .sb-metro{background:#D8F8F0;color:#0D6B55;}
 .sb-duty{background:#FFF0D8;color:#A04000;}
 .sb-chain{background:#EDE0F8;color:#5A1B8A;}
-.store-name{font-size:1.0rem;font-weight:900;color:var(--text);margin-bottom:6px;}
-.store-desc{font-size:0.78rem;color:var(--sub);line-height:1.6;margin-bottom:14px;}
-.store-link{display:block;text-align:center;padding:8px;background:var(--gold);border-radius:20px;color:#fff;font-size:0.78rem;font-weight:700;text-decoration:none;transition:var(--tr);}
+.store-name{font-size:1.0rem;font-weight:900;color:var(--text);margin-bottom:4px;}
+.store-desc{font-size:0.78rem;color:var(--sub);line-height:1.6;margin-bottom:8px;}
+.store-addr,.store-tel,.store-hours{font-size:0.74rem;color:var(--sub);margin-bottom:3px;line-height:1.5;}
+.store-addr strong,.store-tel strong,.store-hours strong{color:var(--text);font-weight:700;}
+.store-link{display:block;text-align:center;padding:8px;background:var(--gold);border-radius:20px;color:#fff;font-size:0.78rem;font-weight:700;text-decoration:none;transition:var(--tr);margin-top:10px;}
 .store-link:hover{opacity:0.85;transform:translateY(-1px);}
+.sb-local{background:#FFF8D8;color:#7A5800;}
 /* ─── 구매 버튼 (카드) ─── */
 .card-buy{display:inline-flex;align-items:center;gap:3px;margin-top:7px;padding:4px 10px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--gold);font-size:0.68rem;font-weight:700;text-decoration:none;transition:var(--tr);cursor:pointer;}
 .card-buy:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
@@ -371,8 +374,8 @@ footer a:hover{color:var(--gold);}
 
   <!-- 서울·수도권 -->
   <div class="store-section" data-region="metro">
-    <div class="store-section-title">🏙️ 서울·수도권 — 주류 전문점</div>
-    <div class="store-grid">
+    <div class="store-section-title">🏙️ 서울·수도권 — 전문점 체인</div>
+    <div class="store-grid" style="margin-bottom:20px;">
       <div class="store-card">
         <span class="store-badge sb-metro">수도권</span>
         <div class="store-name">와인앤모어</div>
@@ -385,17 +388,45 @@ footer a:hover{color:var(--gold);}
         <div class="store-desc">롯데 계열 프리미엄 주류 전문점. 잠실·건대·강남·수원 운영. 희귀 한정판 위스키 취급.</div>
         <a class="store-link" href="https://bottlebunker.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
       </div>
+    </div>
+
+    <div class="store-section-title">🏘️ 서울·수도권 — 소상공인 전문점</div>
+    <div class="store-grid">
       <div class="store-card">
-        <span class="store-badge sb-metro">수도권</span>
-        <div class="store-name">롯데백화점 주류관</div>
-        <div class="store-desc">명동본점·잠실·강남점 위스키 특화 코너. 백화점 포인트 적립. 선물 포장 가능.</div>
-        <a class="store-link" href="https://www.lotteon.com/m/common/search?searchWord=위스키" target="_blank" rel="noopener">방문하기 →</a>
+        <span class="store-badge sb-local">소상공인</span>
+        <div class="store-name">조양마트</div>
+        <div class="store-desc">위스키·와인 성지로 불리는 광진구 전문 주류 매장. 희귀 싱글몰트 보유.</div>
+        <div class="store-addr">📍 <strong>서울 광진구 아차산로30길 39</strong> (자양동)</div>
+        <div class="store-tel">📞 <strong>02-466-4456</strong></div>
+        <div class="store-hours">🕐 <strong>24시간</strong> 연중무휴</div>
+        <a class="store-link" href="https://map.naver.com/p/search/조양마트%20광진구" target="_blank" rel="noopener">지도 보기 →</a>
       </div>
       <div class="store-card">
-        <span class="store-badge sb-metro">수도권</span>
-        <div class="store-name">신세계 와인&리큐르</div>
-        <div class="store-desc">신세계백화점 강남·본점 운영. 수입 싱글몰트 큐레이션. SSG 포인트 연동.</div>
-        <a class="store-link" href="https://www.ssg.com/search.ssg?query=싱글몰트+위스키" target="_blank" rel="noopener">방문하기 →</a>
+        <span class="store-badge sb-local">소상공인</span>
+        <div class="store-name">가나주류백화점 동대문점</div>
+        <div class="store-desc">30년 전통 위스키·와인·꼬냑 전문점. 신설동역 바로 앞. 온라인몰 병행 운영.</div>
+        <div class="store-addr">📍 <strong>서울 동대문구 천호대로 9</strong> (신설동, 명일빌딩 1F)</div>
+        <div class="store-tel">📞 <strong>02-924-9753</strong></div>
+        <div class="store-hours">🕐 평일 10:00–21:00 · 토 10:00–20:00 · <span style="color:#c0392b;">일 휴무</span></div>
+        <a class="store-link" href="https://www.kaja2002.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-local">소상공인</span>
+        <div class="store-name">가나주류 군자역점</div>
+        <div class="store-desc">가나주류백화점 군자역 할인점. 역에서 도보 3분. 가격 할인 행사 상시 진행.</div>
+        <div class="store-addr">📍 <strong>서울 광진구 능동로 261</strong> 1층 101호</div>
+        <div class="store-tel">📞 <strong>02-3409-4823</strong></div>
+        <div class="store-hours">🕐 매장 운영시간 내 방문 권장</div>
+        <a class="store-link" href="https://kanashop.kr/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-local">소상공인</span>
+        <div class="store-name">남대문 수입주류상가</div>
+        <div class="store-desc">위스키 마니아들이 '남던(남대문 던전)'이라 부르는 성지. 희귀·한정판 위스키를 시중 대비 저렴하게 구매 가능.</div>
+        <div class="store-addr">📍 <strong>서울 중구 남대문시장4길 9</strong> (남대문시장 내)</div>
+        <div class="store-tel">📞 <strong>02-752-2958</strong></div>
+        <div class="store-hours">🕐 09:00–18:00 · <span style="color:#c0392b;">일·공휴일 휴무</span></div>
+        <a class="store-link" href="https://map.naver.com/p/search/남대문시장%20주류상가" target="_blank" rel="noopener">지도 보기 →</a>
       </div>
     </div>
   </div>
