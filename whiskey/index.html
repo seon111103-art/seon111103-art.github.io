@@ -210,14 +210,19 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .modal-price-card strong{font-size:1.05rem;color:var(--gold);font-weight:700;}
 
 /* ─── 판매처 탭 ─── */
+.region-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.rgn-btn{padding:7px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--card);color:var(--sub);font-size:0.78rem;font-weight:700;cursor:pointer;transition:var(--tr);font-family:'Noto Sans KR',sans-serif;}
+.rgn-btn.active,.rgn-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
+.store-section{margin-bottom:24px;}
+.store-section-title{font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);}
 .store-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .store-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:18px 16px;transition:var(--tr);}
 .store-card:hover{border-color:var(--gold-dim);box-shadow:var(--shadow-gold);transform:translateY(-2px);}
 .store-badge{font-size:0.65rem;font-weight:700;padding:3px 9px;border-radius:10px;display:inline-block;margin-bottom:10px;}
-.sb-mart{background:#D8F0E0;color:#1B6B35;}
 .sb-online{background:#D8E8F8;color:#1050A0;}
+.sb-metro{background:#D8F8F0;color:#0D6B55;}
 .sb-duty{background:#FFF0D8;color:#A04000;}
-.sb-shop{background:#F0D8F0;color:#6B1B8A;}
+.sb-chain{background:#EDE0F8;color:#5A1B8A;}
 .store-name{font-size:1.0rem;font-weight:900;color:var(--text);margin-bottom:6px;}
 .store-desc{font-size:0.78rem;color:var(--sub);line-height:1.6;margin-bottom:14px;}
 .store-link{display:block;text-align:center;padding:8px;background:var(--gold);border-radius:20px;color:#fff;font-size:0.78rem;font-weight:700;text-decoration:none;transition:var(--tr);}
@@ -323,108 +328,142 @@ footer a:hover{color:var(--gold);}
 
 <!-- ─── 판매처 탭 ─── -->
 <div id="tab-store" class="tab-content">
-  <p style="font-size:0.8rem;color:var(--sub);margin-bottom:16px;line-height:1.6;">국내에서 위스키를 구매할 수 있는 주요 판매처입니다. 가격은 판매처마다 다를 수 있습니다.</p>
+  <p style="font-size:0.8rem;color:var(--sub);margin-bottom:16px;line-height:1.6;">지역별 국내 위스키 주요 판매처입니다. 가격은 매장마다 상이할 수 있습니다.</p>
 
-  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">🏬 대형마트</div>
-  <div class="store-grid" style="margin-bottom:20px;">
-    <div class="store-card">
-      <span class="store-badge sb-mart">마트</span>
-      <div class="store-name">이마트</div>
-      <div class="store-desc">전국 이마트 주류 코너. 입문급~프리미엄 싱글몰트 다양하게 보유.</div>
-      <a class="store-link" href="https://emart.ssg.com/search.ssg?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-mart">마트</span>
-      <div class="store-name">롯데마트</div>
-      <div class="store-desc">전국 롯데마트 주류 코너. 정기 위스키 할인 행사 자주 진행.</div>
-      <a class="store-link" href="https://www.lotteon.com/m/common/search?searchWord=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-mart">마트</span>
-      <div class="store-name">홈플러스</div>
-      <div class="store-desc">위스키 종류 다양. 알뜰 할인 행사로 저렴하게 구매 가능.</div>
-      <a class="store-link" href="https://www.homeplus.co.kr/Pages/Search/SearchResult?search=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-mart">마트</span>
-      <div class="store-name">코스트코</div>
-      <div class="store-desc">대용량·번들 위스키 저렴하게 구매. 회원 전용. 스카치 라인업 우수.</div>
-      <a class="store-link" href="https://www.costco.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+  <div class="region-filter">
+    <button class="rgn-btn active" onclick="filterRegion('all',this)">전체</button>
+    <button class="rgn-btn" onclick="filterRegion('online',this)">🌐 온라인</button>
+    <button class="rgn-btn" onclick="filterRegion('metro',this)">🏙️ 서울·수도권</button>
+    <button class="rgn-btn" onclick="filterRegion('duty',this)">✈️ 인천공항</button>
+    <button class="rgn-btn" onclick="filterRegion('chain',this)">🏬 전국 체인</button>
+  </div>
+
+  <!-- 온라인 -->
+  <div class="store-section" data-region="online">
+    <div class="store-section-title">🌐 온라인 — 전국 배송</div>
+    <div class="store-grid">
+      <div class="store-card">
+        <span class="store-badge sb-online">온라인</span>
+        <div class="store-name">쿠팡</div>
+        <div class="store-desc">로켓배송으로 당일·익일 수령. 와우 회원 추가 할인. 가격 비교 용이.</div>
+        <a class="store-link" href="https://www.coupang.com/np/search?q=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-online">온라인</span>
+        <div class="store-name">마켓컬리</div>
+        <div class="store-desc">새벽배송. 큐레이션된 프리미엄 위스키 셀렉션. 희귀 라인 입고.</div>
+        <a class="store-link" href="https://www.kurly.com/search?sword=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-online">온라인</span>
+        <div class="store-name">SSG.COM</div>
+        <div class="store-desc">이마트 오프라인 재고 연동. 신세계포인트 적립. 빠른 배송.</div>
+        <a class="store-link" href="https://www.ssg.com/search.ssg?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-online">온라인</span>
+        <div class="store-name">네이버쇼핑</div>
+        <div class="store-desc">최저가 비교 필수. 여러 판매처 한눈에 비교. 네이버페이 적립.</div>
+        <a class="store-link" href="https://search.shopping.naver.com/search/all?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
     </div>
   </div>
 
-  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">🛍️ 온라인 쇼핑</div>
-  <div class="store-grid" style="margin-bottom:20px;">
-    <div class="store-card">
-      <span class="store-badge sb-online">온라인</span>
-      <div class="store-name">쿠팡</div>
-      <div class="store-desc">로켓배송으로 빠르게 수령. 와우 회원 할인 적용. 가격 비교 용이.</div>
-      <a class="store-link" href="https://www.coupang.com/np/search?q=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-online">온라인</span>
-      <div class="store-name">마켓컬리</div>
-      <div class="store-desc">새벽배송. 큐레이션 위스키 셀렉션. 프리미엄 라인 강세.</div>
-      <a class="store-link" href="https://www.kurly.com/search?sword=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-online">온라인</span>
-      <div class="store-name">SSG.COM</div>
-      <div class="store-desc">이마트 온라인. 오프라인 재고와 연동. 신세계포인트 적립.</div>
-      <a class="store-link" href="https://www.ssg.com/search.ssg?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-online">온라인</span>
-      <div class="store-name">네이버쇼핑</div>
-      <div class="store-desc">최저가 비교 필수. 여러 판매처 한눈에 비교. 네이버페이 혜택.</div>
-      <a class="store-link" href="https://search.shopping.naver.com/search/all?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-  </div>
-
-  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">✈️ 면세점</div>
-  <div class="store-grid" style="margin-bottom:20px;">
-    <div class="store-card">
-      <span class="store-badge sb-duty">면세점</span>
-      <div class="store-name">롯데면세점</div>
-      <div class="store-desc">인천공항·명동 등 운영. 온라인 사전 주문 후 공항 수령 가능.</div>
-      <a class="store-link" href="https://www.lottedfs.com/" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-duty">면세점</span>
-      <div class="store-name">신라면세점</div>
-      <div class="store-desc">프리미엄 위스키 라인업 강점. 인터넷 면세 한도 내 가장 저렴.</div>
-      <a class="store-link" href="https://www.shilladfs.com/" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-duty">면세점</span>
-      <div class="store-name">현대면세점</div>
-      <div class="store-desc">현대백화점 계열 면세점. 한정판 위스키 입고 이벤트 진행.</div>
-      <a class="store-link" href="https://www.hyundaidfs.com/" target="_blank" rel="noopener">방문하기 →</a>
-    </div>
-    <div class="store-card">
-      <span class="store-badge sb-duty">면세점</span>
-      <div class="store-name">신세계면세점</div>
-      <div class="store-desc">강남·인천공항 운영. 스카치·일본 위스키 다양. SSG 포인트 연동.</div>
-      <a class="store-link" href="https://www.ssgdfm.com/" target="_blank" rel="noopener">방문하기 →</a>
+  <!-- 서울·수도권 -->
+  <div class="store-section" data-region="metro">
+    <div class="store-section-title">🏙️ 서울·수도권 — 주류 전문점</div>
+    <div class="store-grid">
+      <div class="store-card">
+        <span class="store-badge sb-metro">수도권</span>
+        <div class="store-name">와인앤모어</div>
+        <div class="store-desc">이마트 계열 주류 전문점. 강남·목동·죽전 등 수도권 50+ 지점. 싱글몰트 셀렉션 국내 최대 수준.</div>
+        <a class="store-link" href="https://www.wineandmore.co.kr/search?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-metro">수도권</span>
+        <div class="store-name">보틀벙커</div>
+        <div class="store-desc">롯데 계열 프리미엄 주류 전문점. 잠실·건대·강남·수원 운영. 희귀 한정판 위스키 취급.</div>
+        <a class="store-link" href="https://bottlebunker.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-metro">수도권</span>
+        <div class="store-name">롯데백화점 주류관</div>
+        <div class="store-desc">명동본점·잠실·강남점 위스키 특화 코너. 백화점 포인트 적립. 선물 포장 가능.</div>
+        <a class="store-link" href="https://www.lotteon.com/m/common/search?searchWord=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-metro">수도권</span>
+        <div class="store-name">신세계 와인&리큐르</div>
+        <div class="store-desc">신세계백화점 강남·본점 운영. 수입 싱글몰트 큐레이션. SSG 포인트 연동.</div>
+        <a class="store-link" href="https://www.ssg.com/search.ssg?query=싱글몰트+위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
     </div>
   </div>
 
-  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">🍾 주류 전문점</div>
-  <div class="store-grid">
-    <div class="store-card">
-      <span class="store-badge sb-shop">전문점</span>
-      <div class="store-name">와인앤모어</div>
-      <div class="store-desc">이마트 계열 주류 전문 매장. 싱글몰트 셀렉션 국내 최고 수준.</div>
-      <a class="store-link" href="https://www.wineandmore.co.kr/search?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+  <!-- 인천공항 면세 -->
+  <div class="store-section" data-region="duty">
+    <div class="store-section-title">✈️ 인천공항 — 면세점</div>
+    <div class="store-grid">
+      <div class="store-card">
+        <span class="store-badge sb-duty">면세</span>
+        <div class="store-name">롯데면세점</div>
+        <div class="store-desc">인천공항 1·2터미널 운영. 온라인 사전 주문 후 공항 수령 가능.</div>
+        <a class="store-link" href="https://www.lottedfs.com/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-duty">면세</span>
+        <div class="store-name">신라면세점</div>
+        <div class="store-desc">프리미엄·희귀 위스키 라인업 강점. 인터넷 면세 신청 후 공항 수령.</div>
+        <a class="store-link" href="https://www.shilladfs.com/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-duty">면세</span>
+        <div class="store-name">현대면세점</div>
+        <div class="store-desc">인천공항·동대문 운영. 한정판 위스키 단독 입고 이벤트 진행.</div>
+        <a class="store-link" href="https://www.hyundaidfs.com/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-duty">면세</span>
+        <div class="store-name">신세계면세점</div>
+        <div class="store-desc">인천공항·강남 운영. 스카치·일본 위스키 다양. SSG 포인트 연동.</div>
+        <a class="store-link" href="https://www.ssgdfm.com/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
     </div>
-    <div class="store-card">
-      <span class="store-badge sb-shop">전문점</span>
-      <div class="store-name">보틀벙커</div>
-      <div class="store-desc">롯데 계열 주류 전문점. 희귀 한정판 위스키 취급. 소수 지점 운영.</div>
-      <a class="store-link" href="https://bottlebunker.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+    <p style="font-size:0.72rem;color:var(--sub);margin-top:10px;line-height:1.6;">※ 면세 구매 한도: 미화 $800 이내, 주류 1L · 400달러 이내</p>
+  </div>
+
+  <!-- 전국 체인 -->
+  <div class="store-section" data-region="chain">
+    <div class="store-section-title">🏬 전국 체인 — 대형마트</div>
+    <div class="store-grid">
+      <div class="store-card">
+        <span class="store-badge sb-chain">전국</span>
+        <div class="store-name">이마트</div>
+        <div class="store-desc">전국 160+ 지점 주류 코너. 입문급~프리미엄 싱글몰트 상시 보유.</div>
+        <a class="store-link" href="https://emart.ssg.com/search.ssg?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-chain">전국</span>
+        <div class="store-name">롯데마트</div>
+        <div class="store-desc">전국 110+ 지점. 정기 위스키 할인 행사 자주 진행. 온라인 연동.</div>
+        <a class="store-link" href="https://www.lotteon.com/m/common/search?searchWord=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-chain">전국</span>
+        <div class="store-name">홈플러스</div>
+        <div class="store-desc">전국 130+ 지점. 알뜰 할인 행사로 저렴하게 구매. 주류 종류 다양.</div>
+        <a class="store-link" href="https://www.homeplus.co.kr/Pages/Search/SearchResult?search=위스키" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
+      <div class="store-card">
+        <span class="store-badge sb-chain">전국</span>
+        <div class="store-name">코스트코</div>
+        <div class="store-desc">대용량·번들 위스키 저렴하게 구매. 회원 전용. 스카치 라인업 우수.</div>
+        <a class="store-link" href="https://www.costco.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+      </div>
     </div>
   </div>
-  <p style="font-size:0.72rem;color:var(--sub);margin-top:16px;line-height:1.6;">※ 주류는 19세 이상만 구매 가능합니다. 면세 구매 한도는 $800(약 100만원)이며, 주류는 1L 이내입니다.</p>
+
+  <p style="font-size:0.72rem;color:var(--sub);margin-top:4px;line-height:1.6;">※ 주류는 만 19세 이상만 구매 가능합니다.</p>
 </div>
 
 <!-- ─── 모달 ─── -->
@@ -550,6 +589,15 @@ function switchTab(t) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
   if (t === 'price') renderPrice();
+}
+
+// ─── 판매처 지역 필터 ───
+function filterRegion(r, btn) {
+  document.querySelectorAll('.rgn-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.store-section').forEach(s => {
+    s.style.display = (r === 'all' || s.dataset.region === r) ? '' : 'none';
+  });
 }
 
 // ─── 필터 ───
