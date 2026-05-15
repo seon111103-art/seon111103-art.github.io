@@ -147,31 +147,39 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .info-pill strong{color:var(--gold);}
 
 /* ─── 가격 탭 ─── */
-.price-sort{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.price-sort{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
 .sort-btn{
-  padding:7px 14px;border:1.5px solid var(--border);border-radius:20px;
-  background:var(--card);color:var(--sub);font-size:0.78rem;font-weight:700;
-  cursor:pointer;transition:var(--tr);
+  padding:6px 12px;border:1.5px solid var(--border);border-radius:20px;
+  background:var(--card);color:var(--sub);font-size:0.76rem;font-weight:700;
+  cursor:pointer;transition:var(--tr);white-space:nowrap;
 }
 .sort-btn:hover,.sort-btn.active{border-color:var(--gold-dim);color:var(--gold);background:var(--card2);}
 .price-table{width:100%;border-collapse:collapse;}
 .price-table thead th{
-  padding:10px 8px;font-size:0.75rem;color:var(--sub);font-weight:700;
+  padding:10px 6px;font-size:0.72rem;color:var(--sub);font-weight:700;
   border-bottom:1px solid var(--border);text-align:left;background:var(--card);
-  position:sticky;top:0;
+  position:sticky;top:0;white-space:nowrap;
 }
 .price-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:var(--tr);}
 .price-table tbody tr:hover{background:var(--card2);}
-.price-table td{padding:11px 8px;font-size:0.82rem;}
-.pt-name{font-weight:700;color:var(--text);}
-.pt-en{font-size:0.7rem;color:var(--sub);}
-.pt-country{font-size:1rem;}
-.pt-type{font-size:0.7rem;color:var(--sub);}
+.price-table td{padding:10px 6px;font-size:0.82rem;vertical-align:middle;}
+.pt-flag{font-size:1.9rem;line-height:1;margin-bottom:3px;}
+.pt-name{font-weight:700;color:var(--text);font-size:0.82rem;line-height:1.3;}
+.pt-en{font-size:0.67rem;color:var(--sub);margin-top:1px;}
+.pt-typesmall{font-size:0.62rem;color:var(--faint);margin-top:2px;}
 .pt-price{font-weight:700;color:var(--gold);}
 .pt-rt{color:var(--sub);font-size:0.8rem;}
 .tier{
   display:inline-block;padding:2px 7px;border-radius:8px;
-  font-size:0.66rem;font-weight:700;white-space:nowrap;
+  font-size:0.64rem;font-weight:700;white-space:nowrap;
+}
+@media(max-width:380px){
+  .sort-btn{padding:5px 9px;font-size:0.7rem;}
+  .price-table td{padding:9px 4px;}
+  .pt-flag{font-size:1.6rem;}
+  .pt-name{font-size:0.76rem;}
+  .pt-price{font-size:0.78rem;}
+  .tier{font-size:0.58rem;padding:2px 5px;}
 }
 .tier-budget{background:#D8F0E0;color:#1B6B35;}
 .tier-mid{background:#D8E8F8;color:#1050A0;}
@@ -317,7 +325,6 @@ footer a:hover{color:var(--gold);}
       <thead>
         <tr>
           <th>위스키</th>
-          <th>종류</th>
           <th style="text-align:right;">면세가</th>
           <th style="text-align:right;">소매가</th>
           <th>등급</th>
@@ -792,12 +799,10 @@ function renderPrice() {
   document.getElementById('price-tbody').innerHTML = list.map(w => `
     <tr onclick="openModal(${w.id})">
       <td>
+        <div class="pt-flag">${CTRY[w.country].split(' ')[0]}</div>
         <div class="pt-name">${w.ko}</div>
         <div class="pt-en">${w.name}</div>
-      </td>
-      <td>
-        <div class="pt-country">${CTRY[w.country].split(' ')[0]}</div>
-        <div class="pt-type">${TYPE[w.type]}</div>
+        <div class="pt-typesmall">${TYPE[w.type]}</div>
       </td>
       <td style="text-align:right;"><span class="pt-price">₩${w.price.df.toLocaleString()}</span></td>
       <td style="text-align:right;"><span class="pt-rt">₩${w.price.rt.toLocaleString()}</span></td>
