@@ -65,15 +65,27 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 }
 .search-input:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
 .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:1rem;}
-.filter-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
-.chip{
-  padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;
-  background:var(--card);color:var(--sub);font-size:0.78rem;font-weight:700;
-  cursor:pointer;transition:var(--tr);white-space:nowrap;
+.filter-panel{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius-lg);padding:14px 16px;
+  margin-bottom:20px;box-shadow:var(--shadow);
 }
-.chip:hover{border-color:var(--gold-dim);color:var(--text);}
-.chip.active{background:var(--card2);border-color:var(--gold);color:var(--gold);}
-.filter-sep{width:1px;background:var(--border);align-self:stretch;}
+.filter-row{display:flex;align-items:flex-start;gap:10px;}
+.filter-row+.filter-row{margin-top:11px;padding-top:11px;border-top:1px solid var(--border);}
+.filter-label{
+  font-size:0.67rem;font-weight:900;color:var(--gold-dim);
+  white-space:nowrap;margin-top:6px;min-width:20px;
+  letter-spacing:0.5px;
+}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
+.chip{
+  padding:5px 12px;border:1.5px solid var(--border);border-radius:20px;
+  background:var(--card2);color:var(--sub);font-size:0.76rem;font-weight:700;
+  cursor:pointer;transition:var(--tr);font-family:'Noto Sans KR',sans-serif;
+  white-space:nowrap;
+}
+.chip:hover:not(.active){border-color:var(--gold-dim);color:var(--text);}
+.chip.active{background:var(--gold);border-color:var(--gold);color:#fff;}
 
 /* ─── 위스키 카드 (가로형) ─── */
 .whiskey-grid{display:grid;grid-template-columns:1fr;gap:10px;}
@@ -293,19 +305,27 @@ footer a:hover{color:var(--gold);}
     <span class="search-icon">🔍</span>
     <input class="search-input" id="search-input" type="text" placeholder="위스키 이름 검색..." oninput="renderGuide()"/>
   </div>
-  <div class="filter-chips" id="filter-country">
-    <button class="chip active" data-v="all" onclick="setFilter('country','all')">전체</button>
-    <button class="chip" data-v="scotland" onclick="setFilter('country','scotland')">🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드</button>
-    <button class="chip" data-v="ireland" onclick="setFilter('country','ireland')">🇮🇪 아이리시</button>
-    <button class="chip" data-v="japan" onclick="setFilter('country','japan')">🇯🇵 일본</button>
-    <button class="chip" data-v="usa" onclick="setFilter('country','usa')">🇺🇸 미국</button>
-  </div>
-  <div class="filter-chips" id="filter-type">
-    <button class="chip active" data-v="all" onclick="setFilter('type','all')">전체</button>
-    <button class="chip" data-v="single_malt" onclick="setFilter('type','single_malt')">싱글몰트</button>
-    <button class="chip" data-v="blended" onclick="setFilter('type','blended')">블렌디드</button>
-    <button class="chip" data-v="bourbon" onclick="setFilter('type','bourbon')">버번</button>
-    <button class="chip" data-v="pot_still" onclick="setFilter('type','pot_still')">팟스틸</button>
+  <div class="filter-panel">
+    <div class="filter-row">
+      <div class="filter-label">나라</div>
+      <div class="filter-chips" id="filter-country">
+        <button class="chip active" data-v="all" onclick="setFilter('country','all')">전체</button>
+        <button class="chip" data-v="scotland" onclick="setFilter('country','scotland')">🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드</button>
+        <button class="chip" data-v="ireland" onclick="setFilter('country','ireland')">🇮🇪 아이리시</button>
+        <button class="chip" data-v="japan" onclick="setFilter('country','japan')">🇯🇵 일본</button>
+        <button class="chip" data-v="usa" onclick="setFilter('country','usa')">🇺🇸 미국</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">종류</div>
+      <div class="filter-chips" id="filter-type">
+        <button class="chip active" data-v="all" onclick="setFilter('type','all')">전체</button>
+        <button class="chip" data-v="single_malt" onclick="setFilter('type','single_malt')">🥃 싱글몰트</button>
+        <button class="chip" data-v="blended" onclick="setFilter('type','blended')">🔀 블렌디드</button>
+        <button class="chip" data-v="bourbon" onclick="setFilter('type','bourbon')">🌾 버번</button>
+        <button class="chip" data-v="pot_still" onclick="setFilter('type','pot_still')">🏺 팟스틸</button>
+      </div>
+    </div>
   </div>
   <div class="whiskey-grid" id="guide-grid"></div>
 </div>
