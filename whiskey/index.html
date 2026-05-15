@@ -313,6 +313,31 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .hb-rec-flag{font-size:1.5rem;margin-bottom:4px;}
 .hb-rec-name{font-size:0.72rem;font-weight:900;color:var(--text);margin-bottom:3px;}
 .hb-rec-desc{font-size:0.66rem;color:var(--sub);line-height:1.5;}
+/* ─── 콜키지 탭 ─── */
+.ck-notice{background:#FFFBEA;border:1.5px solid #E8D060;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;font-size:0.8rem;color:#7A5800;line-height:1.75;}
+.ck-notice strong{color:#9A6A10;}
+.ck-platform-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:22px;}
+.ck-platform{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;text-decoration:none;display:block;transition:var(--tr);}
+.ck-platform:hover{border-color:var(--gold-dim);transform:translateY(-2px);box-shadow:var(--shadow);}
+.ck-platform-icon{font-size:1.6rem;margin-bottom:5px;}
+.ck-platform-name{font-size:0.75rem;font-weight:900;color:var(--text);margin-bottom:2px;}
+.ck-platform-desc{font-size:0.64rem;color:var(--sub);}
+.ck-region-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.ck-section{margin-bottom:26px;}
+.ck-section-title{font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);}
+.ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ck-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:var(--tr);}
+.ck-card:hover{border-color:var(--gold-dim);box-shadow:var(--shadow-gold);transform:translateY(-2px);}
+.ck-fee{display:inline-block;padding:3px 9px;border-radius:10px;font-size:0.64rem;font-weight:700;margin-bottom:8px;}
+.ck-free{background:#D8F0E0;color:#1B6B35;}
+.ck-paid{background:#FFF0D8;color:#A04000;}
+.ck-name{font-size:0.96rem;font-weight:900;color:var(--text);margin-bottom:3px;}
+.ck-type{font-size:0.74rem;color:var(--sub);margin-bottom:6px;}
+.ck-addr{font-size:0.73rem;color:var(--sub);margin-bottom:3px;line-height:1.5;}
+.ck-addr strong{color:var(--text);}
+.ck-info{font-size:0.72rem;color:var(--gold);font-weight:700;margin-top:6px;}
+.ck-map{display:block;text-align:center;padding:7px;background:var(--gold);border-radius:16px;color:#fff;font-size:0.76rem;font-weight:700;text-decoration:none;transition:var(--tr);margin-top:10px;}
+.ck-map:hover{opacity:0.85;transform:translateY(-1px);}
 /* ─── 푸터 ─── */
 footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
 footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
@@ -356,6 +381,7 @@ footer a:hover{color:var(--gold);}
   <button class="tab-btn" onclick="switchTab('price')">💰 가격</button>
   <button class="tab-btn" onclick="switchTab('store')">🏪 판매처</button>
   <button class="tab-btn" onclick="switchTab('brew')">🥃 즐기기</button>
+  <button class="tab-btn" onclick="switchTab('corkage')">🍽️ 콜키지</button>
 </div>
 
 <!-- ─── 도감 탭 ─── -->
@@ -826,6 +852,208 @@ footer a:hover{color:var(--gold);}
 
 </div>
 
+<!-- ─── 콜키지 탭 ─── -->
+<div id="tab-corkage" class="tab-content">
+
+  <div class="ck-notice">
+    ⚠️ <strong>콜키지 정책은 예고 없이 변경될 수 있습니다.</strong><br>
+    방문 전 매장에 직접 문의하여 콜키지 허용 여부·비용·병 수 제한 등을 반드시 확인해 주세요. 이 정보는 참고용이며 최신 정보와 다를 수 있습니다.
+  </div>
+
+  <div class="brew-section-title" style="margin-bottom:14px;">🔍 전국 콜키지 식당 검색 플랫폼</div>
+  <div class="ck-platform-grid">
+    <a class="ck-platform" href="https://www.diningcode.com/" target="_blank" rel="noopener">
+      <div class="ck-platform-icon">🍴</div>
+      <div class="ck-platform-name">다이닝코드</div>
+      <div class="ck-platform-desc">콜키지 필터 검색</div>
+    </a>
+    <a class="ck-platform" href="https://www.mangoplate.com/" target="_blank" rel="noopener">
+      <div class="ck-platform-icon">🥭</div>
+      <div class="ck-platform-name">망고플레이트</div>
+      <div class="ck-platform-desc">전국 맛집 리뷰</div>
+    </a>
+    <a class="ck-platform" href="https://catchtable.co.kr/" target="_blank" rel="noopener">
+      <div class="ck-platform-icon">📅</div>
+      <div class="ck-platform-name">캐치테이블</div>
+      <div class="ck-platform-desc">예약 + 콜키지 확인</div>
+    </a>
+  </div>
+
+  <div class="ck-region-filter">
+    <button class="rgn-btn active" onclick="filterCorkage('all',this)">전체</button>
+    <button class="rgn-btn" onclick="filterCorkage('gangnam',this)">🏢 서울 강남</button>
+    <button class="rgn-btn" onclick="filterCorkage('jongno',this)">🏛️ 서울 종로</button>
+    <button class="rgn-btn" onclick="filterCorkage('gyeonggi',this)">🌿 경기</button>
+    <button class="rgn-btn" onclick="filterCorkage('busan',this)">🌊 부산</button>
+    <button class="rgn-btn" onclick="filterCorkage('daegu',this)">🔥 대구</button>
+  </div>
+
+  <!-- 서울 강남 -->
+  <div class="ck-section" data-ck-region="gangnam">
+    <div class="ck-section-title">🏢 서울 강남·서초</div>
+    <div class="ck-grid">
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">고메램 삼성점</div>
+        <div class="ck-type">🐑 양갈비·프렌치 레스토랑</div>
+        <div class="ck-addr">📍 <strong>서울 강남구 삼성동</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (사전 협의 권장)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/고메램%20삼성점" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">원할머니 플래그십 강남</div>
+        <div class="ck-type">🍖 한식·보쌈·족발</div>
+        <div class="ck-addr">📍 <strong>서울 강남구 강남대로</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/원할머니%20강남" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">은밀한 술집 논현</div>
+        <div class="ck-type">🥩 한우·고기 전문점</div>
+        <div class="ck-addr">📍 <strong>서울 강남구 논현동</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (예약 필수)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/논현동%20콜키지%20고기집" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-paid">콜키지 유료</span>
+        <div class="ck-name">더 부처스 컷 청담</div>
+        <div class="ck-type">🥩 스테이크하우스</div>
+        <div class="ck-addr">📍 <strong>서울 강남구 청담동</strong></div>
+        <div class="ck-info">🍾 콜키지 3만원/병 (고급 와인·위스키)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/더부처스컷%20청담" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 서울 종로·마포 -->
+  <div class="ck-section" data-ck-region="jongno">
+    <div class="ck-section-title">🏛️ 서울 종로·마포</div>
+    <div class="ck-grid">
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">청기와타운</div>
+        <div class="ck-type">🍖 한식·고기구이</div>
+        <div class="ck-addr">📍 <strong>서울 종로구 인사동 인근</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/청기와타운%20종로" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">종로도담</div>
+        <div class="ck-type">🍲 한식·한정식</div>
+        <div class="ck-addr">📍 <strong>서울 종로구 종로동</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/종로도담" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">명가양꼬치</div>
+        <div class="ck-type">🍢 양꼬치·중국식</div>
+        <div class="ck-addr">📍 <strong>서울 마포구 연남동</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/명가양꼬치%20마포" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">광화문 미진</div>
+        <div class="ck-type">🍜 막국수·한식</div>
+        <div class="ck-addr">📍 <strong>서울 종로구 광화문 인근</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (방문 전 확인)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/광화문미진" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 경기 -->
+  <div class="ck-section" data-ck-region="gyeonggi">
+    <div class="ck-section-title">🌿 경기도</div>
+    <div class="ck-grid">
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">수원 화성갈비</div>
+        <div class="ck-type">🥩 갈비·숯불구이</div>
+        <div class="ck-addr">📍 <strong>경기 수원시 팔달구</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (1인 이상 식사 조건)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/수원%20갈비%20콜키지" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-paid">콜키지 유료</span>
+        <div class="ck-name">성남 분당 와인바 레스토랑</div>
+        <div class="ck-type">🍷 이탈리안·파스타</div>
+        <div class="ck-addr">📍 <strong>경기 성남시 분당구</strong></div>
+        <div class="ck-info">🍾 콜키지 2~3만원/병</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/분당%20콜키지%20레스토랑" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 부산 -->
+  <div class="ck-section" data-ck-region="busan">
+    <div class="ck-section-title">🌊 부산</div>
+    <div class="ck-grid">
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">한와담</div>
+        <div class="ck-type">🥩 한우·고기구이</div>
+        <div class="ck-addr">📍 <strong>부산 해운대구 우동 641-10</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/한와담%20해운대" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">수영동우담</div>
+        <div class="ck-type">🥩 한우·정육식당</div>
+        <div class="ck-addr">📍 <strong>부산 수영구 광안동 207-3</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/수영동우담%20광안동" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">전포동 미지수</div>
+        <div class="ck-type">🍽️ 퓨전·한식</div>
+        <div class="ck-addr">📍 <strong>부산 부산진구 전포동 646-2</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (사전 문의)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/전포동%20미지수%20부산진구" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">해운대 소고기마을</div>
+        <div class="ck-type">🥩 소고기·구이</div>
+        <div class="ck-addr">📍 <strong>부산 해운대구 해운대해변로</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (1인 식사 이상)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/해운대%20소고기%20콜키지" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 대구 -->
+  <div class="ck-section" data-ck-region="daegu">
+    <div class="ck-section-title">🔥 대구</div>
+    <div class="ck-grid">
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">국일생갈비</div>
+        <div class="ck-type">🥩 갈비·고기구이</div>
+        <div class="ck-addr">📍 <strong>대구 중구 국채보상로 인근</strong></div>
+        <div class="ck-info">🍾 콜키지 무료</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/국일생갈비%20대구" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+      <div class="ck-card">
+        <span class="ck-fee ck-free">콜키지 무료</span>
+        <div class="ck-name">동성로 프리미엄 스테이크</div>
+        <div class="ck-type">🥩 스테이크·양식</div>
+        <div class="ck-addr">📍 <strong>대구 중구 동성로 인근</strong></div>
+        <div class="ck-info">🍾 콜키지 무료 (방문 전 확인)</div>
+        <a class="ck-map" href="https://map.naver.com/p/search/대구%20동성로%20콜키지%20스테이크" target="_blank" rel="noopener">지도 보기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:0.72rem;color:var(--sub);margin-top:8px;line-height:1.6;">※ 콜키지(Corkage): 외부에서 가져온 주류를 식당에서 마실 수 있도록 허용하는 서비스. 일부 매장은 잔·개봉 서비스 비용을 청구할 수 있습니다.</p>
+</div>
+
 <!-- ─── 모달 ─── -->
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
   <div class="modal" id="modal-body">
@@ -943,7 +1171,7 @@ let modalRadarChart = null;
 // ─── 탭 전환 ───
 function switchTab(t) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    const names = ['guide','price','store','brew'];
+    const names = ['guide','price','store','brew','corkage'];
     b.classList.toggle('active', names[i] === t);
   });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -953,10 +1181,19 @@ function switchTab(t) {
 
 // ─── 판매처 지역 필터 ───
 function filterRegion(r, btn) {
-  document.querySelectorAll('.rgn-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-store .rgn-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.store-section').forEach(s => {
     s.style.display = (r === 'all' || s.dataset.region === r) ? '' : 'none';
+  });
+}
+
+// ─── 콜키지 지역 필터 ───
+function filterCorkage(r, btn) {
+  document.querySelectorAll('#tab-corkage .rgn-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.ck-section').forEach(s => {
+    s.style.display = (r === 'all' || s.dataset.ckRegion === r) ? '' : 'none';
   });
 }
 
