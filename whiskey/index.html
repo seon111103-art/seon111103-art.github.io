@@ -209,6 +209,28 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .modal-price-card p{font-size:0.72rem;color:var(--sub);margin-bottom:4px;}
 .modal-price-card strong{font-size:1.05rem;color:var(--gold);font-weight:700;}
 
+/* ─── 판매처 탭 ─── */
+.store-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.store-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:18px 16px;transition:var(--tr);}
+.store-card:hover{border-color:var(--gold-dim);box-shadow:var(--shadow-gold);transform:translateY(-2px);}
+.store-badge{font-size:0.65rem;font-weight:700;padding:3px 9px;border-radius:10px;display:inline-block;margin-bottom:10px;}
+.sb-mart{background:#D8F0E0;color:#1B6B35;}
+.sb-online{background:#D8E8F8;color:#1050A0;}
+.sb-duty{background:#FFF0D8;color:#A04000;}
+.sb-shop{background:#F0D8F0;color:#6B1B8A;}
+.store-name{font-size:1.0rem;font-weight:900;color:var(--text);margin-bottom:6px;}
+.store-desc{font-size:0.78rem;color:var(--sub);line-height:1.6;margin-bottom:14px;}
+.store-link{display:block;text-align:center;padding:8px;background:var(--gold);border-radius:20px;color:#fff;font-size:0.78rem;font-weight:700;text-decoration:none;transition:var(--tr);}
+.store-link:hover{opacity:0.85;transform:translateY(-1px);}
+/* ─── 구매 버튼 (카드) ─── */
+.card-buy{display:inline-flex;align-items:center;gap:3px;margin-top:7px;padding:4px 10px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--gold);font-size:0.68rem;font-weight:700;text-decoration:none;transition:var(--tr);cursor:pointer;}
+.card-buy:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
+/* ─── 구매 링크 (모달) ─── */
+.modal-buy{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.modal-buy a{text-align:center;padding:10px 6px;border-radius:var(--radius);font-size:0.8rem;font-weight:700;text-decoration:none;transition:var(--tr);}
+.mbc{background:#E8F0FE;color:#1a73e8;border:1px solid #c5d9f8;}
+.mbn{background:#E8F5E9;color:#1B6B35;border:1px solid #C8E6C9;}
+.modal-buy a:hover{opacity:0.8;transform:translateY(-1px);}
 /* ─── 푸터 ─── */
 footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
 footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
@@ -246,6 +268,7 @@ footer a:hover{color:var(--gold);}
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('guide')">📖 도감</button>
   <button class="tab-btn" onclick="switchTab('price')">💰 가격</button>
+  <button class="tab-btn" onclick="switchTab('store')">🏪 판매처</button>
 </div>
 
 <!-- ─── 도감 탭 ─── -->
@@ -296,6 +319,112 @@ footer a:hover{color:var(--gold);}
     </table>
   </div>
   <p style="font-size:0.72rem;color:var(--sub);margin-top:12px;line-height:1.6;">※ 가격은 700mL 기준 참고가이며, 실제 판매가와 다를 수 있습니다. 면세점은 인천공항 기준.</p>
+</div>
+
+<!-- ─── 판매처 탭 ─── -->
+<div id="tab-store" class="tab-content">
+  <p style="font-size:0.8rem;color:var(--sub);margin-bottom:16px;line-height:1.6;">국내에서 위스키를 구매할 수 있는 주요 판매처입니다. 가격은 판매처마다 다를 수 있습니다.</p>
+
+  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">🏬 대형마트</div>
+  <div class="store-grid" style="margin-bottom:20px;">
+    <div class="store-card">
+      <span class="store-badge sb-mart">마트</span>
+      <div class="store-name">이마트</div>
+      <div class="store-desc">전국 이마트 주류 코너. 입문급~프리미엄 싱글몰트 다양하게 보유.</div>
+      <a class="store-link" href="https://emart.ssg.com/search.ssg?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-mart">마트</span>
+      <div class="store-name">롯데마트</div>
+      <div class="store-desc">전국 롯데마트 주류 코너. 정기 위스키 할인 행사 자주 진행.</div>
+      <a class="store-link" href="https://www.lotteon.com/m/common/search?searchWord=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-mart">마트</span>
+      <div class="store-name">홈플러스</div>
+      <div class="store-desc">위스키 종류 다양. 알뜰 할인 행사로 저렴하게 구매 가능.</div>
+      <a class="store-link" href="https://www.homeplus.co.kr/Pages/Search/SearchResult?search=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-mart">마트</span>
+      <div class="store-name">코스트코</div>
+      <div class="store-desc">대용량·번들 위스키 저렴하게 구매. 회원 전용. 스카치 라인업 우수.</div>
+      <a class="store-link" href="https://www.costco.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+  </div>
+
+  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">🛍️ 온라인 쇼핑</div>
+  <div class="store-grid" style="margin-bottom:20px;">
+    <div class="store-card">
+      <span class="store-badge sb-online">온라인</span>
+      <div class="store-name">쿠팡</div>
+      <div class="store-desc">로켓배송으로 빠르게 수령. 와우 회원 할인 적용. 가격 비교 용이.</div>
+      <a class="store-link" href="https://www.coupang.com/np/search?q=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-online">온라인</span>
+      <div class="store-name">마켓컬리</div>
+      <div class="store-desc">새벽배송. 큐레이션 위스키 셀렉션. 프리미엄 라인 강세.</div>
+      <a class="store-link" href="https://www.kurly.com/search?sword=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-online">온라인</span>
+      <div class="store-name">SSG.COM</div>
+      <div class="store-desc">이마트 온라인. 오프라인 재고와 연동. 신세계포인트 적립.</div>
+      <a class="store-link" href="https://www.ssg.com/search.ssg?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-online">온라인</span>
+      <div class="store-name">네이버쇼핑</div>
+      <div class="store-desc">최저가 비교 필수. 여러 판매처 한눈에 비교. 네이버페이 혜택.</div>
+      <a class="store-link" href="https://search.shopping.naver.com/search/all?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+  </div>
+
+  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">✈️ 면세점</div>
+  <div class="store-grid" style="margin-bottom:20px;">
+    <div class="store-card">
+      <span class="store-badge sb-duty">면세점</span>
+      <div class="store-name">롯데면세점</div>
+      <div class="store-desc">인천공항·명동 등 운영. 온라인 사전 주문 후 공항 수령 가능.</div>
+      <a class="store-link" href="https://www.lottedfs.com/" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-duty">면세점</span>
+      <div class="store-name">신라면세점</div>
+      <div class="store-desc">프리미엄 위스키 라인업 강점. 인터넷 면세 한도 내 가장 저렴.</div>
+      <a class="store-link" href="https://www.shilladfs.com/" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-duty">면세점</span>
+      <div class="store-name">현대면세점</div>
+      <div class="store-desc">현대백화점 계열 면세점. 한정판 위스키 입고 이벤트 진행.</div>
+      <a class="store-link" href="https://www.hyundaidfs.com/" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-duty">면세점</span>
+      <div class="store-name">신세계면세점</div>
+      <div class="store-desc">강남·인천공항 운영. 스카치·일본 위스키 다양. SSG 포인트 연동.</div>
+      <a class="store-link" href="https://www.ssgdfm.com/" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+  </div>
+
+  <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);">🍾 주류 전문점</div>
+  <div class="store-grid">
+    <div class="store-card">
+      <span class="store-badge sb-shop">전문점</span>
+      <div class="store-name">와인앤모어</div>
+      <div class="store-desc">이마트 계열 주류 전문 매장. 싱글몰트 셀렉션 국내 최고 수준.</div>
+      <a class="store-link" href="https://www.wineandmore.co.kr/search?query=위스키" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+    <div class="store-card">
+      <span class="store-badge sb-shop">전문점</span>
+      <div class="store-name">보틀벙커</div>
+      <div class="store-desc">롯데 계열 주류 전문점. 희귀 한정판 위스키 취급. 소수 지점 운영.</div>
+      <a class="store-link" href="https://bottlebunker.co.kr/" target="_blank" rel="noopener">방문하기 →</a>
+    </div>
+  </div>
+  <p style="font-size:0.72rem;color:var(--sub);margin-top:16px;line-height:1.6;">※ 주류는 19세 이상만 구매 가능합니다. 면세 구매 한도는 $800(약 100만원)이며, 주류는 1L 이내입니다.</p>
 </div>
 
 <!-- ─── 모달 ─── -->
@@ -415,7 +544,7 @@ let modalRadarChart = null;
 // ─── 탭 전환 ───
 function switchTab(t) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    const names = ['guide','price'];
+    const names = ['guide','price','store'];
     b.classList.toggle('active', names[i] === t);
   });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -464,6 +593,7 @@ function renderGuide() {
           <span class="tag">${smokyLabel(w.t.sm)}</span>
         </div>
         <div class="card-desc">${w.desc}</div>
+        <a class="card-buy" href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(w.ko+' 위스키')}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🛒 구매하기</a>
       </div>
       <div class="card-right">
         <div class="t-title">TASTING</div>
@@ -515,6 +645,10 @@ function openModal(id) {
   document.getElementById('m-prices').innerHTML = `
     <div class="modal-price-card"><p>✈️ 면세가</p><strong>₩${w.price.df.toLocaleString()}</strong></div>
     <div class="modal-price-card"><p>🏪 소매가</p><strong>₩${w.price.rt.toLocaleString()}</strong></div>
+    <div class="modal-buy" style="grid-column:1/-1;">
+      <a class="mbc" href="https://www.coupang.com/np/search?q=${encodeURIComponent(w.ko+' 위스키')}" target="_blank" rel="noopener">🛒 쿠팡에서 구매</a>
+      <a class="mbn" href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(w.ko+' 위스키')}" target="_blank" rel="noopener">🟢 네이버쇼핑</a>
+    </div>
   `;
   document.getElementById('m-desc').textContent = w.desc;
 
