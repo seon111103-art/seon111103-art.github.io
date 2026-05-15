@@ -322,18 +322,20 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .ck-platform-icon{font-size:1.6rem;margin-bottom:5px;}
 .ck-platform-name{font-size:0.75rem;font-weight:900;color:var(--text);margin-bottom:2px;}
 .ck-platform-desc{font-size:0.64rem;color:var(--sub);}
-.ck-menu{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:22px;box-shadow:var(--shadow);}
-.ck-menu-header{padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);font-size:0.68rem;font-weight:900;color:var(--gold-dim);letter-spacing:1.5px;}
-.ck-menu-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--tr);background:var(--card);border-left:3px solid transparent;font-family:'Noto Sans KR',sans-serif;text-align:left;width:100%;}
-.ck-menu-item:last-child{border-bottom:none;}
-.ck-menu-item:hover{background:var(--card2);}
-.ck-menu-item.active{background:#FFFBEA;border-left-color:var(--gold);}
-.ck-menu-icon{font-size:1.25rem;width:26px;text-align:center;flex-shrink:0;}
-.ck-menu-label{flex:1;font-size:0.85rem;font-weight:700;color:var(--text);}
-.ck-menu-item.active .ck-menu-label{color:var(--gold);}
-.ck-menu-sub{font-size:0.68rem;color:var(--sub);font-weight:400;margin-top:1px;}
-.ck-menu-count{background:var(--card3);border-radius:10px;padding:2px 9px;font-size:0.68rem;font-weight:700;color:var(--sub);flex-shrink:0;}
-.ck-menu-item.active .ck-menu-count{background:var(--gold);color:#fff;}
+.ck-dropdown-wrap{position:relative;margin-bottom:22px;}
+.ck-dropdown-label{font-size:0.72rem;font-weight:900;color:var(--gold-dim);letter-spacing:0.5px;margin-bottom:6px;}
+.ck-select{
+  width:100%;padding:13px 44px 13px 16px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);
+  color:var(--text);font-size:0.9rem;font-weight:700;font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;appearance:none;-webkit-appearance:none;
+  transition:var(--tr);box-shadow:var(--shadow);
+}
+.ck-select:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px rgba(154,106,16,0.12);}
+.ck-dropdown-arrow{
+  position:absolute;right:16px;bottom:14px;pointer-events:none;
+  font-size:1rem;color:var(--gold);
+}
 .ck-section{margin-bottom:26px;}
 .ck-section-title{font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-left:12px;border-left:3px solid var(--gold);}
 .ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -890,38 +892,17 @@ footer a:hover{color:var(--gold);}
     </a>
   </div>
 
-  <div class="ck-menu">
-    <div class="ck-menu-header">📍 지역 선택</div>
-    <button class="ck-menu-item active" onclick="filterCorkage('all',this)">
-      <span class="ck-menu-icon">🇰🇷</span>
-      <span class="ck-menu-label">전체 보기<div class="ck-menu-sub">전국 모든 지역</div></span>
-      <span class="ck-menu-count">16</span>
-    </button>
-    <button class="ck-menu-item" onclick="filterCorkage('gangnam',this)">
-      <span class="ck-menu-icon">🏢</span>
-      <span class="ck-menu-label">서울 강남·서초<div class="ck-menu-sub">강남구·서초구·청담동</div></span>
-      <span class="ck-menu-count">4</span>
-    </button>
-    <button class="ck-menu-item" onclick="filterCorkage('jongno',this)">
-      <span class="ck-menu-icon">🏛️</span>
-      <span class="ck-menu-label">서울 종로·마포<div class="ck-menu-sub">종로구·마포구·인사동</div></span>
-      <span class="ck-menu-count">4</span>
-    </button>
-    <button class="ck-menu-item" onclick="filterCorkage('gyeonggi',this)">
-      <span class="ck-menu-icon">🌿</span>
-      <span class="ck-menu-label">경기도<div class="ck-menu-sub">수원·성남·분당</div></span>
-      <span class="ck-menu-count">2</span>
-    </button>
-    <button class="ck-menu-item" onclick="filterCorkage('busan',this)">
-      <span class="ck-menu-icon">🌊</span>
-      <span class="ck-menu-label">부산<div class="ck-menu-sub">해운대·수영·부산진</div></span>
-      <span class="ck-menu-count">4</span>
-    </button>
-    <button class="ck-menu-item" onclick="filterCorkage('daegu',this)">
-      <span class="ck-menu-icon">🔥</span>
-      <span class="ck-menu-label">대구<div class="ck-menu-sub">중구·동성로</div></span>
-      <span class="ck-menu-count">2</span>
-    </button>
+  <div class="ck-dropdown-wrap">
+    <div class="ck-dropdown-label">📍 지역 선택</div>
+    <select class="ck-select" id="ck-region-select" onchange="filterCorkage(this.value)">
+      <option value="all">🇰🇷 전체 보기 — 전국 모든 지역 (16곳)</option>
+      <option value="gangnam">🏢 서울 강남·서초 — 강남구·청담동 (4곳)</option>
+      <option value="jongno">🏛️ 서울 종로·마포 — 종로구·인사동 (4곳)</option>
+      <option value="gyeonggi">🌿 경기도 — 수원·성남·분당 (2곳)</option>
+      <option value="busan">🌊 부산 — 해운대·수영·부산진 (4곳)</option>
+      <option value="daegu">🔥 대구 — 중구·동성로 (2곳)</option>
+    </select>
+    <span class="ck-dropdown-arrow">▼</span>
   </div>
 
   <!-- 서울 강남 -->
@@ -1225,9 +1206,7 @@ function filterRegion(r, btn) {
 }
 
 // ─── 콜키지 지역 필터 ───
-function filterCorkage(r, btn) {
-  document.querySelectorAll('.ck-menu-item').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+function filterCorkage(r) {
   document.querySelectorAll('.ck-section').forEach(s => {
     s.style.display = (r === 'all' || s.dataset.ckRegion === r) ? '' : 'none';
   });
