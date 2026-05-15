@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>위스키 도감 | 전세계 35종 위스키 가이드</title>
+<meta name="description" content="스코틀랜드·아이리시·일본·미국 위스키 35종 도감. 테이스팅 노트, 레이더 차트, 국내 가격 비교."/>
+<meta name="google-adsense-account" content="ca-pub-5695400087151759">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695400087151759" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#120A00;--card:#1E1000;--card2:#2A1800;--card3:#341F00;
+  --gold:#C9A84C;--gold-light:#F0D080;--gold-dim:#7A6030;
+  --text:#F0E0C0;--sub:#907050;--faint:#503A20;
+  --border:#3A2510;
+  --shadow:0 4px 20px rgba(0,0,0,0.6);
+  --shadow-gold:0 4px 24px rgba(201,168,76,0.18);
+  --radius:14px;--radius-lg:22px;
+  --tr:all 0.22s cubic-bezier(.4,0,.2,1);
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ─── 헤더 ─── */
+header{
+  background:linear-gradient(160deg,#080400 0%,#150900 40%,#2A1400 100%);
+  padding:54px 20px 0; text-align:center; position:relative; overflow:hidden;
+}
+.header-deco{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 20%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.header-icon{font-size:3.2rem;margin-bottom:10px;filter:drop-shadow(0 0 16px rgba(201,168,76,0.5));}
+h1.site-title{font-size:1.9rem;font-weight:900;color:var(--gold-light);letter-spacing:2px;}
+.site-sub{font-size:0.88rem;color:var(--sub);margin-top:6px;margin-bottom:28px;}
+.header-wave{display:block;width:100%;height:40px;fill:var(--bg);}
+
+/* ─── 탭 ─── */
+.tabs{display:flex;justify-content:center;gap:6px;padding:24px 20px 0;max-width:700px;margin:0 auto;}
+.tab-btn{
+  flex:1;padding:11px 8px;border:1.5px solid var(--border);border-radius:30px;
+  background:var(--card);color:var(--sub);font-size:0.9rem;font-weight:700;
+  cursor:pointer;transition:var(--tr);font-family:'Noto Sans KR',sans-serif;
+}
+.tab-btn:hover{border-color:var(--gold-dim);color:var(--text);}
+.tab-btn.active{background:var(--gold);border-color:var(--gold);color:#1A0A00;}
+.tab-content{display:none;max-width:700px;margin:0 auto;padding:24px 16px 80px;}
+.tab-content.active{display:block;}
+
+/* ─── 검색/필터 ─── */
+.search-wrap{position:relative;margin-bottom:16px;}
+.search-input{
+  width:100%;padding:12px 16px 12px 42px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-size:0.92rem;font-family:'Noto Sans KR',sans-serif;
+}
+.search-input:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:1rem;}
+.filter-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
+.chip{
+  padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;
+  background:var(--card);color:var(--sub);font-size:0.78rem;font-weight:700;
+  cursor:pointer;transition:var(--tr);white-space:nowrap;
+}
+.chip:hover{border-color:var(--gold-dim);color:var(--text);}
+.chip.active{background:var(--card2);border-color:var(--gold);color:var(--gold);}
+.filter-sep{width:1px;background:var(--border);align-self:stretch;}
+
+/* ─── 위스키 카드 ─── */
+.whiskey-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.w-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);
+  padding:18px 16px;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden;
+}
+.w-card:hover{transform:translateY(-3px);border-color:var(--gold-dim);box-shadow:var(--shadow-gold);}
+.w-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  opacity:0;transition:var(--tr);
+}
+.w-card:hover::before{opacity:1;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.country-badge{
+  font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:10px;
+  background:var(--card2);color:var(--gold);border:1px solid var(--border);
+}
+.abv-badge{font-size:0.72rem;color:var(--sub);font-weight:700;}
+.card-icon{font-size:2rem;text-align:center;margin-bottom:8px;}
+.card-name-ko{font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.3;}
+.card-name-en{font-size:0.72rem;color:var(--sub);margin-bottom:8px;}
+.card-dist{font-size:0.75rem;color:var(--faint);margin-bottom:6px;}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{font-size:0.68rem;padding:2px 7px;border-radius:8px;background:var(--card3);color:var(--sub);}
+.card-desc{font-size:0.78rem;color:var(--sub);margin-top:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.no-result{text-align:center;color:var(--sub);padding:60px 20px;font-size:0.9rem;}
+
+/* ─── 테이스팅 탭 ─── */
+.tasting-selectors{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.select-wrap label{display:block;font-size:0.78rem;color:var(--sub);margin-bottom:5px;}
+.w-select{
+  width:100%;padding:10px 12px;background:var(--card);
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-size:0.85rem;font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;
+}
+.w-select:focus{outline:none;border-color:var(--gold-dim);}
+.chart-wrap{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);
+  padding:20px;margin-bottom:14px;
+}
+.chart-title{font-size:0.95rem;font-weight:700;color:var(--gold);margin-bottom:16px;text-align:center;}
+.chart-container{position:relative;width:100%;max-width:320px;margin:0 auto;}
+.notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.note-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;}
+.note-label{font-size:0.72rem;color:var(--gold);font-weight:700;margin-bottom:6px;}
+.note-text{font-size:0.82rem;color:var(--text);line-height:1.6;}
+.note-card.full{grid-column:1/-1;}
+.info-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.info-pill{
+  padding:6px 14px;background:var(--card2);border:1px solid var(--border);
+  border-radius:20px;font-size:0.78rem;
+}
+.info-pill span{color:var(--sub);}
+.info-pill strong{color:var(--gold);}
+
+/* ─── 가격 탭 ─── */
+.price-sort{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.sort-btn{
+  padding:7px 14px;border:1.5px solid var(--border);border-radius:20px;
+  background:var(--card);color:var(--sub);font-size:0.78rem;font-weight:700;
+  cursor:pointer;transition:var(--tr);
+}
+.sort-btn:hover,.sort-btn.active{border-color:var(--gold-dim);color:var(--gold);background:var(--card2);}
+.price-table{width:100%;border-collapse:collapse;}
+.price-table thead th{
+  padding:10px 8px;font-size:0.75rem;color:var(--sub);font-weight:700;
+  border-bottom:1px solid var(--border);text-align:left;background:var(--card);
+  position:sticky;top:0;
+}
+.price-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:var(--tr);}
+.price-table tbody tr:hover{background:var(--card2);}
+.price-table td{padding:11px 8px;font-size:0.82rem;}
+.pt-name{font-weight:700;color:var(--text);}
+.pt-en{font-size:0.7rem;color:var(--sub);}
+.pt-country{font-size:1rem;}
+.pt-type{font-size:0.7rem;color:var(--sub);}
+.pt-price{font-weight:700;color:var(--gold);}
+.pt-rt{color:var(--sub);font-size:0.8rem;}
+.tier{
+  display:inline-block;padding:2px 7px;border-radius:8px;
+  font-size:0.66rem;font-weight:700;white-space:nowrap;
+}
+.tier-budget{background:#1A3020;color:#4CAF50;}
+.tier-mid{background:#1A2040;color:#64B5F6;}
+.tier-premium{background:#2A1A00;color:#FFB74D;}
+.tier-luxury{background:#2A0A20;color:#CE93D8;}
+
+/* ─── 모달 ─── */
+.modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  z-index:1000;overflow-y:auto;padding:20px;
+}
+.modal-bg.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);
+  padding:28px 24px;max-width:500px;width:100%;margin:auto;position:relative;
+}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:var(--card2);border:none;border-radius:50%;width:32px;height:32px;
+  color:var(--sub);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:var(--tr);
+}
+.modal-close:hover{background:var(--card3);color:var(--text);}
+.modal-icon{font-size:2.8rem;text-align:center;margin-bottom:12px;}
+.modal-title{font-size:1.3rem;font-weight:900;color:var(--gold-light);text-align:center;margin-bottom:4px;}
+.modal-en{font-size:0.82rem;color:var(--sub);text-align:center;margin-bottom:20px;}
+.modal-chart{max-width:260px;margin:0 auto 20px;}
+.modal-notes{display:grid;gap:8px;}
+.modal-note{background:var(--card2);border-radius:var(--radius);padding:12px;}
+.modal-note-label{font-size:0.7rem;color:var(--gold);font-weight:700;margin-bottom:4px;}
+.modal-note-text{font-size:0.82rem;color:var(--text);line-height:1.5;}
+.modal-desc{font-size:0.85rem;color:var(--sub);line-height:1.7;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.modal-prices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.modal-price-card{background:var(--card2);border-radius:var(--radius);padding:12px;text-align:center;}
+.modal-price-card p{font-size:0.72rem;color:var(--sub);margin-bottom:4px;}
+.modal-price-card strong{font-size:1.05rem;color:var(--gold);font-weight:700;}
+
+/* ─── 푸터 ─── */
+footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
+footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
+footer a:hover{color:var(--gold);}
+
+@media(max-width:440px){
+  .whiskey-grid{grid-template-columns:1fr;}
+  .tasting-selectors{grid-template-columns:1fr;}
+  .notes-grid{grid-template-columns:1fr;}
+  .modal-prices{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-deco"></div>
+  <div class="header-icon">🥃</div>
+  <h1 class="site-title">위스키 도감</h1>
+  <p class="site-sub">전세계 35종 위스키 · 테이스팅 노트 · 국내 가격 비교</p>
+  <svg class="header-wave" viewBox="0 0 1440 40" preserveAspectRatio="none">
+    <path d="M0,24 C360,40 1080,8 1440,24 L1440,40 L0,40 Z"/>
+  </svg>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('guide')">📖 도감</button>
+  <button class="tab-btn" onclick="switchTab('tasting')">🥃 테이스팅</button>
+  <button class="tab-btn" onclick="switchTab('price')">💰 가격</button>
+</div>
+
+<!-- ─── 도감 탭 ─── -->
+<div id="tab-guide" class="tab-content active">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search-input" type="text" placeholder="위스키 이름 검색..." oninput="renderGuide()"/>
+  </div>
+  <div class="filter-chips" id="filter-country">
+    <button class="chip active" data-v="all" onclick="setFilter('country','all')">전체</button>
+    <button class="chip" data-v="scotland" onclick="setFilter('country','scotland')">🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드</button>
+    <button class="chip" data-v="ireland" onclick="setFilter('country','ireland')">🇮🇪 아이리시</button>
+    <button class="chip" data-v="japan" onclick="setFilter('country','japan')">🇯🇵 일본</button>
+    <button class="chip" data-v="usa" onclick="setFilter('country','usa')">🇺🇸 미국</button>
+  </div>
+  <div class="filter-chips" id="filter-type">
+    <button class="chip active" data-v="all" onclick="setFilter('type','all')">전체</button>
+    <button class="chip" data-v="single_malt" onclick="setFilter('type','single_malt')">싱글몰트</button>
+    <button class="chip" data-v="blended" onclick="setFilter('type','blended')">블렌디드</button>
+    <button class="chip" data-v="bourbon" onclick="setFilter('type','bourbon')">버번</button>
+    <button class="chip" data-v="pot_still" onclick="setFilter('type','pot_still')">팟스틸</button>
+  </div>
+  <div class="whiskey-grid" id="guide-grid"></div>
+</div>
+
+<!-- ─── 테이스팅 탭 ─── -->
+<div id="tab-tasting" class="tab-content">
+  <div class="tasting-selectors">
+    <div class="select-wrap">
+      <label>위스키 A</label>
+      <select class="w-select" id="sel-a" onchange="renderTasting()"></select>
+    </div>
+    <div class="select-wrap">
+      <label>위스키 B (비교)</label>
+      <select class="w-select" id="sel-b" onchange="renderTasting()">
+        <option value="">— 선택 안함 —</option>
+      </select>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title" id="chart-title">테이스팅 레이더</div>
+    <div class="chart-container"><canvas id="radar-chart"></canvas></div>
+  </div>
+  <div id="tasting-info-a"></div>
+  <div id="tasting-info-b"></div>
+</div>
+
+<!-- ─── 가격 탭 ─── -->
+<div id="tab-price" class="tab-content">
+  <div class="price-sort">
+    <span style="font-size:0.8rem;color:var(--sub);align-self:center;">정렬:</span>
+    <button class="sort-btn active" data-sort="name" onclick="setSortPrice('name')">이름순</button>
+    <button class="sort-btn" data-sort="df" onclick="setSortPrice('df')">면세가↑</button>
+    <button class="sort-btn" data-sort="df-desc" onclick="setSortPrice('df-desc')">면세가↓</button>
+    <button class="sort-btn" data-sort="country" onclick="setSortPrice('country')">나라순</button>
+  </div>
+  <div style="overflow-x:auto;border-radius:var(--radius-lg);border:1.5px solid var(--border);">
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>위스키</th>
+          <th>종류</th>
+          <th style="text-align:right;">면세가</th>
+          <th style="text-align:right;">소매가</th>
+          <th>등급</th>
+        </tr>
+      </thead>
+      <tbody id="price-tbody"></tbody>
+    </table>
+  </div>
+  <p style="font-size:0.72rem;color:var(--sub);margin-top:12px;line-height:1.6;">※ 가격은 700mL 기준 참고가이며, 실제 판매가와 다를 수 있습니다. 면세점은 인천공항 기준.</p>
+</div>
+
+<!-- ─── 모달 ─── -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal-body">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon" id="m-icon"></div>
+    <div class="modal-title" id="m-title"></div>
+    <div class="modal-en" id="m-en"></div>
+    <div class="info-row" id="m-info"></div>
+    <div class="modal-chart"><canvas id="modal-radar"></canvas></div>
+    <div class="modal-notes" id="m-notes"></div>
+    <div class="modal-prices" id="m-prices"></div>
+    <div class="modal-desc" id="m-desc"></div>
+  </div>
+</div>
+
+<footer>
+  © 2026 꿀단지
+  <a href="/whiskey/guide.html">이용 가이드</a>
+  <a href="/whiskey/privacy.html">개인정보처리방침</a>
+  <a href="/whiskey/terms.html">이용약관</a>
+  <a href="/">꿀단지 홈</a>
+</footer>
+
+<script>
+const CTRY = {scotland:'🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드', ireland:'🇮🇪 아이리시', japan:'🇯🇵 일본', usa:'🇺🇸 미국'};
+const TYPE = {single_malt:'싱글몰트',blended:'블렌디드',bourbon:'버번',pot_still:'팟스틸',grain:'그레인'};
+const ICON = {scotland:'🏔️',ireland:'🍀',japan:'⛩️',usa:'🤠'};
+
+const WHISKIES = [
+  // ── 스코틀랜드 싱글몰트 ──
+  {id:1,name:'Glenfiddich 12',ko:'글렌피딕 12년',country:'scotland',region:'스페이사이드',dist:'글렌피딕',type:'single_malt',abv:40,age:12,price:{df:52000,rt:72000},t:{ar:7,sw:8,sm:1,sp:3,fr:9,ok:5},notes:{ar:'신선한 배·크림·연한 바닐라',ta:'배·복숭아·꿀·오크',fi:'달콤하고 부드러운 여운'},desc:'세계에서 가장 많이 팔리는 싱글몰트. 과일향과 부드러운 맛이 입문자에게 완벽한 선택.'},
+  {id:2,name:'Glenfiddich 18',ko:'글렌피딕 18년',country:'scotland',region:'스페이사이드',dist:'글렌피딕',type:'single_malt',abv:40,age:18,price:{df:145000,rt:198000},t:{ar:8,sw:7,sm:2,sp:6,fr:7,ok:9},notes:{ar:'건포도·무화과·오크·스파이스',ta:'다크초콜릿·건과일·바닐라'},notes:{ar:'건포도·무화과·오크·스파이스',ta:'다크초콜릿·건과일·바닐라·오크',fi:'길고 스파이시한 따뜻한 여운'},desc:'18년 숙성의 깊이. 세 종류 캐스크에서 숙성된 복합적인 풍미가 특징.'},
+  {id:3,name:'Macallan 12 Sherry Oak',ko:'맥캘란 12년 셰리오크',country:'scotland',region:'스페이사이드',dist:'맥캘란',type:'single_malt',abv:40,age:12,price:{df:75000,rt:115000},t:{ar:9,sw:9,sm:1,sp:4,fr:7,ok:8},notes:{ar:'셰리·건과일·초콜릿·생강',ta:'풍부한 건포도·오렌지필·다크초콜릿',fi:'길고 따뜻한 스파이시 여운'},desc:'셰리 오크 캐스크에서 숙성. 달콤하고 과일향 풍부. 위스키 입문자의 프리미엄 선택.'},
+  {id:4,name:'Macallan 18',ko:'맥캘란 18년',country:'scotland',region:'스페이사이드',dist:'맥캘란',type:'single_malt',abv:43,age:18,price:{df:280000,rt:420000},t:{ar:10,sw:8,sm:1,sp:5,fr:8,ok:10},notes:{ar:'셰리·오렌지·다크초콜릿·향신료',ta:'풍부한 셰리·감귤·초콜릿·생강',fi:'매우 길고 복합적인 여운'},desc:'셰리 오크 캐스크 18년 숙성의 걸작. 세계 최고의 위스키 중 하나로 평가받는 명품.'},
+  {id:5,name:'Glenlivet 12',ko:'글렌리벳 12년',country:'scotland',region:'스페이사이드',dist:'글렌리벳',type:'single_malt',abv:40,age:12,price:{df:48000,rt:65000},t:{ar:6,sw:7,sm:1,sp:2,fr:8,ok:5},notes:{ar:'꽃향·복숭아·바닐라·아몬드',ta:'복숭아·파인애플·꿀·가벼운 오크',fi:'부드럽고 달콤한 짧은 여운'},desc:'스페이사이드의 정통. 가볍고 플로럴한 향이 인상적인 친근한 싱글몰트.'},
+  {id:6,name:'Balvenie 12 Doublewood',ko:'발베니 12년 더블우드',country:'scotland',region:'스페이사이드',dist:'발베니',type:'single_malt',abv:40,age:12,price:{df:65000,rt:92000},t:{ar:8,sw:9,sm:1,sp:3,fr:7,ok:7},notes:{ar:'꿀·바닐라·시나몬·토피',ta:'꿀·달콤한 바닐라·과일·오크',fi:'달콤하고 스파이시한 여운'},desc:'두 종류의 오크 캐스크에서 숙성. 꿀과 바닐라의 달콤함이 인상적인 명품.'},
+  {id:7,name:'Aberlour 12',ko:'아벨라워 12년',country:'scotland',region:'스페이사이드',dist:'아벨라워',type:'single_malt',abv:40,age:12,price:{df:55000,rt:75000},t:{ar:8,sw:7,sm:2,sp:6,fr:7,ok:7},notes:{ar:'셰리·계피·생강·다크초콜릿',ta:'건자두·시나몬·생강·셰리',fi:'따뜻하고 스파이시한 여운'},desc:'셰리 캐스크 영향이 강한 스페이사이드. 스파이시함과 달콤함의 균형이 뛰어남.'},
+  {id:8,name:'Dalmore 12',ko:'달모어 12년',country:'scotland',region:'하이랜드',dist:'달모어',type:'single_malt',abv:40,age:12,price:{df:62000,rt:85000},t:{ar:8,sw:7,sm:1,sp:4,fr:6,ok:8},notes:{ar:'감귤·다크초콜릿·생강·셰리',ta:'오렌지마멀레이드·초콜릿·바닐라',fi:'길고 따뜻한 시트러스 여운'},desc:'오크통 교체 숙성이 특징. 풍부한 감귤향과 초콜릿 노트가 조화로운 하이랜드 몰트.'},
+  {id:9,name:'Oban 14',ko:'오반 14년',country:'scotland',region:'하이랜드',dist:'오반',type:'single_malt',abv:43,age:14,price:{df:80000,rt:115000},t:{ar:8,sw:6,sm:4,sp:5,fr:6,ok:7},notes:{ar:'해염·꿀·피트연기·감귤',ta:'달콤한 과일·바다소금·스모키',fi:'따뜻하고 오래가는 스파이시 여운'},desc:'하이랜드와 아일레이의 경계. 해양적 특성과 스모키함이 균형을 이루는 독특한 스타일.'},
+  {id:10,name:'Glenmorangie 10',ko:'글렌모렌지 10년',country:'scotland',region:'하이랜드',dist:'글렌모렌지',type:'single_malt',abv:40,age:10,price:{df:55000,rt:75000},t:{ar:7,sw:7,sm:1,sp:2,fr:8,ok:5},notes:{ar:'꽃향·복숭아·감귤·바닐라',ta:'복숭아·살구·바닐라·레몬',fi:'부드럽고 달콤한 짧은 여운'},desc:'스코틀랜드에서 가장 긴 증류기를 사용. 가볍고 플로럴한 하이랜드 스타일.'},
+  {id:11,name:'Highland Park 12',ko:'하이랜드파크 12년',country:'scotland',region:'오크니',dist:'하이랜드파크',type:'single_malt',abv:40,age:12,price:{df:62000,rt:85000},t:{ar:8,sw:7,sm:5,sp:5,fr:6,ok:7},notes:{ar:'헤더꿀·연기·과일향·오크',ta:'꿀·헤더·스모키·과일케이크',fi:'따뜻하고 부드러운 스모키 여운'},desc:'오크니 제도의 최북단 증류소. 피트와 헤더꿀의 완벽한 균형이 세계적으로 호평.'},
+  {id:12,name:'Talisker 10',ko:'탈리스커 10년',country:'scotland',region:'스카이섬',dist:'탈리스커',type:'single_malt',abv:45.8,age:10,price:{df:62000,rt:85000},t:{ar:9,sw:4,sm:8,sp:9,fr:3,ok:6},notes:{ar:'강한 피트·해염·후추·스모키',ta:'후추·소금·스모키·달콤한 과일',fi:'길고 강렬한 스파이시·피트 여운'},desc:'스카이섬의 거친 해양 기후를 그대로 담아낸 강렬한 아일랜드 스타일. 피트와 후추향이 강렬.'},
+  {id:13,name:'Laphroaig 10',ko:'라프로익 10년',country:'scotland',region:'아일레이',dist:'라프로익',type:'single_malt',abv:40,age:10,price:{df:58000,rt:78000},t:{ar:9,sw:3,sm:10,sp:6,fr:2,ok:5},notes:{ar:'강한 피트·요오드·훈제·해초',ta:'의료적 피트·바닐라·스모키·소금',fi:'매우 길고 강렬한 스모키 여운'},desc:'아일레이 최강의 피트 위스키 중 하나. 의료적이고 스모키한 강렬한 맛. 찰스3세가 즐기는 것으로 유명.'},
+  {id:14,name:'Ardbeg 10',ko:'아드벡 10년',country:'scotland',region:'아일레이',dist:'아드벡',type:'single_malt',abv:46,age:10,price:{df:62000,rt:88000},t:{ar:9,sw:3,sm:9,sp:7,fr:3,ok:6},notes:{ar:'강한 피트연기·레몬·타르·바닐라',ta:'스모키·레몬·다크초콜릿·바닐라',fi:'매우 길고 복합적인 스모키 여운'},desc:'아일레이에서 가장 피트향이 강한 위스키 중 하나. 강렬하면서도 의외의 달콤함이 숨어있음.'},
+  {id:15,name:'Lagavulin 16',ko:'라가불린 16년',country:'scotland',region:'아일레이',dist:'라가불린',type:'single_malt',abv:43,age:16,price:{df:98000,rt:140000},t:{ar:10,sw:4,sm:9,sp:5,fr:4,ok:8},notes:{ar:'복합적인 피트·바다·셰리·바닐라',ta:'달콤한 셰리·피트연기·바다소금·초콜릿',fi:'매우 길고 웜하며 복합적인 여운'},desc:'아일레이의 왕. 16년 숙성의 복합적인 피트와 셰리의 조화. 위스키 애호가들의 성지.'},
+  {id:16,name:'Bowmore 12',ko:'보모어 12년',country:'scotland',region:'아일레이',dist:'보모어',type:'single_malt',abv:40,age:12,price:{df:58000,rt:78000},t:{ar:8,sw:5,sm:7,sp:4,fr:5,ok:6},notes:{ar:'균형 잡힌 피트·꿀·라벤더',ta:'달콤한 과일·피트·해염·초콜릿',fi:'따뜻하고 달콤한 스모키 여운'},desc:'아일레이에서 가장 균형 잡힌 위스키. 강렬한 피트향과 달콤한 과일향이 적절히 조화.'},
+  // ── 스코틀랜드 블렌디드 ──
+  {id:17,name:'Johnnie Walker Black Label',ko:'조니워커 블랙',country:'scotland',region:'블렌디드',dist:'조니워커',type:'blended',abv:40,age:12,price:{df:42000,rt:58000},t:{ar:7,sw:6,sm:4,sp:5,fr:5,ok:6},notes:{ar:'스모키·바닐라·과일·오크',ta:'과일·바닐라·스모키·꿀',fi:'부드럽고 균형 잡힌 여운'},desc:'세계에서 가장 많이 팔리는 스카치 블렌디드. 12년 이상 숙성 원액만 사용. 스모키와 과일의 균형.'},
+  {id:18,name:'Johnnie Walker Blue Label',ko:'조니워커 블루',country:'scotland',region:'블렌디드',dist:'조니워커',type:'blended',abv:40,age:null,price:{df:165000,rt:230000},t:{ar:10,sw:7,sm:4,sp:5,fr:6,ok:9},notes:{ar:'플로럴·셰리·오크·달콤한 연기',ta:'꿀·초콜릿·스모키·바닐라·오렌지',fi:'매우 길고 벨벳같은 여운'},desc:'조니워커의 최정상. 8000개 원액 중 1개만 선별 사용. 사치스러운 부드러움과 복합성.'},
+  {id:19,name:'Chivas Regal 12',ko:'시바스리갈 12년',country:'scotland',region:'블렌디드',dist:'시바스',type:'blended',abv:40,age:12,price:{df:38000,rt:52000},t:{ar:7,sw:8,sm:1,sp:3,fr:6,ok:6},notes:{ar:'헤더꿀·과일·바닐라·오크',ta:'달콤한 꿀·사과·바닐라·카라멜',fi:'부드럽고 달콤한 여운'},desc:'부드럽고 달콤한 스코틀랜드 블렌디드의 정석. 세계 2위 스카치 위스키 판매량.'},
+  {id:20,name:'Monkey Shoulder',ko:'몽키숄더',country:'scotland',region:'블렌디드',dist:'윌리엄그랜트',type:'blended',abv:40,age:null,price:{df:45000,rt:62000},t:{ar:7,sw:8,sm:1,sp:3,fr:7,ok:5},notes:{ar:'바닐라·꿀·과일·생강',ta:'바닐라·오렌지·카라멜·생강',fi:'부드럽고 달콤한 짧은 여운'},desc:'글렌피딕·발베니·키니니스 3개 증류소 원액 블렌딩. 칵테일에도 완벽한 만능 위스키.'},
+  // ── 아이리시 ──
+  {id:21,name:'Jameson',ko:'제임슨',country:'ireland',region:'아이리시 블렌디드',dist:'미들턴',type:'blended',abv:40,age:null,price:{df:28000,rt:38000},t:{ar:6,sw:7,sm:1,sp:2,fr:6,ok:4},notes:{ar:'라이트 몰트·바닐라·나무',ta:'달콤한 몰트·바닐라·꿀',fi:'부드럽고 가벼운 여운'},desc:'세계에서 가장 많이 팔리는 아이리시 위스키. 3회 증류로 극도로 부드럽고 마시기 쉬운 맛.'},
+  {id:22,name:'Redbreast 12',ko:'레드브레스트 12년',country:'ireland',region:'아이리시 팟스틸',dist:'미들턴',type:'pot_still',abv:40,age:12,price:{df:72000,rt:98000},t:{ar:8,sw:7,sm:1,sp:6,fr:7,ok:7},notes:{ar:'과일케이크·스파이스·바닐라',ta:'사과·건과일·시나몬·바닐라·오크',fi:'길고 스파이시한 여운'},desc:'아이리시 팟스틸 위스키의 최고봉. 풍부하고 과일향이 넘치는 복합적인 맛으로 수많은 수상.'},
+  {id:23,name:'Teeling Single Grain',ko:'틸링 싱글그레인',country:'ireland',region:'아이리시 그레인',dist:'틸링',type:'grain',abv:46,age:null,price:{df:52000,rt:72000},t:{ar:7,sw:8,sm:1,sp:3,fr:7,ok:5},notes:{ar:'캐러멜·바닐라·달콤한 과일',ta:'바닐라·카라멜·배·오크',fi:'부드럽고 달콤한 여운'},desc:'캘리포니아 와인 캐스크에서 숙성한 모던 아이리시. 달콤하고 부드러운 독특한 개성.'},
+  {id:24,name:'Green Spot',ko:'그린스팟',country:'ireland',region:'아이리시 팟스틸',dist:'미들턴',type:'pot_still',abv:40,age:null,price:{df:62000,rt:85000},t:{ar:7,sw:6,sm:1,sp:4,fr:8,ok:6},notes:{ar:'풋사과·맥아·꿀·스파이스',ta:'사과·배·잔디·시나몬·꿀',fi:'상쾌하고 스파이시한 여운'},desc:'아이리시 팟스틸의 전통을 계승. 그린 애플과 허브향이 신선하고 독특한 매력.'},
+  // ── 일본 ──
+  {id:25,name:'Nikka From The Barrel',ko:'닛카 프롬더배럴',country:'japan',region:'일본 블렌디드',dist:'닛카',type:'blended',abv:51.4,age:null,price:{df:55000,rt:88000},t:{ar:9,sw:7,sm:2,sp:7,fr:5,ok:8},notes:{ar:'카라멜·오크·생강·과일',ta:'다크초콜릿·바닐라·생강·말린과일',fi:'길고 따뜻한 스파이시 여운'},desc:'높은 도수(51.4%)에서 오는 강렬한 풍미. 성능 대비 가성비 최고의 일본 위스키.'},
+  {id:26,name:'Hibiki Harmony',ko:'히비키 하모니',country:'japan',region:'일본 블렌디드',dist:'산토리',type:'blended',abv:43,age:null,price:{df:68000,rt:115000},t:{ar:9,sw:8,sm:1,sp:3,fr:8,ok:7},notes:{ar:'꽃향·복숭아·바닐라·꿀',ta:'달콤한 과일·꿀·바닐라·오크',fi:'우아하고 긴 플로럴 여운'},desc:'산토리의 아트. 24개 원액의 섬세한 블렌딩. 우아하고 복합적인 일본 위스키의 정수.'},
+  {id:27,name:'Yamazaki 12',ko:'야마자키 12년',country:'japan',region:'일본 싱글몰트',dist:'산토리',type:'single_malt',abv:43,age:12,price:{df:145000,rt:260000},t:{ar:9,sw:8,sm:2,sp:4,fr:9,ok:8},notes:{ar:'복숭아·파인애플·생강·오크',ta:'잘익은 열대과일·바닐라·생강',fi:'길고 과일향 넘치는 여운'},desc:'일본 최초의 싱글몰트 증류소. 미즈나라 오크를 포함한 다양한 캐스크 사용. 세계 최고상 수상 이력.'},
+  {id:28,name:'Hakushu 12',ko:'하쿠슈 12년',country:'japan',region:'일본 싱글몰트',dist:'산토리',type:'single_malt',abv:43,age:12,price:{df:145000,rt:260000},t:{ar:8,sw:6,sm:3,sp:4,fr:7,ok:6},notes:{ar:'허브·민트·그린애플·희미한 피트',ta:'신선한 허브·라임·그린사과·피트',fi:'상쾌하고 허브향 여운'},desc:'해발 700m 숲속 증류소. 신선한 허브와 민트향이 독특한 그린 위스키. 세계에서 가장 청량한 싱글몰트.'},
+  {id:29,name:'Suntory Toki',ko:'산토리 도키',country:'japan',region:'일본 블렌디드',dist:'산토리',type:'blended',abv:43,age:null,price:{df:42000,rt:62000},t:{ar:7,sw:7,sm:1,sp:3,fr:7,ok:5},notes:{ar:'허니·사과·민트·오크',ta:'달콤한 사과·꿀·바닐라·생강',fi:'부드럽고 달콤한 여운'},desc:'하이볼용으로 설계된 산토리의 모던 블렌디드. 라이트하고 달콤한 일본 위스키 입문서.'},
+  // ── 미국 버번 ──
+  {id:30,name:'Buffalo Trace',ko:'버팔로 트레이스',country:'usa',region:'켄터키',dist:'버팔로 트레이스',type:'bourbon',abv:45,age:null,price:{df:38000,rt:52000},t:{ar:7,sw:8,sm:1,sp:4,fr:5,ok:7},notes:{ar:'카라멜·바닐라·민트·목재',ta:'달콤한 카라멜·바닐라·오크·약간의 스파이스',fi:'길고 따뜻한 오크 여운'},desc:'미국 버번의 바이블. 가성비와 품질 모두 최고. 팬톤 반 윙클(Pappy) 등 명품 버번의 모태 증류소.'},
+  {id:31,name:'Woodford Reserve',ko:'우드포드 리저브',country:'usa',region:'켄터키',dist:'우드포드 리저브',type:'bourbon',abv:43.2,age:null,price:{df:48000,rt:68000},t:{ar:8,sw:7,sm:1,sp:6,fr:6,ok:8},notes:{ar:'체리·다크과일·오크·바닐라',ta:'리치한 과일·다크초콜릿·오크·스파이스',fi:'길고 스파이시한 여운'},desc:'켄터키 버번의 프리미엄. 3회 증류 방식으로 제조. 체리·오크·스파이스의 복합적인 조화.'},
+  {id:32,name:"Maker's Mark",ko:"메이커스 마크",country:'usa',region:'켄터키',dist:"메이커스 마크",type:'bourbon',abv:45,age:null,price:{df:38000,rt:52000},t:{ar:7,sw:9,sm:1,sp:3,fr:5,ok:6},notes:{ar:'바닐라·카라멜·과일·꿀',ta:'달콤한 바닐라·카라멜·꿀·약간의 스파이스',fi:'부드럽고 달콤한 여운'},desc:'밀(wheat) 사용으로 부드러운 버번. 빨간 왁스 씰이 트레이드마크. 달콤하고 입문자에게 친화적.'},
+  {id:33,name:'Bulleit Bourbon',ko:'불릿 버번',country:'usa',region:'켄터키',dist:'불릿',type:'bourbon',abv:45,age:null,price:{df:38000,rt:52000},t:{ar:7,sw:6,sm:1,sp:8,fr:4,ok:7},notes:{ar:'오크·바닐라·체리·후추',ta:'체리·오크·스파이시한 후추·드라이',fi:'드라이하고 스파이시한 여운'},desc:'높은 라이 함량으로 스파이시하고 드라이한 버번. 프런티어 스타일의 개성 강한 위스키.'},
+  {id:34,name:'Wild Turkey 101',ko:'와일드터키 101',country:'usa',region:'켄터키',dist:'와일드터키',type:'bourbon',abv:50.5,age:null,price:{df:35000,rt:48000},t:{ar:8,sw:6,sm:1,sp:9,fr:3,ok:7},notes:{ar:'캐러멜·오크·바닐라·강한 스파이스',ta:'오크·캐러멜·스파이시한 호밀·바닐라',fi:'길고 매우 스파이시한 여운'},desc:'높은 도수(50.5%)와 강한 라이 스파이스. 버번 중 가장 대담하고 강렬한 개성. 저렴하지만 강력한 가성비.'},
+  {id:35,name:'Knob Creek 9',ko:'놉크릭 9년',country:'usa',region:'켄터키',dist:'짐빔',type:'bourbon',abv:50,age:9,price:{df:48000,rt:68000},t:{ar:8,sw:7,sm:1,sp:7,fr:4,ok:9},notes:{ar:'리치한 오크·캐러멜·바닐라·견과류',ta:'풍부한 오크·카라멜·바닐라·호밀스파이스',fi:'길고 복합적인 오크 여운'},desc:'9년 숙성의 풀바디 버번. 짙은 오크와 카라멜의 풍부한 맛. 높은 도수(50%)와 복합적인 풍미.'}
+];
+
+// ─── 상태 ───
+let filterCountry = 'all', filterType = 'all';
+let priceSort = 'name';
+let radarChart = null, modalRadarChart = null;
+
+// ─── 탭 전환 ───
+function switchTab(t) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    const names = ['guide','tasting','price'];
+    b.classList.toggle('active', names[i] === t);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  if (t === 'tasting') initTasting();
+  if (t === 'price') renderPrice();
+}
+
+// ─── 필터 ───
+function setFilter(type, val) {
+  if (type === 'country') filterCountry = val;
+  else filterType = val;
+  document.querySelectorAll(`#filter-${type} .chip`).forEach(c => {
+    c.classList.toggle('active', c.dataset.v === val);
+  });
+  renderGuide();
+}
+
+// ─── 도감 렌더 ───
+function renderGuide() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const list = WHISKIES.filter(w => {
+    const matchCountry = filterCountry === 'all' || w.country === filterCountry;
+    const matchType = filterType === 'all' || w.type === filterType;
+    const matchQ = !q || w.ko.toLowerCase().includes(q) || w.name.toLowerCase().includes(q) || w.dist.toLowerCase().includes(q);
+    return matchCountry && matchType && matchQ;
+  });
+  const grid = document.getElementById('guide-grid');
+  if (!list.length) { grid.innerHTML = '<p class="no-result">검색 결과가 없습니다.</p>'; return; }
+  grid.innerHTML = list.map(w => `
+    <div class="w-card" onclick="openModal(${w.id})">
+      <div class="card-top">
+        <span class="country-badge">${CTRY[w.country]}</span>
+        <span class="abv-badge">${w.abv}%</span>
+      </div>
+      <div class="card-icon">${ICON[w.country]}</div>
+      <div class="card-name-ko">${w.ko}</div>
+      <div class="card-name-en">${w.name}</div>
+      <div class="card-dist">📍 ${w.dist} · ${w.region}</div>
+      <div class="card-tags">
+        <span class="tag">${TYPE[w.type]}</span>
+        ${w.age ? `<span class="tag">${w.age}년</span>` : ''}
+        <span class="tag">${smokyLabel(w.t.sm)}</span>
+      </div>
+      <div class="card-desc">${w.desc}</div>
+    </div>
+  `).join('');
+}
+
+function smokyLabel(v) {
+  if (v <= 2) return '🌸 논피트';
+  if (v <= 5) return '💨 라이트피트';
+  if (v <= 7) return '🔥 미디엄피트';
+  return '💀 헤비피트';
+}
+
+// ─── 모달 ───
+function openModal(id) {
+  const w = WHISKIES.find(x => x.id === id);
+  if (!w) return;
+  document.getElementById('m-icon').textContent = ICON[w.country];
+  document.getElementById('m-title').textContent = w.ko;
+  document.getElementById('m-en').textContent = `${w.name} · ${w.dist}`;
+  document.getElementById('m-info').innerHTML = `
+    <div class="info-pill"><span>나라</span> <strong>${CTRY[w.country]}</strong></div>
+    <div class="info-pill"><span>종류</span> <strong>${TYPE[w.type]}</strong></div>
+    <div class="info-pill"><span>도수</span> <strong>${w.abv}%</strong></div>
+    ${w.age ? `<div class="info-pill"><span>숙성</span> <strong>${w.age}년</strong></div>` : ''}
+    <div class="info-pill"><span>지역</span> <strong>${w.region}</strong></div>
+  `;
+  document.getElementById('m-notes').innerHTML = `
+    <div class="modal-note"><div class="modal-note-label">🌿 아로마</div><div class="modal-note-text">${w.notes.ar}</div></div>
+    <div class="modal-note"><div class="modal-note-label">👅 테이스트</div><div class="modal-note-text">${w.notes.ta}</div></div>
+    <div class="modal-note"><div class="modal-note-label">🌊 피니시</div><div class="modal-note-text">${w.notes.fi}</div></div>
+  `;
+  document.getElementById('m-prices').innerHTML = `
+    <div class="modal-price-card"><p>✈️ 면세가</p><strong>₩${w.price.df.toLocaleString()}</strong></div>
+    <div class="modal-price-card"><p>🏪 소매가</p><strong>₩${w.price.rt.toLocaleString()}</strong></div>
+  `;
+  document.getElementById('m-desc').textContent = w.desc;
+
+  if (modalRadarChart) modalRadarChart.destroy();
+  const ctx = document.getElementById('modal-radar').getContext('2d');
+  modalRadarChart = buildRadar(ctx, [w], ['rgba(201,168,76,0.25)'], ['#C9A84C']);
+
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-bg') || e.target.classList.contains('modal-close'))
+    document.getElementById('modal-bg').classList.remove('open');
+}
+
+// ─── 테이스팅 탭 ───
+function initTasting() {
+  const selA = document.getElementById('sel-a');
+  const selB = document.getElementById('sel-b');
+  if (selA.options.length > 0) return;
+  WHISKIES.forEach(w => {
+    const o1 = new Option(w.ko, w.id);
+    const o2 = new Option(w.ko, w.id);
+    selA.add(o1); selB.add(o2);
+  });
+  renderTasting();
+}
+
+function renderTasting() {
+  const idA = parseInt(document.getElementById('sel-a').value);
+  const idB = parseInt(document.getElementById('sel-b').value) || null;
+  const wA = WHISKIES.find(x => x.id === idA);
+  const wB = idB ? WHISKIES.find(x => x.id === idB) : null;
+
+  document.getElementById('chart-title').textContent = wB
+    ? `${wA.ko} vs ${wB.ko}`
+    : `${wA.ko} 테이스팅 노트`;
+
+  if (radarChart) radarChart.destroy();
+  const ctx = document.getElementById('radar-chart').getContext('2d');
+  if (wB) {
+    radarChart = buildRadar(ctx,
+      [wA, wB],
+      ['rgba(201,168,76,0.2)', 'rgba(100,180,255,0.2)'],
+      ['#C9A84C', '#64B4FF']
+    );
+  } else {
+    radarChart = buildRadar(ctx, [wA], ['rgba(201,168,76,0.25)'], ['#C9A84C']);
+  }
+
+  document.getElementById('tasting-info-a').innerHTML = tastingInfoHTML(wA, '#C9A84C');
+  document.getElementById('tasting-info-b').innerHTML = wB ? tastingInfoHTML(wB, '#64B4FF') : '';
+}
+
+function tastingInfoHTML(w, color) {
+  return `
+    <div class="chart-wrap" style="border-color:${color}33;margin-bottom:10px;">
+      <div class="chart-title" style="color:${color}">${w.ko}</div>
+      <div class="info-row">
+        <div class="info-pill"><span>도수</span> <strong style="color:${color}">${w.abv}%</strong></div>
+        ${w.age ? `<div class="info-pill"><span>숙성</span> <strong style="color:${color}">${w.age}년</strong></div>` : ''}
+        <div class="info-pill"><span>지역</span> <strong style="color:${color}">${w.region}</strong></div>
+      </div>
+      <div class="notes-grid">
+        <div class="note-card"><div class="note-label" style="color:${color}">🌿 아로마</div><div class="note-text">${w.notes.ar}</div></div>
+        <div class="note-card"><div class="note-label" style="color:${color}">👅 테이스트</div><div class="note-text">${w.notes.ta}</div></div>
+        <div class="note-card full"><div class="note-label" style="color:${color}">🌊 피니시</div><div class="note-text">${w.notes.fi}</div></div>
+      </div>
+    </div>
+  `;
+}
+
+function buildRadar(ctx, whiskies, bgColors, borderColors) {
+  const labels = ['향기','달콤함','스모키','스파이시','과일향','오크'];
+  return new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels,
+      datasets: whiskies.map((w, i) => ({
+        label: w.ko,
+        data: [w.t.ar, w.t.sw, w.t.sm, w.t.sp, w.t.fr, w.t.ok],
+        backgroundColor: bgColors[i],
+        borderColor: borderColors[i],
+        borderWidth: 2,
+        pointBackgroundColor: borderColors[i],
+        pointRadius: 4,
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#C9A84C', font: { size: 11, family: 'Noto Sans KR' } } } },
+      scales: {
+        r: {
+          min: 0, max: 10,
+          ticks: { display: false, stepSize: 2 },
+          pointLabels: { color: '#F0E0C0', font: { size: 11, family: 'Noto Sans KR' } },
+          grid: { color: 'rgba(201,168,76,0.12)' },
+          angleLines: { color: 'rgba(201,168,76,0.15)' },
+        }
+      }
+    }
+  });
+}
+
+// ─── 가격 탭 ───
+function setSortPrice(s) {
+  priceSort = s;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === s));
+  renderPrice();
+}
+
+function renderPrice() {
+  let list = [...WHISKIES];
+  if (priceSort === 'df') list.sort((a,b) => a.price.df - b.price.df);
+  else if (priceSort === 'df-desc') list.sort((a,b) => b.price.df - a.price.df);
+  else if (priceSort === 'country') list.sort((a,b) => a.country.localeCompare(b.country));
+  else list.sort((a,b) => a.ko.localeCompare(b.ko));
+
+  document.getElementById('price-tbody').innerHTML = list.map(w => `
+    <tr onclick="openModal(${w.id})">
+      <td>
+        <div class="pt-name">${w.ko}</div>
+        <div class="pt-en">${w.name}</div>
+      </td>
+      <td>
+        <div class="pt-country">${CTRY[w.country].split(' ')[0]}</div>
+        <div class="pt-type">${TYPE[w.type]}</div>
+      </td>
+      <td style="text-align:right;"><span class="pt-price">₩${w.price.df.toLocaleString()}</span></td>
+      <td style="text-align:right;"><span class="pt-rt">₩${w.price.rt.toLocaleString()}</span></td>
+      <td><span class="tier ${tierClass(w.price.df)}">${tierLabel(w.price.df)}</span></td>
+    </tr>
+  `).join('');
+}
+
+function tierClass(p) {
+  if (p < 45000) return 'tier-budget';
+  if (p < 80000) return 'tier-mid';
+  if (p < 150000) return 'tier-premium';
+  return 'tier-luxury';
+}
+function tierLabel(p) {
+  if (p < 45000) return '가성비';
+  if (p < 80000) return '미드레인지';
+  if (p < 150000) return '프리미엄';
+  return '럭셔리';
+}
+
+// ─── 초기화 ───
+renderGuide();
+</script>
+
+<!-- Adsterra -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10000;text-align:center;pointer-events:none;">
+  <div style="pointer-events:auto;">
+    <script>atOptions={'key':'fcfce445eacefe11f7f5495f13f0c366','format':'iframe','height':50,'width':320,'params':{}};</script>
+    <script src="https://www.highperformanceformat.com/fcfce445eacefe11f7f5495f13f0c366/invoke.js"></script>
+  </div>
+</div>
+</body>
+</html>
