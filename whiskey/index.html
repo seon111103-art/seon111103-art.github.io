@@ -259,6 +259,29 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .mbc{background:#E8F0FE;color:#1a73e8;border:1px solid #c5d9f8;}
 .mbn{background:#E8F5E9;color:#1B6B35;border:1px solid #C8E6C9;}
 .modal-buy a:hover{opacity:0.8;transform:translateY(-1px);}
+/* ─── 제조법 탭 ─── */
+.brew-intro{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:22px;font-size:0.82rem;color:var(--sub);line-height:1.8;}
+.brew-section{margin-bottom:26px;}
+.brew-section-title{font-size:0.9rem;font-weight:900;color:var(--gold);margin-bottom:12px;padding-left:14px;position:relative;}
+.brew-section-title::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:1em;border-radius:2px;background:var(--gold);}
+.brew-steps{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.brew-step{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:13px 11px;position:relative;overflow:hidden;transition:var(--tr);}
+.brew-step:hover{border-color:var(--gold-dim);box-shadow:var(--shadow);}
+.brew-step-num{position:absolute;top:6px;right:9px;font-size:1.5rem;font-weight:900;color:var(--border);line-height:1;}
+.brew-step-icon{font-size:1.55rem;margin-bottom:3px;}
+.brew-step-name{font-size:0.81rem;font-weight:900;color:var(--text);margin-bottom:1px;}
+.brew-step-en{font-size:0.64rem;color:var(--gold-dim);margin-bottom:5px;font-style:italic;}
+.brew-step-desc{font-size:0.71rem;color:var(--sub);line-height:1.65;}
+.brew-types,.brew-countries,.brew-casks{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.brew-type,.brew-country,.brew-cask{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:13px 11px;transition:var(--tr);}
+.brew-type:hover,.brew-country:hover,.brew-cask:hover{border-color:var(--gold-dim);box-shadow:var(--shadow);}
+.brew-type-icon,.brew-country-flag,.brew-cask-icon{font-size:1.75rem;margin-bottom:5px;}
+.brew-type-name,.brew-country-name,.brew-cask-name{font-size:0.8rem;font-weight:900;color:var(--text);margin-bottom:5px;}
+.brew-type-desc,.brew-cask-desc{font-size:0.71rem;color:var(--sub);line-height:1.65;margin-bottom:7px;}
+.brew-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.brew-tag{font-size:0.61rem;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--card2);color:var(--gold);border:1px solid var(--border);}
+.brew-country-list{padding-left:14px;font-size:0.71rem;color:var(--sub);line-height:1.9;margin:0;}
+.brew-country-list strong{color:var(--gold);}
 /* ─── 푸터 ─── */
 footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
 footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
@@ -297,6 +320,7 @@ footer a:hover{color:var(--gold);}
   <button class="tab-btn active" onclick="switchTab('guide')">📖 도감</button>
   <button class="tab-btn" onclick="switchTab('price')">💰 가격</button>
   <button class="tab-btn" onclick="switchTab('store')">🏪 판매처</button>
+  <button class="tab-btn" onclick="switchTab('brew')">📚 제조법</button>
 </div>
 
 <!-- ─── 도감 탭 ─── -->
@@ -524,6 +548,183 @@ footer a:hover{color:var(--gold);}
   <p style="font-size:0.72rem;color:var(--sub);margin-top:4px;line-height:1.6;">※ 주류는 만 19세 이상만 구매 가능합니다.</p>
 </div>
 
+<!-- ─── 제조법 탭 ─── -->
+<div id="tab-brew" class="tab-content">
+
+  <div class="brew-intro">
+    위스키는 곡물을 발효·증류하여 오크통에서 숙성한 증류주입니다. 원료·제조법·숙성 방식에 따라 스카치, 버번, 아이리시 등 전혀 다른 개성이 탄생합니다.
+  </div>
+
+  <!-- 제조 8단계 -->
+  <div class="brew-section">
+    <div class="brew-section-title">🏭 위스키 제조 8단계</div>
+    <div class="brew-steps">
+      <div class="brew-step">
+        <div class="brew-step-num">1</div>
+        <div class="brew-step-icon">🌾</div>
+        <div class="brew-step-name">원료 선택</div>
+        <div class="brew-step-en">Raw Materials</div>
+        <div class="brew-step-desc">보리·옥수수·호밀·밀 등 곡물 선택. 원료에 따라 위스키의 기본 풍미가 결정됩니다.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">2</div>
+        <div class="brew-step-icon">🌱</div>
+        <div class="brew-step-name">맥아화 (몰팅)</div>
+        <div class="brew-step-en">Malting</div>
+        <div class="brew-step-desc">보리를 물에 불려 발아시켜 전분을 당으로 바꾸는 효소를 활성화합니다. 스카치·아이리시의 필수 단계.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">3</div>
+        <div class="brew-step-icon">🔥</div>
+        <div class="brew-step-name">건조 (킬닝)</div>
+        <div class="brew-step-en">Kilning</div>
+        <div class="brew-step-desc">발아 보리를 열로 건조. 피트(토탄)를 태우면 스모키 향이 배어들어 아일레이 위스키의 특징이 됩니다.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">4</div>
+        <div class="brew-step-icon">💧</div>
+        <div class="brew-step-name">당화 (매싱)</div>
+        <div class="brew-step-en">Mashing</div>
+        <div class="brew-step-desc">분쇄한 맥아를 뜨거운 물과 섞어 전분을 당분으로 변환. 이 단 액체를 워트(Wort)라 합니다.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">5</div>
+        <div class="brew-step-icon">🍶</div>
+        <div class="brew-step-name">발효</div>
+        <div class="brew-step-en">Fermentation</div>
+        <div class="brew-step-desc">워트에 효모 투입 → 당분을 알코올로 변환. 48~96시간 후 알코올 약 8%의 워시(Wash) 완성.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">6</div>
+        <div class="brew-step-icon">⚗️</div>
+        <div class="brew-step-name">증류</div>
+        <div class="brew-step-en">Distillation</div>
+        <div class="brew-step-desc">팟스틸(단식) 또는 컬럼스틸(연속)로 알코올 농축. 싱글몰트는 팟스틸 2회, 아이리시는 3회 증류.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">7</div>
+        <div class="brew-step-icon">🛢️</div>
+        <div class="brew-step-name">오크통 숙성</div>
+        <div class="brew-step-en">Maturation</div>
+        <div class="brew-step-desc">오크통에서 최소 3년 이상 숙성. 오크통에서 바닐라·캐러멜·스파이스 향이 배어나며 최종 색상의 60~70%가 결정됩니다.</div>
+      </div>
+      <div class="brew-step">
+        <div class="brew-step-num">8</div>
+        <div class="brew-step-icon">🍾</div>
+        <div class="brew-step-name">블렌딩 & 병입</div>
+        <div class="brew-step-en">Blending & Bottling</div>
+        <div class="brew-step-desc">여러 오크통 원액을 블렌딩해 일관된 풍미 구현. 가수(물)로 도수 조정 후 병입하여 출시합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 종류별 특징 -->
+  <div class="brew-section">
+    <div class="brew-section-title">🥃 종류별 특징</div>
+    <div class="brew-types">
+      <div class="brew-type">
+        <div class="brew-type-icon">🥃</div>
+        <div class="brew-type-name">싱글몰트 스카치</div>
+        <div class="brew-type-desc">단일 증류소에서 보리 맥아만 사용. 팟스틸로 2회 증류. 증류소마다 독자적인 개성을 가집니다.</div>
+        <div class="brew-tags"><span class="brew-tag">보리 100%</span><span class="brew-tag">팟스틸 2회</span><span class="brew-tag">최소 3년</span></div>
+      </div>
+      <div class="brew-type">
+        <div class="brew-type-icon">🔀</div>
+        <div class="brew-type-name">블렌디드 스카치</div>
+        <div class="brew-type-desc">여러 증류소 싱글몰트 + 그레인 위스키 혼합. 균형 잡히고 부드러운 풍미. 세계 소비량 1위.</div>
+        <div class="brew-tags"><span class="brew-tag">몰트+그레인</span><span class="brew-tag">여러 증류소</span><span class="brew-tag">균형감</span></div>
+      </div>
+      <div class="brew-type">
+        <div class="brew-type-icon">🌾</div>
+        <div class="brew-type-name">버번 위스키</div>
+        <div class="brew-type-desc">미국 법규상 옥수수 51% 이상. 새 참나무 오크통에만 숙성. 바닐라·캐러멜의 진한 단맛이 특징.</div>
+        <div class="brew-tags"><span class="brew-tag">옥수수 51%+</span><span class="brew-tag">새 오크통</span><span class="brew-tag">미국산</span></div>
+      </div>
+      <div class="brew-type">
+        <div class="brew-type-icon">🏺</div>
+        <div class="brew-type-name">팟스틸 아이리시</div>
+        <div class="brew-type-desc">맥아 보리 + 비맥아 보리 혼합 사용. 3회 증류로 매우 부드럽고 크리미한 질감. 아이리시 고유 스타일.</div>
+        <div class="brew-tags"><span class="brew-tag">맥아+비맥아</span><span class="brew-tag">3회 증류</span><span class="brew-tag">크리미한 맛</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 나라별 법적 기준 -->
+  <div class="brew-section">
+    <div class="brew-section-title">🌍 나라별 법적 기준</div>
+    <div class="brew-countries">
+      <div class="brew-country">
+        <div class="brew-country-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+        <div class="brew-country-name">스코틀랜드 (스카치)</div>
+        <ul class="brew-country-list">
+          <li>스코틀랜드에서만 증류·숙성</li>
+          <li>오크통 최소 <strong>3년</strong> 숙성</li>
+          <li>최소 <strong>40% ABV</strong> 이상</li>
+          <li>5개 산지: 스페이사이드·하이랜드·아일레이·로우랜드·캠벨타운</li>
+        </ul>
+      </div>
+      <div class="brew-country">
+        <div class="brew-country-flag">🇮🇪</div>
+        <div class="brew-country-name">아이리시 위스키</div>
+        <ul class="brew-country-list">
+          <li>아일랜드 공화국·북아일랜드 생산</li>
+          <li>오크통 최소 <strong>3년</strong> 숙성</li>
+          <li>일반적으로 <strong>3회 증류</strong> (부드러운 맛)</li>
+          <li>팟스틸·몰트·그레인·블렌디드 4종류</li>
+        </ul>
+      </div>
+      <div class="brew-country">
+        <div class="brew-country-flag">🇯🇵</div>
+        <div class="brew-country-name">재패니즈 위스키</div>
+        <ul class="brew-country-list">
+          <li>2021년부터 일본산 원료·증류 의무화</li>
+          <li>오크통 최소 <strong>3년</strong> 숙성</li>
+          <li>스카치 제조 스타일 + 일본 장인 정신</li>
+          <li>야마자키·하쿠슈·닛카 등 세계적 명성</li>
+        </ul>
+      </div>
+      <div class="brew-country">
+        <div class="brew-country-flag">🇺🇸</div>
+        <div class="brew-country-name">아메리칸 위스키</div>
+        <ul class="brew-country-list">
+          <li>버번: 옥수수 <strong>51% 이상</strong>, 새 오크통</li>
+          <li>스트레이트 버번: 최소 <strong>2년</strong> 숙성</li>
+          <li>테네시: 버번 + 차콜 멜로잉 공정</li>
+          <li>라이 위스키: 호밀 51% 이상 사용</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 오크통 종류 -->
+  <div class="brew-section">
+    <div class="brew-section-title">🛢️ 오크통 종류와 풍미</div>
+    <div class="brew-casks">
+      <div class="brew-cask">
+        <div class="brew-cask-icon">🌰</div>
+        <div class="brew-cask-name">버번 캐스크</div>
+        <div class="brew-cask-desc">가장 일반적. 버번 숙성 후 재사용. 바닐라·꿀·캐러멜의 달콤한 풍미를 부여합니다.</div>
+      </div>
+      <div class="brew-cask">
+        <div class="brew-cask-icon">🍷</div>
+        <div class="brew-cask-name">셰리 캐스크</div>
+        <div class="brew-cask-desc">스페인 셰리 와인통 재사용. 건과일·초콜릿·스파이스의 풍부하고 진한 풍미. 맥칼란이 대표적.</div>
+      </div>
+      <div class="brew-cask">
+        <div class="brew-cask-icon">🍒</div>
+        <div class="brew-cask-name">포트 캐스크</div>
+        <div class="brew-cask-desc">포르투갈 포트 와인통 재사용. 달콤한 붉은 과일 향과 진한 색상. 달모어 포트우드가 대표적.</div>
+      </div>
+      <div class="brew-cask">
+        <div class="brew-cask-icon">🌳</div>
+        <div class="brew-cask-name">미즈나라 캐스크</div>
+        <div class="brew-cask-desc">일본산 물참나무 오크통. 백단향·침향 같은 동양적 향 특징. 히비키·야마자키에 주로 사용.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <!-- ─── 모달 ─── -->
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
   <div class="modal" id="modal-body">
@@ -641,7 +842,7 @@ let modalRadarChart = null;
 // ─── 탭 전환 ───
 function switchTab(t) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    const names = ['guide','price','store'];
+    const names = ['guide','price','store','brew'];
     b.classList.toggle('active', names[i] === t);
   });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
