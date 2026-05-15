@@ -71,7 +71,7 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .tab-content.active{display:block;}
 
 /* ─── 검색/필터 ─── */
-.search-wrap{position:relative;margin-bottom:16px;}
+.search-wrap{position:relative;margin-bottom:12px;}
 .search-input{
   width:100%;padding:12px 16px 12px 42px;
   background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
@@ -79,27 +79,7 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 }
 .search-input:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
 .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:1rem;}
-.filter-panel{
-  background:var(--card);border:1.5px solid var(--border);
-  border-radius:var(--radius-lg);padding:14px 16px;
-  margin-bottom:20px;box-shadow:var(--shadow);
-}
-.filter-row{display:flex;align-items:flex-start;gap:10px;}
-.filter-row+.filter-row{margin-top:11px;padding-top:11px;border-top:1px solid var(--border);}
-.filter-label{
-  font-size:0.67rem;font-weight:900;color:var(--gold-dim);
-  white-space:nowrap;margin-top:6px;min-width:20px;
-  letter-spacing:0.5px;
-}
-.filter-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
-.chip{
-  padding:5px 12px;border:1.5px solid var(--border);border-radius:20px;
-  background:var(--card2);color:var(--sub);font-size:0.76rem;font-weight:700;
-  cursor:pointer;transition:var(--tr);font-family:'Noto Sans KR',sans-serif;
-  white-space:nowrap;
-}
-.chip:hover:not(.active){border-color:var(--gold-dim);color:var(--text);}
-.chip.active{background:var(--gold);border-color:var(--gold);color:#fff;}
+.filter-dropdowns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 
 /* ─── 위스키 카드 (가로형) ─── */
 .whiskey-grid{display:grid;grid-template-columns:1fr;gap:10px;}
@@ -407,26 +387,28 @@ footer a:hover{color:var(--gold);}
     <span class="search-icon">🔍</span>
     <input class="search-input" id="search-input" type="text" placeholder="위스키 이름 검색..." oninput="renderGuide()"/>
   </div>
-  <div class="filter-panel">
-    <div class="filter-row">
-      <div class="filter-label">나라</div>
-      <div class="filter-chips" id="filter-country">
-        <button class="chip active" data-v="all" onclick="setFilter('country','all')">전체</button>
-        <button class="chip" data-v="scotland" onclick="setFilter('country','scotland')">🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드</button>
-        <button class="chip" data-v="ireland" onclick="setFilter('country','ireland')">🇮🇪 아이리시</button>
-        <button class="chip" data-v="japan" onclick="setFilter('country','japan')">🇯🇵 일본</button>
-        <button class="chip" data-v="usa" onclick="setFilter('country','usa')">🇺🇸 미국</button>
-      </div>
+  <div class="filter-dropdowns">
+    <div class="ck-dropdown-wrap" style="margin-bottom:0;">
+      <div class="ck-dropdown-label">🌍 나라</div>
+      <select class="ck-select" id="filter-country" onchange="setFilter('country',this.value)">
+        <option value="all">전체</option>
+        <option value="scotland">🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드</option>
+        <option value="ireland">🇮🇪 아이리시</option>
+        <option value="japan">🇯🇵 일본</option>
+        <option value="usa">🇺🇸 미국</option>
+      </select>
+      <span class="ck-dropdown-arrow">▼</span>
     </div>
-    <div class="filter-row">
-      <div class="filter-label">종류</div>
-      <div class="filter-chips" id="filter-type">
-        <button class="chip active" data-v="all" onclick="setFilter('type','all')">전체</button>
-        <button class="chip" data-v="single_malt" onclick="setFilter('type','single_malt')">🥃 싱글몰트</button>
-        <button class="chip" data-v="blended" onclick="setFilter('type','blended')">🔀 블렌디드</button>
-        <button class="chip" data-v="bourbon" onclick="setFilter('type','bourbon')">🌾 버번</button>
-        <button class="chip" data-v="pot_still" onclick="setFilter('type','pot_still')">🏺 팟스틸</button>
-      </div>
+    <div class="ck-dropdown-wrap" style="margin-bottom:0;">
+      <div class="ck-dropdown-label">🥃 종류</div>
+      <select class="ck-select" id="filter-type" onchange="setFilter('type',this.value)">
+        <option value="all">전체</option>
+        <option value="single_malt">싱글몰트</option>
+        <option value="blended">블렌디드</option>
+        <option value="bourbon">버번</option>
+        <option value="pot_still">팟스틸</option>
+      </select>
+      <span class="ck-dropdown-arrow">▼</span>
     </div>
   </div>
   <div class="whiskey-grid" id="guide-grid"></div>
@@ -462,12 +444,16 @@ footer a:hover{color:var(--gold);}
 <div id="tab-store" class="tab-content">
   <p style="font-size:0.8rem;color:var(--sub);margin-bottom:16px;line-height:1.6;">지역별 국내 위스키 주요 판매처입니다. 가격은 매장마다 상이할 수 있습니다.</p>
 
-  <div class="region-filter">
-    <button class="rgn-btn active" onclick="filterRegion('all',this)">전체</button>
-    <button class="rgn-btn" onclick="filterRegion('online',this)">🌐 온라인</button>
-    <button class="rgn-btn" onclick="filterRegion('metro',this)">🏙️ 서울·수도권</button>
-    <button class="rgn-btn" onclick="filterRegion('duty',this)">✈️ 인천공항</button>
-    <button class="rgn-btn" onclick="filterRegion('chain',this)">🏬 전국 체인</button>
+  <div class="ck-dropdown-wrap">
+    <div class="ck-dropdown-label">📍 판매처 지역</div>
+    <select class="ck-select" onchange="filterRegion(this.value)">
+      <option value="all">전체 — 모든 판매처</option>
+      <option value="online">🌐 온라인 — 전국 배송</option>
+      <option value="metro">🏙️ 서울·수도권 — 전문점·소상공인</option>
+      <option value="duty">✈️ 인천공항 — 면세점</option>
+      <option value="chain">🏬 전국 체인 — 대형마트</option>
+    </select>
+    <span class="ck-dropdown-arrow">▼</span>
   </div>
 
   <!-- 온라인 -->
@@ -1201,9 +1187,7 @@ function switchTab(t) {
 }
 
 // ─── 판매처 지역 필터 ───
-function filterRegion(r, btn) {
-  document.querySelectorAll('#tab-store .rgn-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+function filterRegion(r) {
   document.querySelectorAll('.store-section').forEach(s => {
     s.style.display = (r === 'all' || s.dataset.region === r) ? '' : 'none';
   });
@@ -1220,9 +1204,6 @@ function filterCorkage(r) {
 function setFilter(type, val) {
   if (type === 'country') filterCountry = val;
   else filterType = val;
-  document.querySelectorAll(`#filter-${type} .chip`).forEach(c => {
-    c.classList.toggle('active', c.dataset.v === val);
-  });
   renderGuide();
 }
 
