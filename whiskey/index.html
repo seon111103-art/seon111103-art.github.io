@@ -25,72 +25,104 @@
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 @keyframes char-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 
-/* ─── 헤더 ─── */
-header{
-  background:#FFFFFF;
-  padding:54px 20px 0; text-align:center; position:relative; overflow:hidden;
-  border-bottom:1.5px solid var(--border);
+/* ─── 앱바 (상단 고정) ─── */
+.app-bar{
+  position:sticky;top:50px;z-index:900;
+  height:56px;
+  background:rgba(253,246,236,0.92);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:10px;
+  box-shadow:0 2px 12px rgba(100,60,0,0.07);
 }
-.header-deco{
-  position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse 60% 40% at 50% 20%, rgba(180,130,30,0.06) 0%, transparent 70%);
-  pointer-events:none;
+.app-bar-left{display:flex;align-items:center;gap:9px;flex:1;min-width:0;}
+.app-bar-char{height:36px;width:auto;filter:drop-shadow(0 2px 6px rgba(150,100,10,0.25));flex-shrink:0;}
+.app-bar-texts{display:flex;flex-direction:column;justify-content:center;line-height:1.2;}
+.app-bar-title{font-size:1.0rem;font-weight:900;color:var(--gold-light);letter-spacing:2px;}
+.app-bar-sub{font-size:0.58rem;letter-spacing:3px;color:var(--gold-dim);font-weight:700;text-transform:uppercase;}
+.app-bar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.app-dark-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--card2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.05rem;cursor:pointer;transition:var(--tr);
 }
-.header-icon{font-size:3.2rem;margin-bottom:10px;filter:drop-shadow(0 0 16px rgba(150,100,10,0.3));}
-h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-spacing:4px;}
-.site-en{font-size:0.72rem;letter-spacing:6px;color:var(--gold-dim);margin-top:4px;font-weight:700;text-transform:uppercase;}
-.site-meaning{font-size:0.76rem;color:var(--sub);margin-top:10px;line-height:2;}
-.site-meaning em{color:var(--gold);font-style:normal;font-weight:700;}
-.site-tags{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:12px;margin-bottom:26px;}
-.site-tags span{font-size:0.73rem;color:var(--faint);background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:4px 11px;white-space:nowrap;}
-.site-sub{display:none;}
-.header-wave{display:none;}
+.app-dark-btn:hover{transform:scale(1.1);border-color:var(--gold-dim);}
 
-/* ─── 탭 ─── */
-.tabs{
-  display:flex;justify-content:flex-start;gap:5px;
-  padding:22px 16px 0;max-width:700px;margin:0 auto;
-  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+/* ─── 하단 네비게이션 ─── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:900;
+  height:60px;
+  background:rgba(253,246,236,0.96);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  box-shadow:0 -2px 16px rgba(100,60,0,0.09);
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;cursor:pointer;border:none;background:none;
+  color:var(--faint);font-family:'Noto Sans KR',sans-serif;
+  font-size:0.58rem;font-weight:700;transition:var(--tr);padding:6px 4px;
+  position:relative;
+}
+.nav-icon{font-size:1.3rem;transition:var(--tr);line-height:1;}
+.nav-label{line-height:1;}
+.nav-item.active{color:var(--gold);}
+.nav-item.active .nav-icon{transform:translateY(-1px);filter:drop-shadow(0 2px 5px rgba(154,106,16,0.35));}
+.nav-item.active::before{
+  content:'';position:absolute;top:0;left:25%;right:25%;height:2.5px;
+  background:var(--gold);border-radius:0 0 3px 3px;
+}
+
+/* ─── 칩 필터 ─── */
+.filter-chips{
+  display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;padding-bottom:2px;
   flex-wrap:nowrap;
 }
-.tabs::-webkit-scrollbar{display:none;}
-.tab-btn{
+.filter-chips::-webkit-scrollbar{display:none;}
+.chip{
   flex:none;white-space:nowrap;
-  padding:9px 13px;border:1.5px solid var(--border);border-radius:30px;
-  background:var(--card);color:var(--sub);font-size:0.82rem;font-weight:700;
+  padding:7px 14px;border:1.5px solid var(--border);border-radius:20px;
+  background:var(--card);color:var(--sub);font-size:0.78rem;font-weight:700;
   cursor:pointer;transition:var(--tr);font-family:'Noto Sans KR',sans-serif;
 }
-@media(max-width:400px){
-  .tab-btn{padding:8px 10px;font-size:0.78rem;}
-  .tabs{gap:4px;}
-}
-.tab-btn:hover{border-color:var(--gold-dim);color:var(--text);}
-.tab-btn.active{background:var(--gold);border-color:var(--gold);color:#1A0A00;}
-.tab-content{display:none;max-width:700px;margin:0 auto;padding:24px 16px 80px;}
+.chip:hover{border-color:var(--gold-dim);color:var(--text);}
+.chip.active{background:var(--gold-light);border-color:var(--gold);color:#fff;}
+.filter-section{margin-bottom:14px;}
+.filter-label{font-size:0.68rem;font-weight:900;color:var(--gold-dim);letter-spacing:0.5px;margin-bottom:6px;}
+
+/* ─── 탭 숨김 (하단 nav로 대체) ─── */
+.tabs{display:none;}
+.tab-btn{display:none;}
+.tab-content{display:none;max-width:700px;margin:0 auto;padding:16px 16px 80px;}
 .tab-content.active{display:block;}
 
 /* ─── 검색/필터 ─── */
-.search-wrap{position:relative;margin-bottom:12px;}
+.search-wrap{position:relative;margin-bottom:14px;}
 .search-input{
-  width:100%;padding:12px 16px 12px 42px;
-  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
+  width:100%;padding:13px 16px 13px 44px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:26px;
   color:var(--text);font-size:0.92rem;font-family:'Noto Sans KR',sans-serif;
+  box-shadow:0 2px 10px rgba(100,60,0,0.06);
 }
-.search-input:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
-.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:1rem;}
-.filter-dropdowns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.search-input:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px rgba(154,106,16,0.12);}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:1rem;}
 
 /* ─── 위스키 카드 (가로형) ─── */
 .whiskey-grid{display:grid;grid-template-columns:1fr;gap:10px;}
 .w-card{
-  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-lg);
-  padding:14px 16px;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden;
-  display:flex;gap:14px;align-items:flex-start;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:14px 14px 14px 16px;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden;
+  display:flex;gap:12px;align-items:flex-start;
+  box-shadow:0 1px 6px rgba(100,60,0,0.06);
 }
-.w-card:hover{border-color:var(--gold-dim);box-shadow:var(--shadow-gold);}
+.w-card:hover{border-color:var(--gold-dim);box-shadow:var(--shadow-gold);transform:translateY(-1px);}
 .w-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold),var(--gold-light));
+  border-radius:3px 0 0 3px;
   opacity:0;transition:var(--tr);
 }
 .w-card:hover::before{opacity:1;}
@@ -335,7 +367,7 @@ h1.site-title{font-size:2.2rem;font-weight:900;color:var(--gold-light);letter-sp
 .ck-map{display:block;text-align:center;padding:7px;background:var(--gold);border-radius:16px;color:#fff;font-size:0.76rem;font-weight:700;text-decoration:none;transition:var(--tr);margin-top:10px;}
 .ck-map:hover{opacity:0.85;transform:translateY(-1px);}
 /* ─── 푸터 ─── */
-footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
+footer{text-align:center;padding:20px 20px 16px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--sub);}
 footer a{color:var(--gold-dim);text-decoration:none;margin:0 7px;}
 footer a:hover{color:var(--gold);}
 
@@ -360,7 +392,9 @@ body.dark{
   --shadow:0 4px 20px rgba(0,0,0,0.5);
   --shadow-gold:0 4px 24px rgba(210,160,30,0.25);
 }
-body.dark header{background:#1E1208;}
+body.dark .app-bar{background:rgba(24,16,10,0.94);}
+body.dark .bottom-nav{background:rgba(24,16,10,0.96);}
+body.dark .chip.active{background:var(--gold-dim);color:#1A0A00;}
 body.dark .modal-bg{background:rgba(0,0,0,0.78);}
 body.dark .tier-budget{background:#1A3A22;color:#6FE09A;}
 body.dark .tier-mid{background:#12264A;color:#7AACF0;}
@@ -370,41 +404,23 @@ body.dark .card-left{background:#F5ECD8;}
 body.dark .card-bottle{mix-blend-mode:normal;filter:brightness(1.0) contrast(1.05) drop-shadow(0 3px 8px rgba(0,0,0,0.4));}
 body.dark .modal-bottle{mix-blend-mode:normal;filter:brightness(1.0) contrast(1.05) drop-shadow(0 4px 12px rgba(0,0,0,0.4));}
 
-/* 다크모드 토글 버튼 */
-.dark-toggle{
-  position:fixed;top:62px;right:14px;z-index:9999;
-  width:40px;height:40px;border-radius:50%;
-  background:var(--card);border:1.5px solid var(--border);
-  box-shadow:var(--shadow);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;transition:var(--tr);
-}
-.dark-toggle:hover{transform:scale(1.1);border-color:var(--gold-dim);}
+/* 다크모드 — 앱바 버튼으로 통합 */
 </style>
 </head>
 <body>
 
-<button class="dark-toggle" id="dark-toggle" onclick="toggleDark()" title="다크/라이트 모드 전환">🌙</button>
-
-<header>
-  <div class="header-deco"></div>
-  <img src="character.png" alt="글렌우드 캐릭터" style="width:160px;height:auto;margin-bottom:8px;filter:drop-shadow(0 6px 18px rgba(201,168,76,0.5));animation:char-bounce 2.8s ease-in-out infinite;">
-  <h1 class="site-title">글렌우드</h1>
-  <p class="site-en">G L E N W O O D</p>
-  <p class="site-meaning">
-    <em>Glen</em> — 스코틀랜드 깊은 계곡&nbsp;&nbsp;·&nbsp;&nbsp;<em>Wood</em> — 오크나무통
-  </p>
-  <svg class="header-wave" viewBox="0 0 1440 40" preserveAspectRatio="none">
-    <path d="M0,24 C360,40 1080,8 1440,24 L1440,40 L0,40 Z"/>
-  </svg>
-</header>
-
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('guide')">⭐ 인기 위스키</button>
-  <button class="tab-btn" onclick="switchTab('price')">💵 가격비교</button>
-  <button class="tab-btn" onclick="switchTab('store')">🛒 어디서 살까</button>
-  <button class="tab-btn" onclick="switchTab('brew')">🍹 마시는 법</button>
-  <button class="tab-btn" onclick="switchTab('corkage')">📍 콜키지 지도</button>
+<!-- ─── 상단 앱바 ─── -->
+<div class="app-bar">
+  <div class="app-bar-left">
+    <img src="character.png" alt="글렌우드" class="app-bar-char">
+    <div class="app-bar-texts">
+      <span class="app-bar-title">글렌우드</span>
+      <span class="app-bar-sub">GLENWOOD</span>
+    </div>
+  </div>
+  <div class="app-bar-right">
+    <button class="app-dark-btn" id="dark-toggle" onclick="toggleDark()" title="다크/라이트 모드 전환">🌙</button>
+  </div>
 </div>
 
 <!-- ─── 도감 탭 ─── -->
@@ -413,30 +429,26 @@ body.dark .modal-bottle{mix-blend-mode:normal;filter:brightness(1.0) contrast(1.
     <span class="search-icon">🔍</span>
     <input class="search-input" id="search-input" type="text" placeholder="위스키 이름 검색..." oninput="renderGuide()"/>
   </div>
-  <div class="filter-dropdowns">
-    <div class="ck-dropdown-wrap" style="margin-bottom:0;">
-      <div class="ck-dropdown-label">🌍 나라</div>
-      <select class="ck-select" id="filter-country" onchange="setFilter('country',this.value)">
-        <option value="all">전체</option>
-        <option value="scotland">🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드</option>
-        <option value="ireland">🇮🇪 아이리시</option>
-        <option value="japan">🇯🇵 일본</option>
-        <option value="usa">🇺🇸 미국</option>
-        <option value="taiwan">🇹🇼 대만</option>
-        <option value="india">🇮🇳 인도</option>
-      </select>
-      <span class="ck-dropdown-arrow">▼</span>
+  <div class="filter-section">
+    <div class="filter-label">🌍 나라</div>
+    <div class="filter-chips" id="country-chips">
+      <button class="chip active" onclick="setFilter('country','all')">전체</button>
+      <button class="chip" onclick="setFilter('country','scotland')">🏴 스코틀랜드</button>
+      <button class="chip" onclick="setFilter('country','ireland')">🇮🇪 아이리시</button>
+      <button class="chip" onclick="setFilter('country','japan')">🇯🇵 일본</button>
+      <button class="chip" onclick="setFilter('country','usa')">🇺🇸 미국</button>
+      <button class="chip" onclick="setFilter('country','taiwan')">🇹🇼 대만</button>
+      <button class="chip" onclick="setFilter('country','india')">🇮🇳 인도</button>
     </div>
-    <div class="ck-dropdown-wrap" style="margin-bottom:0;">
-      <div class="ck-dropdown-label">🥃 종류</div>
-      <select class="ck-select" id="filter-type" onchange="setFilter('type',this.value)">
-        <option value="all">전체</option>
-        <option value="single_malt">싱글몰트</option>
-        <option value="blended">블렌디드</option>
-        <option value="bourbon">버번</option>
-        <option value="pot_still">팟스틸</option>
-      </select>
-      <span class="ck-dropdown-arrow">▼</span>
+  </div>
+  <div class="filter-section">
+    <div class="filter-label">🥃 종류</div>
+    <div class="filter-chips" id="type-chips">
+      <button class="chip active" onclick="setFilter('type','all')">전체</button>
+      <button class="chip" onclick="setFilter('type','single_malt')">싱글몰트</button>
+      <button class="chip" onclick="setFilter('type','blended')">블렌디드</button>
+      <button class="chip" onclick="setFilter('type','bourbon')">버번</button>
+      <button class="chip" onclick="setFilter('type','pot_still')">팟스틸</button>
     </div>
   </div>
   <div class="whiskey-grid" id="guide-grid"></div>
@@ -1423,13 +1435,14 @@ let modalRadarChart = null;
 
 // ─── 탭 전환 ───
 function switchTab(t) {
-  document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    const names = ['guide','price','store','brew','corkage'];
-    b.classList.toggle('active', names[i] === t);
-  });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
+  ['guide','price','store','brew','corkage'].forEach(name => {
+    const el = document.getElementById('nav-'+name);
+    if (el) el.classList.toggle('active', name === t);
+  });
   if (t === 'price') renderPrice();
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ─── 판매처 지역 필터 ───
@@ -1448,8 +1461,17 @@ function filterCorkage(r) {
 
 // ─── 필터 ───
 function setFilter(type, val) {
-  if (type === 'country') filterCountry = val;
-  else filterType = val;
+  if (type === 'country') {
+    filterCountry = val;
+    document.querySelectorAll('#country-chips .chip').forEach(c => {
+      c.classList.toggle('active', c.textContent.trim() === '' || c.getAttribute('onclick').includes("'"+val+"'"));
+    });
+  } else {
+    filterType = val;
+    document.querySelectorAll('#type-chips .chip').forEach(c => {
+      c.classList.toggle('active', c.getAttribute('onclick').includes("'"+val+"'"));
+    });
+  }
   renderGuide();
 }
 
@@ -1651,6 +1673,30 @@ function toggleDark() {
 renderGuide();
 
 </script>
+
+<!-- ─── 하단 네비게이션 ─── -->
+<nav class="bottom-nav">
+  <button class="nav-item active" id="nav-guide" onclick="switchTab('guide')">
+    <span class="nav-icon">🥃</span>
+    <span class="nav-label">위스키</span>
+  </button>
+  <button class="nav-item" id="nav-price" onclick="switchTab('price')">
+    <span class="nav-icon">💵</span>
+    <span class="nav-label">가격비교</span>
+  </button>
+  <button class="nav-item" id="nav-store" onclick="switchTab('store')">
+    <span class="nav-icon">🛒</span>
+    <span class="nav-label">판매처</span>
+  </button>
+  <button class="nav-item" id="nav-brew" onclick="switchTab('brew')">
+    <span class="nav-icon">🍹</span>
+    <span class="nav-label">마시는법</span>
+  </button>
+  <button class="nav-item" id="nav-corkage" onclick="switchTab('corkage')">
+    <span class="nav-icon">📍</span>
+    <span class="nav-label">콜키지</span>
+  </button>
+</nav>
 
 <!-- Adsterra -->
 <div style="position:fixed;top:0;left:0;right:0;z-index:10000;text-align:center;pointer-events:none;">
