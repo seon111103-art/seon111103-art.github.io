@@ -349,10 +349,41 @@ footer a:hover{color:var(--gold);}
   .notes-grid{grid-template-columns:1fr;}
   .modal-prices{grid-template-columns:1fr;}
 }
+
+/* ─── 다크모드 ─── */
+body{transition:background 0.25s,color 0.25s;}
+body.dark{
+  --bg:#18100A;--card:#241808;--card2:#321E0C;--card3:#402810;
+  --gold:#D4A840;--gold-light:#E0B850;--gold-dim:#B88A28;
+  --text:#F0DFB0;--sub:#C09858;--faint:#907040;
+  --border:#5A3818;
+  --shadow:0 4px 20px rgba(0,0,0,0.5);
+  --shadow-gold:0 4px 24px rgba(210,160,30,0.25);
+}
+body.dark header{background:#1E1208;}
+body.dark .modal-bg{background:rgba(0,0,0,0.78);}
+body.dark .tier-budget{background:#1A3A22;color:#6FE09A;}
+body.dark .tier-mid{background:#12264A;color:#7AACF0;}
+body.dark .tier-premium{background:#3A2010;color:#F0A060;}
+body.dark .tier-luxury{background:#2A1232;color:#C07AE0;}
+body.dark .card-left{background:#2A1C0A;}
+body.dark .card-bottle{filter:brightness(1.12) contrast(1.08) drop-shadow(0 3px 8px rgba(0,0,0,0.5));}
+
+/* 다크모드 토글 버튼 */
+.dark-toggle{
+  position:fixed;top:14px;right:14px;z-index:9999;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--card);border:1.5px solid var(--border);
+  box-shadow:var(--shadow);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;transition:var(--tr);
+}
+.dark-toggle:hover{transform:scale(1.1);border-color:var(--gold-dim);}
 </style>
 </head>
 <body>
 
+<button class="dark-toggle" id="dark-toggle" onclick="toggleDark()" title="다크/라이트 모드 전환">🌙</button>
 
 <header>
   <div class="header-deco"></div>
@@ -1517,6 +1548,21 @@ function tierLabel(p) {
   if (p < 150000) return '프리미엄';
   return '럭셔리';
 }
+
+// ─── 다크모드 ───
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('dark-toggle').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('glenwood-dark', isDark ? '1' : '0');
+}
+(function(){
+  const saved = localStorage.getItem('glenwood-dark');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === '1' || (saved === null && prefersDark)) {
+    document.body.classList.add('dark');
+    document.getElementById('dark-toggle').textContent = '☀️';
+  }
+})();
 
 // ─── 초기화 ───
 renderGuide();
