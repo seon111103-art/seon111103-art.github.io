@@ -457,15 +457,16 @@ body.dark .modal-bottle{mix-blend-mode:normal;filter:brightness(1.0) contrast(1.
       <thead>
         <tr>
           <th>위스키</th>
-          <th style="text-align:right;">면세가</th>
-          <th style="text-align:right;">소매가</th>
+          <th style="text-align:right;">면세가<br><small style="font-weight:400;color:var(--faint);">인천공항 기준</small></th>
+          <th style="text-align:right;">국내 시세<br><small style="font-weight:400;color:var(--faint);">온라인·마트 참고</small></th>
           <th>등급</th>
+          <th style="text-align:center;">현재가</th>
         </tr>
       </thead>
       <tbody id="price-tbody"></tbody>
     </table>
   </div>
-  <p style="font-size:0.72rem;color:var(--sub);margin-top:12px;line-height:1.6;">※ 가격은 700mL 기준 참고가이며, 실제 판매가와 다를 수 있습니다. 면세점은 인천공항 기준.</p>
+  <p style="font-size:0.72rem;color:var(--sub);margin-top:12px;line-height:1.6;">※ 가격은 700mL 기준 참고가이며, 실제 판매가와 다를 수 있습니다. 면세가는 인천공항 기준 / 국내 시세는 온라인·대형마트 기준. 🔍 <strong>현재가</strong>를 누르면 네이버 쇼핑에서 실시간 시세를 확인할 수 있습니다.</p>
 </div>
 
 <!-- ─── 판매처 탭 ─── -->
@@ -1611,6 +1612,9 @@ function renderPrice() {
       <td style="text-align:right;"><span class="pt-price">₩${w.price.df.toLocaleString()}</span></td>
       <td style="text-align:right;"><span class="pt-rt">₩${w.price.rt.toLocaleString()}</span></td>
       <td><span class="tier ${tierClass(w.price.df)}">${tierLabel(w.price.df)}</span></td>
+      <td style="text-align:center;" onclick="event.stopPropagation()">
+        <a href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(w.ko+' 위스키')}" target="_blank" rel="noopener" style="font-size:0.8rem;color:var(--gold);text-decoration:none;white-space:nowrap;">🔍 확인</a>
+      </td>
     </tr>
   `).join('');
 }
