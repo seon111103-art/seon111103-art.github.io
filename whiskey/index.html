@@ -25,13 +25,13 @@
   /* 별칭 (기존 코드 호환) */
   --gold:var(--amber);--gold-light:var(--amber-bright);--gold-dim:var(--amber-dim);
 }
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-top:106px;padding-bottom:64px;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-top:56px;padding-bottom:64px;}
 body{transition:background 0.3s,color 0.3s;}
 @keyframes char-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
 /* ─── 앱바 (고정) ─── */
 .app-bar{
-  position:fixed;top:50px;left:0;right:0;z-index:900;
+  position:fixed;top:0;left:0;right:0;z-index:900;
   height:56px;
   background:rgba(248,241,231,0.94);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
@@ -1795,13 +1795,6 @@ renderGuide();
   </button>
 </nav>
 
-<!-- Adsterra -->
-<div style="position:fixed;top:0;left:0;right:0;z-index:10000;text-align:center;pointer-events:none;">
-  <div style="pointer-events:auto;">
-    <script>atOptions={'key':'fcfce445eacefe11f7f5495f13f0c366','format':'iframe','height':50,'width':320,'params':{}};</script>
-    <script src="https://www.highperformanceformat.com/fcfce445eacefe11f7f5495f13f0c366/invoke.js"></script>
-  </div>
-</div>
 </body>
 </html>
 
