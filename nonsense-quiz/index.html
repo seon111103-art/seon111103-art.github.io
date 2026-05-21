@@ -121,18 +121,21 @@ html.dark .mascot-img {
 
 /* 반응 캐릭터 (퀴즈 화면) */
 .react-char {
-  width: 100px; height: 100px; object-fit: contain;
+  width: 110px; height: 110px; object-fit: contain;
   display: block; margin: 0 auto 6px;
-  filter: drop-shadow(0 4px 12px rgba(56,189,248,0.35));
+  filter: drop-shadow(0 6px 18px rgba(255,255,255,0.6)) drop-shadow(0 2px 8px rgba(14,165,233,0.35));
   animation: bounce 2.4s ease-in-out infinite;
-  transition: opacity 0.15s;
+  transition: filter 0.3s;
+}
+html.dark .react-char {
+  filter: drop-shadow(0 6px 20px rgba(56,189,248,0.65)) brightness(0.92);
 }
 .react-char.pop {
   animation: charPop 0.35s cubic-bezier(.4,0,.2,1), bounce 2.4s ease-in-out 0.35s infinite;
 }
 @keyframes charPop {
   0%  { transform: scale(0.65); opacity: 0.4; }
-  65% { transform: scale(1.12); }
+  65% { transform: scale(1.14); }
   100%{ transform: scale(1);    opacity: 1; }
 }
 
@@ -140,8 +143,11 @@ html.dark .mascot-img {
 .result-char {
   width: 190px; height: 190px; object-fit: contain;
   display: block; margin: 0 auto 10px;
-  filter: drop-shadow(0 6px 18px rgba(56,189,248,0.4));
+  filter: drop-shadow(0 6px 22px rgba(255,255,255,0.6)) drop-shadow(0 2px 10px rgba(14,165,233,0.4));
   animation: bounce 2s ease-in-out infinite;
+}
+html.dark .result-char {
+  filter: drop-shadow(0 6px 24px rgba(56,189,248,0.7)) brightness(0.9);
 }
 
 /* 타이틀 */
