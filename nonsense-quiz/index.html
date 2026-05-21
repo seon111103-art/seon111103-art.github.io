@@ -6,45 +6,50 @@
 <title>뭉실뭉실 수수께끼</title>
 <meta name="description" content="깔깔깔! 초등학생들을 위한 재미있는 수수께끼 게임">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f0f9ff;
+  --bg: #dbeafe;
   --card: #ffffff;
-  --border: #e0e7ff;
-  --text: #1e1b4b;
-  --text-muted: #6b7280;
-  --primary: #38bdf8;
+  --border: #bae6fd;
+  --text: #0c4a6e;
+  --text-muted: #0369a1;
+  --primary: #0ea5e9;
   --primary-dark: #0284c7;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow: 0 4px 18px rgba(0,0,0,0.10);
-  --shadow-md: 0 8px 30px rgba(0,0,0,0.14);
-  --transition: all 0.2s cubic-bezier(.4,0,.2,1);
-  --radius: 18px;
-  --radius-lg: 26px;
+  --shadow-sm: 0 3px 12px rgba(14,165,233,0.12);
+  --shadow: 0 5px 22px rgba(14,165,233,0.16);
+  --shadow-md: 0 10px 36px rgba(14,165,233,0.24);
+  --transition: all 0.22s cubic-bezier(.4,0,.2,1);
+  --radius: 20px;
+  --radius-lg: 30px;
 }
 html.dark {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --border: #334155;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
+  --bg: #082f49;
+  --card: #0c4a6e;
+  --border: #075985;
+  --text: #e0f2fe;
+  --text-muted: #7dd3fc;
   --primary: #38bdf8;
   --primary-dark: #7dd3fc;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow: 0 4px 18px rgba(0,0,0,0.4);
-  --shadow-md: 0 8px 30px rgba(0,0,0,0.5);
+  --shadow-sm: 0 3px 12px rgba(0,0,0,0.35);
+  --shadow: 0 5px 22px rgba(0,0,0,0.45);
+  --shadow-md: 0 10px 36px rgba(0,0,0,0.55);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  background: var(--bg);
+  font-family: 'Jua', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background: linear-gradient(180deg, #bae6fd 0%, #dbeafe 45%, #f0f9ff 100%);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
   transition: background 0.3s, color 0.3s;
   overflow-x: hidden;
+}
+html.dark body {
+  background: linear-gradient(180deg, #082f49 0%, #0c2a3f 50%, #0a1f30 100%);
+  background-attachment: fixed;
 }
 
 /* ── 떠다니는 배경 장식 ── */
@@ -67,7 +72,7 @@ html.dark .bg-deco { opacity: 0.07; }
 
 /* ── HEADER ── */
 header {
-  background: linear-gradient(150deg, #4c1d95 0%, #7c3aed 40%, #a78bfa 75%, #38bdf8 100%);
+  background: linear-gradient(160deg, #0369a1 0%, #0ea5e9 55%, #38bdf8 85%, #7dd3fc 100%);
   padding: 48px 20px 0;
   text-align: center;
   position: relative;
@@ -77,8 +82,8 @@ header {
 header::before {
   content: '';
   position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='2' fill='white' fill-opacity='0.08'/%3E%3C/svg%3E");
-  background-size: 60px 60px;
+  background: url("data:image/svg+xml,%3Csvg width='90' height='60' viewBox='0 0 90 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='45' cy='42' rx='28' ry='15' fill='white' fill-opacity='0.06'/%3E%3Cellipse cx='30' cy='37' rx='16' ry='11' fill='white' fill-opacity='0.06'/%3E%3Cellipse cx='60' cy='37' rx='16' ry='11' fill='white' fill-opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 90px 60px;
 }
 
 /* 다크모드 토글 */
@@ -105,12 +110,12 @@ html.dark .theme-thumb { left: calc(100% - 27px); }
 .mascot-wrap { position: relative; display: inline-block; margin-bottom: 4px; }
 .mascot-img {
   width: 190px; height: 190px; object-fit: contain;
-  filter: drop-shadow(0 6px 20px rgba(56,189,248,0.5));
+  filter: drop-shadow(0 6px 24px rgba(255,255,255,0.65)) drop-shadow(0 2px 8px rgba(3,105,161,0.3));
   animation: bounce 2.4s ease-in-out infinite;
   transition: filter 0.3s;
 }
 html.dark .mascot-img {
-  filter: drop-shadow(0 6px 24px rgba(167,139,250,0.7)) brightness(0.88);
+  filter: drop-shadow(0 6px 24px rgba(56,189,248,0.7)) brightness(0.88);
 }
 @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
 
@@ -145,13 +150,14 @@ html.dark .mascot-img {
   gap: 8px; margin-top: 4px;
 }
 .title-main {
+  font-family: 'Jua', sans-serif;
   font-size: 2.8rem; font-weight: 900; letter-spacing: 3px;
-  color: #7dd3fc;
+  color: #ffffff;
   text-shadow:
-    0 0 20px rgba(125,211,252,0.9),
-    2px 2px 0 rgba(56,189,248,0.4),
-    -1px -1px 0 rgba(255,255,255,0.5),
-    4px 4px 8px rgba(14,116,144,0.2);
+    0 0 24px rgba(255,255,255,0.8),
+    2px 3px 0 rgba(3,105,161,0.45),
+    -1px -1px 0 rgba(255,255,255,0.6),
+    4px 6px 12px rgba(2,132,199,0.25);
 }
 .title-sub {
   font-size: 1.1rem; font-weight: 900; letter-spacing: 2px;
@@ -165,8 +171,8 @@ html.dark .mascot-img {
 .header-tag { color: rgba(255,255,255,0.88); font-size: 0.9rem; margin-top: 8px; font-weight: 700; }
 
 .header-wave { display: block; width: 100%; height: 52px; margin-top: 14px; transition: fill 0.3s; }
-html:not(.dark) .header-wave { fill: #f0f9ff; }
-html.dark .header-wave { fill: #0f172a; }
+html:not(.dark) .header-wave { fill: #bae6fd; }
+html.dark .header-wave { fill: #082f49; }
 
 /* ── MAIN ── */
 .main {
@@ -178,9 +184,12 @@ html.dark .header-wave { fill: #0f172a; }
 
 /* ── 섹션 타이틀 ── */
 .sec-title {
-  font-size: 1rem; font-weight: 800;
+  font-size: 1.05rem; font-weight: 900;
   display: flex; align-items: center; gap: 6px;
   margin: 20px 0 10px; color: var(--text);
+  padding-left: 10px;
+  border-left: 4px solid var(--primary);
+  border-radius: 2px;
 }
 .sec-title span { font-size: 1.2rem; }
 
@@ -289,7 +298,7 @@ html.dark .header-wave { fill: #0f172a; }
 /* ── 시작 버튼 ── */
 .start-btn {
   width: 100%; padding: 18px;
-  background: linear-gradient(135deg, #7c3aed, #38bdf8);
+  background: linear-gradient(135deg, #0284c7, #0ea5e9, #38bdf8);
   color: #fff; border: none; border-radius: var(--radius-lg);
   font-size: 1.15rem; font-weight: 900; cursor: pointer; letter-spacing: 0.5px;
   transition: var(--transition); position: relative; overflow: hidden;
@@ -327,7 +336,7 @@ html.dark .header-wave { fill: #0f172a; }
 }
 .prog-fill {
   height: 100%; border-radius: 5px;
-  background: linear-gradient(90deg, #7c3aed, #38bdf8);
+  background: linear-gradient(90deg, #0284c7, #38bdf8, #7dd3fc);
   transition: width 0.45s ease;
   position: relative; overflow: hidden;
 }
@@ -343,8 +352,8 @@ html.dark .header-wave { fill: #0f172a; }
 .quiz-card {
   background: var(--card);
   border-radius: var(--radius-lg);
-  border: 3px solid var(--border);
-  box-shadow: var(--shadow);
+  border: 2.5px solid var(--border);
+  box-shadow: var(--shadow), 0 0 0 6px rgba(186,230,253,0.3);
   padding: 28px 22px; text-align: center;
   margin-bottom: 14px; min-height: 185px;
   display: flex; flex-direction: column;
@@ -423,23 +432,23 @@ html.dark .ans-text { color: #fbbf24; }
 .result-sub { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 22px; }
 .score-box {
   border-radius: var(--radius); padding: 20px; margin-bottom: 22px;
-  background: linear-gradient(135deg, #ede9fe, #dbeafe);
+  background: linear-gradient(135deg, #dbeafe, #e0f2fe);
 }
-html.dark .score-box { background: linear-gradient(135deg, #1e0a4a, #0c1a40); }
-.score-num { font-size: 3.2rem; font-weight: 900; color: #7c3aed; line-height: 1; }
-html.dark .score-num { color: #a78bfa; }
+html.dark .score-box { background: linear-gradient(135deg, #062a40, #072840); }
+.score-num { font-size: 3.2rem; font-weight: 900; color: #0369a1; line-height: 1; }
+html.dark .score-num { color: #38bdf8; }
 .score-of { font-size: 0.92rem; color: var(--text-muted); margin-top: 2px; }
 .score-msg { font-size: 1rem; font-weight: 800; margin-top: 8px; color: var(--text); }
 .result-btns { display: flex; flex-direction: column; gap: 10px; }
 .btn-retry {
   padding: 15px;
-  background: linear-gradient(135deg, #7c3aed, #38bdf8);
+  background: linear-gradient(135deg, #0284c7, #0ea5e9, #38bdf8);
   color: #fff; border: none; border-radius: var(--radius);
   font-size: 1rem; font-weight: 900; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(124,58,237,0.38);
+  box-shadow: 0 4px 16px rgba(14,165,233,0.4);
   transition: var(--transition);
 }
-.btn-retry:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(124,58,237,0.5); }
+.btn-retry:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(14,165,233,0.55); }
 .btn-kakao {
   padding: 14px; background: #fee500; color: #3c1e1e;
   border: none; border-radius: var(--radius);
@@ -477,11 +486,11 @@ html.dark .score-num { color: #a78bfa; }
 <body>
 
 <!-- 배경 장식 -->
-<div class="bg-deco">⭐</div>
-<div class="bg-deco">🌟</div>
-<div class="bg-deco">✨</div>
-<div class="bg-deco">💫</div>
-<div class="bg-deco">🌈</div>
+<div class="bg-deco">☁️</div>
+<div class="bg-deco">⛅</div>
+<div class="bg-deco">☁️</div>
+<div class="bg-deco">🌤️</div>
+<div class="bg-deco">☁️</div>
 
 <!-- 다크모드 토글 -->
 <button class="theme-btn" onclick="toggleDark()">
