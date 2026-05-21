@@ -206,13 +206,25 @@ html.dark .header-wave { fill: #0f172a; }
 }
 .cat-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-md); }
 .cat-card:hover::after { opacity: 1; }
-.cat-card.selected { border-color: #fff; box-shadow: var(--shadow-md), 0 0 0 3px rgba(255,255,255,0.6); }
+.cat-card.selected {
+  border-color: transparent;
+  box-shadow: var(--shadow-md),
+    0 0 0 3px transparent,
+    0 0 18px 4px rgba(255,255,255,0.5);
+  outline: 3px solid transparent;
+}
 .cat-card.selected::before {
-  content: '✓'; position: absolute; top: 8px; right: 10px;
-  font-size: 0.85rem; font-weight: 900;
-  background: rgba(255,255,255,0.9); color: #1e1b4b;
-  border-radius: 50%; width: 20px; height: 20px;
-  display: flex; align-items: center; justify-content: center;
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: calc(var(--radius-lg) + 3px);
+  background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #38bdf8, #a78bfa, #ff6b6b);
+  background-size: 300%;
+  animation: gradBorder 2.5s linear infinite;
+  z-index: -1;
+}
+@keyframes gradBorder {
+  0%   { background-position: 0%; }
+  100% { background-position: 300%; }
 }
 .cat-all  { background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
 .cat-ani  { background: linear-gradient(135deg, #6bcb77, #22c55e); }
