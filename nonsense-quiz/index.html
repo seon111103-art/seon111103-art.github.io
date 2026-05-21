@@ -327,8 +327,16 @@ html.dark .header-wave { fill: #082f49; }
 /* ── 퀴즈 헤더 ── */
 .quiz-top {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 0 12px;
+  padding: 16px 0 12px; gap: 8px;
 }
+.btn-home-quiz {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--card); border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm); cursor: pointer;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition); flex-shrink: 0;
+}
+.btn-home-quiz:hover { background: #fee2e2; border-color: #fca5a5; transform: scale(1.08); }
 .prog-text { font-size: 0.9rem; font-weight: 800; color: var(--text-muted); }
 .score-pill {
   background: linear-gradient(135deg, #ffd93d, #fb923c);
@@ -583,6 +591,7 @@ html.dark .score-num { color: #38bdf8; }
   <!-- ② 퀴즈 화면 -->
   <div class="screen" id="s-quiz">
     <div class="quiz-top">
+      <button class="btn-home-quiz" onclick="goHome()" title="처음으로">🏠</button>
       <span class="prog-text" id="progTxt">1 / 10</span>
       <span class="score-pill">⭐ <span id="scoreTxt">0</span>점</span>
     </div>
