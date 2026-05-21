@@ -7,6 +7,8 @@
 <meta name="description" content="깔깔깔! 초등학생들을 위한 재미있는 수수께끼 게임">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- 카카오 에드핏 -->
+<script type="text/javascript" src="//t1.kakaocdn.net/kas/static/ba.min.js" async></script>
 <style>
 :root {
   --bg: #dbeafe;
@@ -499,6 +501,16 @@ html.dark .score-num { color: #38bdf8; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
+/* ── 광고 영역 ── */
+.ad-wrap {
+  margin: 14px 0 4px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.ad-label {
+  font-size: 0.62rem; color: var(--text-muted);
+  letter-spacing: 0.8px; opacity: 0.7;
+}
+
 /* ── 랭킹 버튼 (홈 화면) ── */
 .btn-ranking {
   width: 100%; padding: 13px; margin-top: 10px;
@@ -674,6 +686,15 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
 
     <button class="start-btn" onclick="startQuiz()">🚀 수수께끼 시작!</button>
     <button class="btn-ranking" onclick="showRanking()">🏆 전체 랭킹 보기</button>
+
+    <!-- 홈 광고 -->
+    <div class="ad-wrap">
+      <div class="ad-label">광 고</div>
+      <ins class="kakao_ad_area" style="display:none;"
+        data-ad-unit="DAN-kXGCS2U0YToyqxXx"
+        data-ad-width="320"
+        data-ad-height="50"></ins>
+    </div>
   </div>
 
   <!-- ② 퀴즈 화면 -->
@@ -723,6 +744,15 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
         <button class="btn-retry"  onclick="startQuiz()">🔄 한 번 더!</button>
         <button class="btn-kakao"  onclick="shareRes()">💛 친구한테 공유하기</button>
         <button class="btn-home"   onclick="goHome()">🏠 처음으로</button>
+      </div>
+
+      <!-- 결과 광고 -->
+      <div class="ad-wrap" style="margin-top:18px;">
+        <div class="ad-label">광 고</div>
+        <ins class="kakao_ad_area" style="display:none;"
+          data-ad-unit="DAN-avsn0h0tINnusCW1"
+          data-ad-width="320"
+          data-ad-height="50"></ins>
       </div>
     </div>
   </div>
