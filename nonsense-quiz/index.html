@@ -499,6 +499,93 @@ html.dark .score-num { color: #38bdf8; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
+/* ── 랭킹 버튼 (홈 화면) ── */
+.btn-ranking {
+  width: 100%; padding: 13px; margin-top: 10px;
+  background: transparent; border: 2.5px solid var(--border);
+  border-radius: var(--radius); color: var(--text-muted);
+  font-size: 0.9rem; font-weight: 900; cursor: pointer;
+  transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-ranking:hover { border-color: #fbbf24; color: #b45309; background: #fffbeb; transform: translateY(-2px); }
+html.dark .btn-ranking:hover { background: rgba(253,224,71,0.08); color: #fde047; border-color: #fde047; }
+
+/* ── 닉네임 등록 (결과 화면) ── */
+.nick-section {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 14px;
+  border: 2px solid var(--border); transition: opacity 0.3s;
+}
+html.dark .nick-section { background: linear-gradient(135deg, #062a40, #072840); }
+.nick-label { font-size: 0.82rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; }
+.nick-row { display: flex; gap: 8px; }
+.nick-input {
+  flex: 1; padding: 12px 14px;
+  border: 2.5px solid var(--border); border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 0.95rem; font-weight: 800;
+  color: var(--text); background: var(--card); transition: var(--transition);
+}
+.nick-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); outline: none; }
+.btn-submit-score {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #6bcb77, #22c55e);
+  color: #fff; border: none; border-radius: var(--radius);
+  font-size: 0.92rem; font-weight: 900; cursor: pointer;
+  box-shadow: 0 3px 12px rgba(34,197,94,0.35); transition: var(--transition); white-space: nowrap;
+}
+.btn-submit-score:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(34,197,94,0.5); }
+.btn-submit-score:disabled { opacity: 0.6; cursor: default; }
+
+/* ── 랭킹 모달 ── */
+.rank-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(3,50,80,0.72); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.rank-overlay.open { opacity: 1; pointer-events: all; }
+.rank-modal {
+  background: var(--card); border-radius: var(--radius-lg);
+  border: 3px solid var(--border); box-shadow: var(--shadow-md);
+  width: 100%; max-width: 400px; max-height: 82vh; overflow-y: auto;
+  padding: 28px 20px;
+  transform: scale(0.88); transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+}
+.rank-overlay.open .rank-modal { transform: scale(1); }
+.rank-modal-title { font-size: 1.3rem; font-weight: 900; text-align: center; margin-bottom: 20px; color: var(--text); }
+.rank-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: var(--radius);
+  margin-bottom: 8px; background: var(--bg);
+  border: 2px solid var(--border); transition: var(--transition);
+}
+.rank-item:hover { border-color: var(--primary); transform: translateX(3px); }
+.rank-item.top1 { border-color: #fbbf24; background: linear-gradient(135deg,#fffbeb,#fef3c7); }
+.rank-item.top2 { border-color: #94a3b8; background: linear-gradient(135deg,#f8fafc,#f1f5f9); }
+.rank-item.top3 { border-color: #cd7c2f; background: linear-gradient(135deg,#fff7ed,#ffedd5); }
+html.dark .rank-item.top1 { background: rgba(251,191,36,0.12); }
+html.dark .rank-item.top2 { background: rgba(148,163,184,0.08); }
+html.dark .rank-item.top3 { background: rgba(205,124,47,0.10); }
+.rank-medal { font-size: 1.4rem; width: 28px; text-align: center; flex-shrink: 0; }
+.rank-num { font-size: 0.82rem; font-weight: 900; color: var(--text-muted); width: 22px; text-align: center; flex-shrink: 0; }
+.rank-name { flex: 1; font-weight: 900; font-size: 0.95rem; color: var(--text); }
+.rank-score {
+  font-size: 0.95rem; font-weight: 900; color: #0369a1;
+  background: linear-gradient(135deg,#dbeafe,#e0f2fe);
+  padding: 4px 12px; border-radius: 50px; flex-shrink: 0;
+}
+html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
+.rank-date { font-size: 0.72rem; color: var(--text-muted); flex-shrink: 0; }
+.rank-empty { text-align: center; color: var(--text-muted); padding: 30px 0; font-size: 0.95rem; line-height: 1.8; }
+.rank-loading { text-align: center; padding: 30px 0; font-size: 2rem; animation: bounce 0.8s ease-in-out infinite; }
+.btn-rank-close {
+  width: 100%; margin-top: 16px; padding: 13px;
+  background: var(--primary); color: #fff; border: none;
+  border-radius: var(--radius); font-size: 0.95rem; font-weight: 900;
+  cursor: pointer; transition: var(--transition);
+}
+.btn-rank-close:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(14,165,233,0.45); }
+
 /* ── 반응형 ── */
 @media(max-width:400px) {
   .title-main { font-size: 2.1rem; }
@@ -586,6 +673,7 @@ html.dark .score-num { color: #38bdf8; }
     </div>
 
     <button class="start-btn" onclick="startQuiz()">🚀 수수께끼 시작!</button>
+    <button class="btn-ranking" onclick="showRanking()">🏆 전체 랭킹 보기</button>
   </div>
 
   <!-- ② 퀴즈 화면 -->
@@ -623,6 +711,14 @@ html.dark .score-num { color: #38bdf8; }
         <div class="score-of"  id="resOf">/ 100점</div>
         <div class="score-msg" id="resMsg">잘했어요!</div>
       </div>
+      <!-- 닉네임 랭킹 등록 -->
+      <div class="nick-section" id="nickSection">
+        <div class="nick-label">🏅 닉네임 입력하고 랭킹에 올려봐!</div>
+        <div class="nick-row">
+          <input class="nick-input" id="nickInput" type="text" placeholder="닉네임 (최대 8자)" maxlength="8">
+          <button class="btn-submit-score" id="btnSubmit" onclick="submitScore()">등록!</button>
+        </div>
+      </div>
       <div class="result-btns">
         <button class="btn-retry"  onclick="startQuiz()">🔄 한 번 더!</button>
         <button class="btn-kakao"  onclick="shareRes()">💛 친구한테 공유하기</button>
@@ -634,6 +730,15 @@ html.dark .score-num { color: #38bdf8; }
 </div>
 
 <div class="confetti-wrap" id="confWrap"></div>
+
+<!-- 랭킹 모달 -->
+<div class="rank-overlay" id="rankOverlay" onclick="closeRankingBg(event)">
+  <div class="rank-modal">
+    <div class="rank-modal-title">🏆 전체 랭킹 TOP 10</div>
+    <div id="rankList"><div class="rank-loading">🏆</div></div>
+    <button class="btn-rank-close" onclick="closeRanking()">닫기 ✕</button>
+  </div>
+</div>
 
 <script>
 // ── 데이터 ──
@@ -855,6 +960,19 @@ function showResult() {
   document.getElementById('resTitle').textContent = title;
   document.getElementById('resMsg').textContent   = msg;
   if (ratio >= 0.6) confetti();
+
+  // 닉네임 등록창 초기화
+  const ns = document.getElementById('nickSection');
+  const ni = document.getElementById('nickInput');
+  const nb = document.getElementById('btnSubmit');
+  ns.style.opacity = '';
+  ns.style.pointerEvents = '';
+  ni.value = '';
+  ni.style.borderColor = '';
+  ni.placeholder = '닉네임 (최대 8자)';
+  nb.disabled = false;
+  nb.textContent = '등록!';
+  nb.style.background = '';
 }
 
 function shareRes() {
@@ -949,6 +1067,106 @@ function confetti() {
     wrap.appendChild(p);
   }
   setTimeout(() => wrap.innerHTML = '', 3500);
+}
+
+// ── Firebase 전체 랭킹 ──
+// ★ Firebase 프로젝트 만든 뒤 아래 URL을 교체해줘!
+const FB_URL = 'https://munsilquiz-default-rtdb.firebaseio.com';
+
+async function submitScore() {
+  const nickEl  = document.getElementById('nickInput');
+  const btnEl   = document.getElementById('btnSubmit');
+  let name = nickEl.value.trim().slice(0, 8);
+  if (!name) {
+    nickEl.focus();
+    nickEl.style.borderColor = '#ef4444';
+    nickEl.placeholder = '닉네임을 입력해줘! 😊';
+    return;
+  }
+  nickEl.style.borderColor = '';
+  btnEl.disabled = true;
+  btnEl.textContent = '등록 중...';
+
+  const scoreVal = parseInt(document.getElementById('resScore').textContent) || 0;
+  const ofText   = document.getElementById('resOf').textContent;           // "/ 50점"
+  const maxVal   = parseInt(ofText.replace(/[^0-9]/g, '')) || 0;
+
+  try {
+    const res = await fetch(`${FB_URL}/scores.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        score: scoreVal,
+        maxScore: maxVal,
+        date: new Date().toLocaleDateString('ko-KR')
+      })
+    });
+    if (!res.ok) throw new Error('서버 오류');
+    btnEl.textContent = '✅ 등록 완료!';
+    btnEl.style.background = 'linear-gradient(135deg,#38bdf8,#0ea5e9)';
+    document.getElementById('nickSection').style.opacity = '0.65';
+    document.getElementById('nickSection').style.pointerEvents = 'none';
+  } catch(e) {
+    btnEl.disabled = false;
+    btnEl.textContent = '다시 시도';
+    alert('랭킹 등록에 실패했어 😅\n인터넷 연결을 확인해봐!');
+  }
+}
+
+async function showRanking() {
+  const overlay = document.getElementById('rankOverlay');
+  const listEl  = document.getElementById('rankList');
+  overlay.classList.add('open');
+  listEl.innerHTML = '<div class="rank-loading">🏆</div>';
+
+  try {
+    const res  = await fetch(`${FB_URL}/scores.json`);
+    const data = await res.json();
+
+    if (!data) {
+      listEl.innerHTML = '<div class="rank-empty">아직 기록이 없어!<br>첫 번째 도전자가 되어봐! 🚀</div>';
+      return;
+    }
+
+    const scores = Object.values(data)
+      .filter(s => s && s.name && typeof s.score === 'number')
+      .sort((a, b) => b.score - a.score || a.date?.localeCompare(b.date || ''))
+      .slice(0, 10);
+
+    if (scores.length === 0) {
+      listEl.innerHTML = '<div class="rank-empty">아직 기록이 없어!<br>첫 번째 도전자가 되어봐! 🚀</div>';
+      return;
+    }
+
+    const medals = ['🥇','🥈','🥉'];
+    const topClass = ['top1','top2','top3'];
+    listEl.innerHTML = scores.map((s, i) => `
+      <div class="rank-item ${topClass[i] || ''}">
+        <span class="rank-medal">${medals[i] || ''}</span>
+        <span class="rank-num">${medals[i] ? '' : i + 1}</span>
+        <span class="rank-name">${escHtml(s.name)}</span>
+        <span class="rank-score">${s.score}점</span>
+        <span class="rank-date">${s.date || ''}</span>
+      </div>
+    `).join('');
+  } catch(e) {
+    listEl.innerHTML = '<div class="rank-empty">랭킹을 불러올 수 없어 😅<br>인터넷 연결을 확인해봐!</div>';
+  }
+}
+
+function closeRanking() {
+  document.getElementById('rankOverlay').classList.remove('open');
+}
+
+function closeRankingBg(e) {
+  if (e.target === document.getElementById('rankOverlay')) closeRanking();
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 if (localStorage.getItem('mungsilTheme') === 'dark')
