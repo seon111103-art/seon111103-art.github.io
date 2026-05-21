@@ -372,53 +372,64 @@ html.dark .header-wave { fill: #082f49; }
 }
 .q-text { font-size: 1.18rem; font-weight: 800; line-height: 1.55; color: var(--text); }
 
-/* ── 정답 영역 ── */
-.answer-box {
-  background: linear-gradient(135deg, #fef9c3, #fef3c7);
-  border: 2.5px solid #fbbf24;
-  border-radius: var(--radius); padding: 16px 20px;
-  margin-bottom: 12px; text-align: center;
-  display: none; animation: popIn 0.28s cubic-bezier(.4,0,.2,1);
+/* ── 객관식 선택지 ── */
+.choices {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 14px;
 }
-html.dark .answer-box { background: linear-gradient(135deg, #2d2000, #1a1200); border-color: #92400e; }
-.answer-box.show { display: block; }
-.ans-label { font-size: 0.76rem; color: var(--text-muted); font-weight: 700; margin-bottom: 4px; }
-.ans-text { font-size: 1.28rem; font-weight: 900; color: #b45309; }
-html.dark .ans-text { color: #fbbf24; }
-
-@keyframes popIn {
-  from { transform: scale(0.75) translateY(10px); opacity: 0; }
-  to   { transform: scale(1) translateY(0);       opacity: 1; }
-}
-
-.reaction { font-size: 1rem; font-weight: 800; text-align: center; min-height: 28px; margin-bottom: 8px; }
-
-/* ── 버튼 ── */
-.btn-row { display: flex; gap: 10px; margin-bottom: 10px; }
-.btn-reveal {
-  flex: 1; padding: 15px;
-  background: linear-gradient(135deg, #6bcb77, #22c55e);
-  color: #fff; border: none; border-radius: var(--radius);
-  font-size: 1rem; font-weight: 900; cursor: pointer;
-  box-shadow: 0 4px 14px rgba(34,197,94,0.38);
-  transition: var(--transition);
-}
-.btn-reveal:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.52); }
-.btn-next {
-  padding: 15px 18px;
+.choice-btn {
+  padding: 15px 10px;
   background: var(--card); border: 2.5px solid var(--border);
-  border-radius: var(--radius); font-size: 0.95rem; font-weight: 800;
+  border-radius: var(--radius); font-size: 0.88rem; font-weight: 800;
   color: var(--text); cursor: pointer; transition: var(--transition);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm); line-height: 1.35; text-align: center;
+  word-break: keep-all;
 }
-.btn-next:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
-.btn-skip {
-  width: 100%; padding: 11px;
-  background: transparent; color: var(--text-muted);
-  border: 2px dashed var(--border); border-radius: var(--radius);
-  font-size: 0.86rem; cursor: pointer; transition: var(--transition);
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--primary); color: var(--primary);
+  transform: translateY(-2px); box-shadow: var(--shadow);
 }
-.btn-skip:hover { border-color: var(--primary); color: var(--text); }
+.choice-btn.correct {
+  background: linear-gradient(135deg, #6bcb77, #22c55e);
+  border-color: #16a34a; color: #fff;
+  box-shadow: 0 4px 16px rgba(34,197,94,0.45);
+  animation: popIn 0.3s cubic-bezier(.4,0,.2,1);
+  opacity: 1 !important;
+}
+.choice-btn.wrong {
+  background: linear-gradient(135deg, #ff6b6b, #ef4444);
+  border-color: #dc2626; color: #fff;
+  box-shadow: 0 4px 16px rgba(239,68,68,0.45);
+  animation: shake 0.4s ease;
+  opacity: 1 !important;
+}
+.choice-btn:disabled { cursor: default; opacity: 0.55; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-7px); }
+  40%      { transform: translateX(7px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+@keyframes popIn {
+  from { transform: scale(0.78) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);      opacity: 1; }
+}
+
+.reaction { font-size: 1.05rem; font-weight: 900; text-align: center; min-height: 30px; margin-bottom: 8px; }
+
+/* ── 다음 문제 버튼 ── */
+.btn-next-main {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, #0284c7, #0ea5e9, #38bdf8);
+  color: #fff; border: none; border-radius: var(--radius-lg);
+  font-size: 1.05rem; font-weight: 900; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(14,165,233,0.4);
+  transition: var(--transition); margin-bottom: 10px;
+  animation: popIn 0.3s cubic-bezier(.4,0,.2,1);
+}
+.btn-next-main:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(14,165,233,0.55); }
 
 /* ── 결과 화면 ── */
 .result-wrap {
@@ -583,19 +594,11 @@ html.dark .score-num { color: #38bdf8; }
       <div class="q-text" id="qText">문제 로딩 중...</div>
     </div>
 
-    <div class="answer-box" id="ansBox">
-      <div class="ans-label">💡 정답은?</div>
-      <div class="ans-text" id="ansTxt"></div>
-    </div>
-
     <img class="react-char" id="reactChar" src="캐릭-기본.png" alt="">
     <div class="reaction" id="reaction"></div>
 
-    <div class="btn-row">
-      <button class="btn-reveal" id="btnReveal" onclick="showAns()">💡 정답 볼게!</button>
-      <button class="btn-next"   id="btnNext"   onclick="nextQ()" style="display:none">다음 ▶</button>
-    </div>
-    <button class="btn-skip" id="btnSkip" onclick="skipQ()">⏭ 이건 넘길래요</button>
+    <div class="choices" id="choicesBox"></div>
+    <button class="btn-next-main" id="btnNextMain" onclick="nextQ()" style="display:none">다음 문제 →</button>
   </div>
 
   <!-- ③ 결과 화면 -->
@@ -625,52 +628,52 @@ html.dark .score-num { color: #38bdf8; }
 // ── 데이터 ──
 const DB = {
   animal: [
-    { q:"세상에서 가장 빠른 닭은?",            a:"치타닭 🐔",                emoji:"🐔" },
-    { q:"곰이 넘어지면?",                       a:"쿵쿵따 🐻",                emoji:"🐻" },
-    { q:"오리가 날면?",                         a:"훨훨~ 뚜루뚜루 🦆",        emoji:"🦆" },
-    { q:"개가 학교에 가면?",                    a:"멍청이 🐶",                emoji:"🐶" },
-    { q:"소가 웃으면?",                         a:"우하하 🐄",                emoji:"🐄" },
-    { q:"세상에서 가장 큰 개는?",               a:"하마개 🦛",                emoji:"🦛" },
-    { q:"말이 두 마리 있으면?",                 a:"이말 저말 🐴",             emoji:"🐴" },
-    { q:"토끼가 뛰면?",                         a:"토끼뛰기 (토뛰) 🐰",       emoji:"🐰" },
-    { q:"원숭이가 제일 좋아하는 과목은?",       a:"나무수학 🐒",              emoji:"🐒" },
-    { q:"고양이가 제일 좋아하는 색은?",         a:"고양이색! 😺",             emoji:"😺" },
+    { q:"세상에서 가장 빠른 닭은?",          a:"치타닭 🐔",             emoji:"🐔", choices:["번개닭 ⚡","독수리닭 🦅","로켓닭 🚀"] },
+    { q:"곰이 넘어지면?",                    a:"쿵쿵따 🐻",             emoji:"🐻", choices:["털썩! 😣","아야야 😖","우당탕 💥"] },
+    { q:"오리가 날면?",                      a:"훨훨~ 뚜루뚜루 🦆",    emoji:"🦆", choices:["꽥꽥~ 🦆","수영해 🏊","뒤뚱뒤뚱 🐧"] },
+    { q:"개가 학교에 가면?",                 a:"멍청이 🐶",             emoji:"🐶", choices:["짖어요 🔊","공부왕 📚","착한개 🐾"] },
+    { q:"소가 웃으면?",                      a:"우하하 🐄",             emoji:"🐄", choices:["음메음메 🐄","히힝히힝 🐴","꾀꼴꾀꼴 🐦"] },
+    { q:"세상에서 가장 큰 개는?",            a:"하마개 🦛",             emoji:"🦛", choices:["코끼리개 🐘","고래개 🐋","공룡개 🦕"] },
+    { q:"말이 두 마리 있으면?",              a:"이말 저말 🐴",          emoji:"🐴", choices:["두말 🐴🐴","쌍말 🐴","말말 🐎"] },
+    { q:"토끼가 뛰면?",                      a:"토끼뛰기 (토뛰) 🐰",   emoji:"🐰", choices:["깡충깡충 🐰","뽀뽀뽀 🐰","토끼춤 🕺"] },
+    { q:"원숭이가 제일 좋아하는 과목은?",    a:"나무수학 🐒",           emoji:"🐒", choices:["바나나과학 🍌","정글체육 🏃","원숭이미술 🎨"] },
+    { q:"고양이가 제일 좋아하는 색은?",      a:"고양이색! 😺",          emoji:"😺", choices:["주황색 🟠","검은색 ⬛","흰색 ⬜"] },
   ],
   food: [
-    { q:"피자가 심심하면?",                     a:"피자피자~ 🍕",             emoji:"🍕" },
-    { q:"라면이 화나면?",                       a:"라면라면 🍜",              emoji:"🍜" },
-    { q:"햄버거가 공부하면?",                   a:"버거운 공부 🍔",           emoji:"🍔" },
-    { q:"사탕이 학교 가면?",                    a:"달달한 학교생활 🍬",       emoji:"🍬" },
-    { q:"치킨이 춤추면?",                       a:"치킨 댄스! 🍗",            emoji:"🍗" },
-    { q:"아이스크림이 왜 울어?",                a:"녹아서 슬프니까 🍦",       emoji:"🍦" },
-    { q:"수박이 뛰면?",                         a:"수박이 박수! 🍉",          emoji:"🍉" },
-    { q:"포도가 넘어지면?",                     a:"포도 포도~ 🍇",            emoji:"🍇" },
-    { q:"도넛 가운데 구멍이 있는 이유는?",      a:"안 먹으려고! 🍩",          emoji:"🍩" },
-    { q:"세상에서 가장 용감한 김밥은?",         a:"두룹지 않은 김밥 🍱",      emoji:"🍱" },
+    { q:"피자가 심심하면?",                  a:"피자피자~ 🍕",          emoji:"🍕", choices:["도우도우 🍕","먹어줘~ 😢","혼자 돌아 🔄"] },
+    { q:"라면이 화나면?",                    a:"라면라면 🍜",           emoji:"🍜", choices:["끓어올라 🔥","국물 흘려 💧","면이 퉁퉁 🍜"] },
+    { q:"햄버거가 공부하면?",                a:"버거운 공부 🍔",        emoji:"🍔", choices:["맛있는 공부 😋","빵빵한 공부 🍞","패티 공부 🥩"] },
+    { q:"사탕이 학교 가면?",                 a:"달달한 학교생활 🍬",    emoji:"🍬", choices:["끈적한 학교 🍬","녹아서 지각 ⏰","달콤한 숙제 📚"] },
+    { q:"치킨이 춤추면?",                    a:"치킨 댄스! 🍗",         emoji:"🍗", choices:["튀김 댄스 🍳","닭다리 댄스 🦵","바삭 댄스 🎵"] },
+    { q:"아이스크림이 왜 울어?",             a:"녹아서 슬프니까 🍦",    emoji:"🍦", choices:["너무 차가워서 🥶","달아서 행복해서 😊","맛없어서 😞"] },
+    { q:"수박이 뛰면?",                      a:"수박이 박수! 🍉",       emoji:"🍉", choices:["수박이 굴러 🍉","쿵쿵쿵 🍉","터져! 💥"] },
+    { q:"포도가 넘어지면?",                  a:"포도 포도~ 🍇",         emoji:"🍇", choices:["포도 굴러 🍇","포도 터져 💥","포도 울어 😢"] },
+    { q:"도넛 가운데 구멍이 있는 이유는?",   a:"안 먹으려고! 🍩",       emoji:"🍩", choices:["더 맛있으려고 😋","예뻐서 💕","만들기 쉬워서 👐"] },
+    { q:"세상에서 가장 용감한 김밥은?",      a:"두룹지 않은 김밥 🍱",   emoji:"🍱", choices:["씩씩한 김밥 💪","용사 김밥 ⚔️","무서운 김밥 😱"] },
   ],
   school: [
-    { q:"선생님이 제일 좋아하는 나라는?",       a:"칠레 (칠판 나라) 🌍",     emoji:"📚" },
-    { q:"지우개가 왜 학교에 다녀?",             a:"실수를 지우려고! ✏️",      emoji:"✏️" },
-    { q:"연필이 제일 싫어하는 건?",             a:"샤프! (자리 뺏으니까) 📝", emoji:"📝" },
-    { q:"수학책이 울면?",                       a:"문제가 너무 많아서 😢",    emoji:"📖" },
-    { q:"가방이 제일 무거운 날은?",             a:"월요일! 🎒",               emoji:"🎒" },
-    { q:"급식 최고 인기 반찬은?",               a:"치킨!! 🍗",                emoji:"🍽️" },
-    { q:"교실에서 제일 키가 큰 것은?",          a:"칠판! 📋",                 emoji:"📋" },
-    { q:"받아쓰기 100점 맞으면?",               a:"엄마가 치킨 사줘! 🍗",    emoji:"🏆" },
-    { q:"공부를 제일 잘하는 나무는?",           a:"공부나무 🌳",              emoji:"🌳" },
-    { q:"체육선생님이 제일 좋아하는 음식은?",   a:"달리기! 🏃",               emoji:"🏃" },
+    { q:"선생님이 제일 좋아하는 나라는?",    a:"칠레 (칠판 나라) 🌍",  emoji:"📚", choices:["일본 🇯🇵","한국 🇰🇷","미국 🇺🇸"] },
+    { q:"지우개가 왜 학교에 다녀?",          a:"실수를 지우려고! ✏️",   emoji:"✏️", choices:["연필 따라서 📝","공부하려고 📚","선생님이 좋아서 ❤️"] },
+    { q:"연필이 제일 싫어하는 건?",          a:"샤프! (자리 뺏으니까) 📝", emoji:"📝", choices:["지우개 🧹","물 💧","빨간펜 🖊️"] },
+    { q:"수학책이 울면?",                    a:"문제가 너무 많아서 😢", emoji:"📖", choices:["어려워서 🤔","선생님이 무서워서 😱","숫자가 싫어서 🔢"] },
+    { q:"가방이 제일 무거운 날은?",          a:"월요일! 🎒",            emoji:"🎒", choices:["금요일 🎉","수요일 📚","시험날 📝"] },
+    { q:"급식 최고 인기 반찬은?",            a:"치킨!! 🍗",             emoji:"🍽️", choices:["김치 🥬","생선 🐟","나물 🌿"] },
+    { q:"교실에서 제일 키가 큰 것은?",       a:"칠판! 📋",              emoji:"📋", choices:["선생님 👩‍🏫","키 큰 친구 🧍","책상 🪑"] },
+    { q:"받아쓰기 100점 맞으면?",            a:"엄마가 치킨 사줘! 🍗", emoji:"🏆", choices:["칭찬 스티커 🌟","용돈 받아 💰","게임 허락 🎮"] },
+    { q:"공부를 제일 잘하는 나무는?",        a:"공부나무 🌳",           emoji:"🌳", choices:["소나무 🌲","은행나무 🌿","느티나무 🌴"] },
+    { q:"체육선생님이 제일 좋아하는 음식은?",a:"달리기! 🏃",            emoji:"🏃", choices:["단백질 바 🥗","닭가슴살 🍗","에너지 드링크 🥤"] },
   ],
   word: [
-    { q:"세상에서 제일 긴 코를 가진 사람은?",   a:"피노키오! 🤥",            emoji:"👃" },
-    { q:"'나는 멍청해'를 영어로?",              a:"I am stupid 😂",          emoji:"💬" },
-    { q:"아버지가 방에 들어가시면?",            a:"아버지가방에들어가신다! 😄",emoji:"🚪" },
-    { q:"가장 빠른 말은?",                      a:"'어서오세요' (말이니까) 💬",emoji:"💨" },
-    { q:"뚱뚱한 사람이 비행기 타면?",           a:"점보기 ✈️",               emoji:"✈️" },
-    { q:"하나 + 하나는?",                       a:"하나하나 (둘이 아니라!) 😄",emoji:"🔢" },
-    { q:"선풍기가 느리게 돌면?",                a:"선---풍---기 🌀",          emoji:"🌀" },
-    { q:"한국에서 제일 높은 사람은?",           a:"비행기 타고 있는 사람! ✈️", emoji:"🏔️" },
-    { q:"세상에서 가장 작은 방은?",             a:"유방! 😂",                emoji:"🏠" },
-    { q:"세상에서 제일 비싼 물은?",             a:"치료비 나오는 물 💧",      emoji:"💧" },
+    { q:"세상에서 제일 긴 코를 가진 사람은?",a:"피노키오! 🤥",          emoji:"👃", choices:["코끼리인간 🐘","슈퍼맨 🦸","마법사 🧙"] },
+    { q:"'나는 멍청해'를 영어로?",           a:"I am stupid 😂",        emoji:"💬", choices:["I am cute 😊","I am smart 🧠","I am funny 😄"] },
+    { q:"아버지가 방에 들어가시면?",         a:"아버지가방에들어가신다! 😄", emoji:"🚪", choices:["방이 좁아진다 😅","불 켜신다 💡","TV 보신다 📺"] },
+    { q:"가장 빠른 말은?",                   a:"'어서오세요' (말이니까) 💬", emoji:"💨", choices:["경마장 말 🐎","스포츠카 🚗","비행기 ✈️"] },
+    { q:"뚱뚱한 사람이 비행기 타면?",        a:"점보기 ✈️",             emoji:"✈️", choices:["자리 두 개 😅","티켓 두 장 🎫","짐이 무거워 🧳"] },
+    { q:"하나 + 하나는?",                    a:"하나하나 (둘이 아니라!) 😄", emoji:"🔢", choices:["2️⃣ 둘","3️⃣ 셋","1+1=11 😵"] },
+    { q:"선풍기가 느리게 돌면?",             a:"선---풍---기 🌀",        emoji:"🌀", choices:["시원해~ 😊","고장났어 🔧","바람이 약해 💨"] },
+    { q:"한국에서 제일 높은 사람은?",        a:"비행기 타고 있는 사람! ✈️", emoji:"🏔️", choices:["대통령 🏛️","농구선수 🏀","등산객 🏔️"] },
+    { q:"세상에서 가장 작은 방은?",          a:"유방! 😂",              emoji:"🏠", choices:["쥐구멍 🐭","개미집 🐜","화장실 🚽"] },
+    { q:"세상에서 제일 비싼 물은?",          a:"치료비 나오는 물 💧",   emoji:"💧", choices:["에비앙 💧","금으로 된 물 🥇","다이아몬드 물 💎"] },
   ]
 };
 
@@ -719,20 +722,29 @@ function render() {
   answered = false;
   const q = list[idx], total = list.length;
   const cat = getCat(q);
-  document.getElementById('progTxt').textContent   = `${idx+1} / ${total}`;
-  document.getElementById('progFill').style.width  = `${(idx/total)*100}%`;
-  document.getElementById('scoreTxt').textContent  = score;
+  document.getElementById('progTxt').textContent  = `${idx+1} / ${total}`;
+  document.getElementById('progFill').style.width = `${(idx/total)*100}%`;
+  document.getElementById('scoreTxt').textContent = score;
   const tag = document.getElementById('catTag');
   tag.textContent = {animal:'🐶 동물',food:'🍕 음식',school:'📚 학교',word:'💬 말장난',all:'🎲 랜덤'}[cat] || '';
   tag.style.background = CAT_COLOR[cat] || '#ff6b6b';
-  document.getElementById('qEmoji').textContent    = q.emoji;
-  document.getElementById('qText').textContent     = q.q;
-  document.getElementById('ansTxt').textContent    = q.a;
-  document.getElementById('ansBox').classList.remove('show');
-  document.getElementById('reaction').textContent  = '';
-  document.getElementById('btnReveal').style.display = '';
-  document.getElementById('btnNext').style.display   = 'none';
-  document.getElementById('btnSkip').style.display   = '';
+  document.getElementById('qEmoji').textContent   = q.emoji;
+  document.getElementById('qText').textContent    = q.q;
+  document.getElementById('reaction').textContent = '';
+  document.getElementById('btnNextMain').style.display = 'none';
+
+  // 선택지 생성 (정답 1 + 오답 3 섞기)
+  const allChoices = shuffle([q.a, ...q.choices]);
+  const box = document.getElementById('choicesBox');
+  box.innerHTML = '';
+  allChoices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => pickChoice(btn, c === q.a);
+    box.appendChild(btn);
+  });
+
   setChar('캐릭-수줍');
 }
 
@@ -742,24 +754,30 @@ function getCat(q) {
   return 'all';
 }
 
-function showAns() {
+function pickChoice(btn, isCorrect) {
   if (answered) return;
-  answered = true; score += 10;
-  document.getElementById('scoreTxt').textContent = score;
-  document.getElementById('ansBox').classList.add('show');
-  document.getElementById('btnReveal').style.display = 'none';
-  document.getElementById('btnNext').style.display   = '';
-  document.getElementById('btnSkip').style.display   = 'none';
-  const msgs = ['😂 깔깔깔!','🤣 너무 웃겨!','😄 재밌지?','🎉 굿!','😆 ㅋㅋㅋ','🤪 엉뚱해~'];
-  document.getElementById('reaction').textContent = msgs[Math.floor(Math.random()*msgs.length)];
-  setChar('캐릭-정답');
-}
+  answered = true;
 
-function skipQ() {
-  const msgs = ['🙈 어렵지?','😜 생각해봐!','🤔 힌트: 말장난이야!'];
-  document.getElementById('reaction').textContent = msgs[Math.floor(Math.random()*msgs.length)];
-  setChar('캐릭-모름');
-  setTimeout(nextQ, 500);
+  // 모든 버튼 비활성화 + 정답 강조
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === list[idx].a) b.classList.add('correct');
+  });
+
+  if (isCorrect) {
+    score += 10;
+    document.getElementById('scoreTxt').textContent = score;
+    const msgs = ['🎉 딩동댕!','⭐ 정답!','👏 맞았어!','🌟 천재인데?','😄 완벽해!'];
+    document.getElementById('reaction').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+    setChar('캐릭-정답');
+  } else {
+    btn.classList.add('wrong');
+    const msgs = ['😢 아쉬워!','🙈 다시 해봐!','💪 다음엔 맞자!','😅 아깝다~'];
+    document.getElementById('reaction').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+    setChar('캐릭-슬픔');
+  }
+
+  document.getElementById('btnNextMain').style.display = '';
 }
 
 function nextQ() {
