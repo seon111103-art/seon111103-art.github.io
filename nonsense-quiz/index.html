@@ -770,11 +770,14 @@ function pickChoice(btn, isCorrect) {
     const msgs = ['🎉 딩동댕!','⭐ 정답!','👏 맞았어!','🌟 천재인데?','😄 완벽해!'];
     document.getElementById('reaction').textContent = msgs[Math.floor(Math.random()*msgs.length)];
     setChar('캐릭-정답');
+    playSound('correct');
+    miniConfetti();
   } else {
     btn.classList.add('wrong');
     const msgs = ['😢 아쉬워!','🙈 다시 해봐!','💪 다음엔 맞자!','😅 아깝다~'];
     document.getElementById('reaction').textContent = msgs[Math.floor(Math.random()*msgs.length)];
     setChar('캐릭-슬픔');
+    playSound('wrong');
   }
 
   document.getElementById('btnNextMain').style.display = '';
@@ -820,6 +823,61 @@ function show(id) {
 function toggleDark() {
   document.documentElement.classList.toggle('dark');
   localStorage.setItem('mungsilTheme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+}
+
+// ── 효과음 (Web Audio API - 파일 없이 생성) ──
+function playSound(type) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (type === 'correct') {
+      // 밝고 경쾌한 "딩동댕!" 3음
+      [523, 659, 784].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine'; osc.frequency.value = freq;
+        const t = ctx.currentTime + i * 0.13;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.5, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+        osc.start(t); osc.stop(t + 0.38);
+      });
+    } else {
+      // 내려가는 "부우~" 틀림 소리
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.28, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.5);
+    }
+  } catch(e) {}
+}
+
+// ── 정답 시 미니 폭죽 ──
+function miniConfetti() {
+  const wrap = document.getElementById('confWrap');
+  const cols = ['#ff6b6b','#ffd93d','#6bcb77','#38bdf8','#a78bfa','#f472b6','#fb923c'];
+  for (let i = 0; i < 50; i++) {
+    const p = document.createElement('div');
+    p.className = 'cp';
+    p.style.cssText = `
+      left:${Math.random()*100}vw; top:-12px;
+      width:${Math.random()*7+4}px; height:${Math.random()*7+4}px;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      animation-delay:${Math.random()*0.6}s;
+      animation-duration:${Math.random()*0.8+1}s;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    wrap.appendChild(p);
+  }
+  setTimeout(() => {
+    // 이미 있던 결과화면 폭죽은 건드리지 않도록 개별 제거
+    wrap.querySelectorAll('.cp').forEach(el => el.remove());
+  }, 2200);
 }
 
 function confetti() {
