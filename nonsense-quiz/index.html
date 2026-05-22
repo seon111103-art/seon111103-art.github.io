@@ -121,9 +121,10 @@ html.dark .theme-thumb { left: calc(100% - 27px); }
 .t-sun, .t-moon { font-size: 0.8rem; line-height:1; z-index:1; }
 
 /* 마스코트 */
-.mascot-wrap { position: relative; display: inline-block; margin-bottom: 4px; }
+.mascot-wrap { position: relative; display: flex; justify-content: center; margin-bottom: 4px; }
 .mascot-img {
   width: 380px; height: 380px; object-fit: contain;
+  display: block; margin: 0 auto;
   filter: drop-shadow(0 6px 24px rgba(255,255,255,0.65)) drop-shadow(0 2px 8px rgba(3,105,161,0.3));
   animation: bounce 2.4s ease-in-out infinite;
   transition: filter 0.3s;
