@@ -54,23 +54,35 @@ html.dark body {
   background-attachment: fixed;
 }
 
-/* ── 떠다니는 배경 장식 ── */
+/* ── 흘러가는 배경 구름 ── */
 .bg-deco {
   position: fixed; pointer-events: none; z-index: 0;
-  font-size: 2rem; opacity: 0.12;
-  animation: floatUp 6s ease-in-out infinite;
-  user-select: none;
+  opacity: 0; user-select: none;
+  animation: cloudDrift linear infinite;
 }
-html.dark .bg-deco { opacity: 0.07; }
-.bg-deco:nth-child(1){ top:8%;  left:4%;  animation-delay:0s;   font-size:1.8rem; }
-.bg-deco:nth-child(2){ top:20%; right:5%; animation-delay:1.2s; font-size:2.2rem; }
-.bg-deco:nth-child(3){ top:50%; left:2%; animation-delay:2.4s; font-size:1.5rem; }
-.bg-deco:nth-child(4){ top:70%; right:3%; animation-delay:0.8s; font-size:2rem; }
-.bg-deco:nth-child(5){ top:85%; left:8%; animation-delay:3s;   font-size:1.6rem; }
-@keyframes floatUp {
-  0%,100% { transform: translateY(0) rotate(-5deg); }
-  50%      { transform: translateY(-16px) rotate(5deg); }
+html.dark .bg-deco { filter: brightness(0.6); }
+
+/* 구름이 왼쪽에서 오른쪽으로 흘러가는 애니메이션 */
+@keyframes cloudDrift {
+  0%   { transform: translateX(-160px) translateY(0px); opacity: 0; }
+  6%   { opacity: 0.22; }
+  50%  { transform: translateX(50vw)   translateY(-14px); opacity: 0.22; }
+  94%  { opacity: 0.22; }
+  100% { transform: translateX(calc(100vw + 160px)) translateY(0px); opacity: 0; }
 }
+
+.bg-deco:nth-child(1) { top: 4%;  font-size:2.4rem; animation-duration:22s; animation-delay:0s;   }
+.bg-deco:nth-child(2) { top:16%;  font-size:1.7rem; animation-duration:30s; animation-delay:6s;   }
+.bg-deco:nth-child(3) { top:30%;  font-size:3.0rem; animation-duration:26s; animation-delay:13s;  }
+.bg-deco:nth-child(4) { top:48%;  font-size:1.9rem; animation-duration:18s; animation-delay:2s;   }
+.bg-deco:nth-child(5) { top:63%;  font-size:2.6rem; animation-duration:34s; animation-delay:9s;   }
+.bg-deco:nth-child(6) { top:10%;  font-size:2.0rem; animation-duration:28s; animation-delay:17s;  }
+.bg-deco:nth-child(7) { top:38%;  font-size:1.5rem; animation-duration:20s; animation-delay:4s;   }
+.bg-deco:nth-child(8) { top:75%;  font-size:2.8rem; animation-duration:38s; animation-delay:11s;  }
+.bg-deco:nth-child(9) { top:55%;  font-size:1.6rem; animation-duration:24s; animation-delay:21s;  }
+.bg-deco:nth-child(10){ top:84%;  font-size:2.2rem; animation-duration:16s; animation-delay:7s;   }
+.bg-deco:nth-child(11){ top:22%;  font-size:3.2rem; animation-duration:42s; animation-delay:3s;   }
+.bg-deco:nth-child(12){ top:70%;  font-size:1.8rem; animation-duration:32s; animation-delay:15s;  }
 
 /* ── HEADER ── */
 header {
@@ -609,12 +621,19 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
 </head>
 <body>
 
-<!-- 배경 장식 -->
+<!-- 배경 구름 -->
 <div class="bg-deco">☁️</div>
 <div class="bg-deco">⛅</div>
 <div class="bg-deco">☁️</div>
 <div class="bg-deco">🌤️</div>
 <div class="bg-deco">☁️</div>
+<div class="bg-deco">⛅</div>
+<div class="bg-deco">☁️</div>
+<div class="bg-deco">🌤️</div>
+<div class="bg-deco">☁️</div>
+<div class="bg-deco">⛅</div>
+<div class="bg-deco">☁️</div>
+<div class="bg-deco">🌤️</div>
 
 <!-- 다크모드 토글 -->
 <button class="theme-btn" onclick="toggleDark()">
