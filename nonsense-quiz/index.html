@@ -530,7 +530,7 @@ html.dark .btn-ranking:hover { background: rgba(253,224,71,0.08); color: #fde047
 }
 html.dark .nick-section { background: linear-gradient(135deg, #062a40, #072840); }
 .nick-label { font-size: 0.82rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; }
-.nick-row { display: flex; gap: 8px; }
+.nick-row { display: flex; flex-direction: column; gap: 8px; }
 .nick-input {
   flex: 1; padding: 12px 14px;
   border: 2.5px solid var(--border); border-radius: var(--radius);
@@ -539,11 +539,11 @@ html.dark .nick-section { background: linear-gradient(135deg, #062a40, #072840);
 }
 .nick-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); outline: none; }
 .btn-submit-score {
-  padding: 12px 16px;
+  width: 100%; padding: 14px;
   background: linear-gradient(135deg, #6bcb77, #22c55e);
   color: #fff; border: none; border-radius: var(--radius);
-  font-size: 0.92rem; font-weight: 900; cursor: pointer;
-  box-shadow: 0 3px 12px rgba(34,197,94,0.35); transition: var(--transition); white-space: nowrap;
+  font-size: 1rem; font-weight: 900; cursor: pointer;
+  box-shadow: 0 3px 12px rgba(34,197,94,0.35); transition: var(--transition);
 }
 .btn-submit-score:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(34,197,94,0.5); }
 .btn-submit-score:disabled { opacity: 0.6; cursor: default; }
