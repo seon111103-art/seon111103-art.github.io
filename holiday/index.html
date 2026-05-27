@@ -605,13 +605,6 @@
   <div id="book-section"></div>
 </main>
 
-<footer>
-  © 2026 윈드홀리데이 · 광고 문의: seon111103@gmail.com<br>
-  <a href="guide.html" style="color:var(--sub);text-decoration:none;">📚 이용 가이드</a> &nbsp;|&nbsp;
-  <a href="privacy.html" style="color:var(--sub);text-decoration:none;">개인정보처리방침</a> &nbsp;|&nbsp;
-  <a href="terms.html" style="color:var(--sub);text-decoration:none;">이용약관</a>
-</footer>
-
 <script>
 /* ── 공휴일 데이터 ── */
 const FIXED=[[1,1,'신정'],[3,1,'삼일절'],[5,5,'어린이날'],[6,6,'현충일'],[8,15,'광복절'],[10,3,'개천절'],[10,9,'한글날'],[12,25,'크리스마스']];
@@ -807,6 +800,7 @@ function selectDest(code,kr){
 }
 
 const YEARS=Array.from({length:20},(_,i)=>2025+i);
+const confettiFiredMonths=new Set(); // 이미 폭죽 발사한 연월 추적
 const today=new Date(); today.setHours(0,0,0,0);
 let curYear=today.getFullYear()<2025?2025:today.getFullYear()>2044?2044:today.getFullYear();
 let curMonth=today.getMonth();
@@ -928,21 +922,26 @@ function renderCalendar(){
     // 폭죽 🎆
     const hasSuper=thisMonthClusters.some(c=>c.days.length>=7);
     const hasGolden=thisMonthClusters.some(c=>c.days.length>=4);
-    if(hasSuper){
-      // 슈퍼황금연휴: 양쪽에서 연속 폭죽
-      const end=Date.now()+2200;
-      (function fire(){
-        if(Date.now()>end)return;
-        confetti({particleCount:55,angle:60,spread:58,origin:{x:0,y:0.65},colors:['#FFD740','#FF6B6B','#42A5F5','#66BB6A','#CE93D8']});
-        confetti({particleCount:55,angle:120,spread:58,origin:{x:1,y:0.65},colors:['#FFD740','#FF6B6B','#42A5F5','#66BB6A','#CE93D8']});
-        setTimeout(fire,300);
-      })();
-    } else if(hasGolden){
-      // 황금연휴: 중앙 한 방
-      confetti({particleCount:90,spread:70,origin:{y:0.65},colors:['#FFD740','#FF9800','#42A5F5','#fff']});
-    } else {
-      // 일반 연휴: 가볍게
-      confetti({particleCount:45,spread:55,origin:{y:0.65}});
+    // 이미 이 연월에 폭죽 발사했으면 건너뜀 (달력 이동마다 반복 방지)
+    const monthKey=year+'-'+month;
+    if(!confettiFiredMonths.has(monthKey)&&typeof confetti==='function'){
+      confettiFiredMonths.add(monthKey);
+      if(hasSuper){
+        // 슈퍼황금연휴: 양쪽에서 연속 폭죽
+        const end=Date.now()+2200;
+        (function fire(){
+          if(Date.now()>end)return;
+          confetti({particleCount:55,angle:60,spread:58,origin:{x:0,y:0.65},colors:['#FFD740','#FF6B6B','#42A5F5','#66BB6A','#CE93D8']});
+          confetti({particleCount:55,angle:120,spread:58,origin:{x:1,y:0.65},colors:['#FFD740','#FF6B6B','#42A5F5','#66BB6A','#CE93D8']});
+          setTimeout(fire,300);
+        })();
+      } else if(hasGolden){
+        // 황금연휴: 중앙 한 방
+        confetti({particleCount:90,spread:70,origin:{y:0.65},colors:['#FFD740','#FF9800','#42A5F5','#fff']});
+      } else {
+        // 일반 연휴: 가볍게
+        confetti({particleCount:45,spread:55,origin:{y:0.65}});
+      }
     }
     sumEl.innerHTML=thisMonthClusters.map(c=>{
       const len=c.days.length;
