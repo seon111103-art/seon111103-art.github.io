@@ -1,0 +1,26 @@
+{
+  "name": "뭉실뭉실 수수께끼",
+  "short_name": "뭉실수수께끼",
+  "description": "초등학생을 위한 재미있는 넌센스 수수께끼 퀴즈!",
+  "start_url": "/nonsense-quiz/",
+  "scope": "/nonsense-quiz/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0ea5e9",
+  "background_color": "#dbeafe",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/nonsense-quiz/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/nonsense-quiz/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
