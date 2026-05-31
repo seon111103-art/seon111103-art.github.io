@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://seon111103-art.github.io/holiday/sitemap.xml
