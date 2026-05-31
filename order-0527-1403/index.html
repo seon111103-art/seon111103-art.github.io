@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>환율 계산기</title>
+<style>
+  :root {
+    --primary: #2196F3;
+    --primary-light: #E3F2FD;
+    --primary-dark: #1565C0;
+    --primary-mid: #1976D2;
+    --bg: #F0F7FF;
+    --card: #ffffff;
+    --border: #BBDEFB;
+    --text: #1a2a3a;
+    --text-sub: #5a7a9a;
+    --shadow: 0 2px 12px rgba(33,150,243,0.08);
+    --shadow-md: 0 6px 24px rgba(33,150,243,0.16);
+    --transition: all 0.22s cubic-bezier(.4,0,.2,1);
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(160deg, #0D47A1 0%, #2196F3 100%);
+    color: white;
+    padding: 36px 20px 0;
+    text-align: center;
+    position: relative;
+  }
+
+  header h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  header p {
+    font-size: 0.92rem;
+    opacity: 0.82;
+    margin-bottom: 20px;
+  }
+
+  .header-wave {
+    display: block;
+    width: 100%;
+    height: 48px;
+    fill: var(--bg);
+  }
+
+  .container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  .section-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-left: 14px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .section-title::before {
+    content: '';
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 4px; height: 1.1em; border-radius: 2px;
+    background: var(--primary);
+  }
+
+  .input-card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: var(--transition);
+  }
+
+  .input-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .currency-select {
+    flex: 0 0 120px;
+    padding: 12px 10px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231565C0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+
+  .currency-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(33,150,243,0.12);
+    outline: none;
+  }
+
+  .amount-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+    background: white;
+    transition: var(--transition);
+  }
+
+  .amount-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(33,150,243,0.12);
+    outline: none;
+  }
+
+  .currency-flag {
+    font-size: 1.4rem;
+    margin-right: 4px;
+  }
+
+  .swap-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: white;
+    cursor: pointer;
+    margin: -8px auto;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    color: var(--primary);
+  }
+
+  .swap-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: rotate(180deg) scale(1.08);
+    box-shadow: var(--shadow-md);
+  }
+
+  .swap-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .results-section {
+    margin-top: 4px;
+  }
+
+  .result-card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: var(--transition);
+    cursor: default;
+  }
+
+  .result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+  }
+
+  .result-card.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  .result-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .result-flag {
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .result-name {
+    font-size: 0.88rem;
+    color: var(--text-sub);
+    font-weight: 500;
+  }
+
+  .result-code {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .result-amount {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    text-align: right;
+  }
+
+  .result-symbol {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .rate-info {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 12px 16px;
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--text-sub);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .rate-info span {
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+
+  .quick-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    margin-bottom: 4px;
+  }
+
+  .quick-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 8px 0;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: white;
+    color: var(--primary-dark);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+  }
+
+  .quick-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .last-updated {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    margin-top: 20px;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 400px) {
+    header h1 { font-size: 1.4rem; }
+    .amount-input { font-size: 1rem; }
+    .result-amount { font-size: 1.1rem; }
+    .currency-select { flex: 0 0 100px; font-size: 0.9rem; }
+    .quick-btn { font-size: 0.8rem; padding: 7px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💱 환율 계산기</h1>
+  <p>실시간 기준 환율로 빠르게 변환하세요</p>
+  <svg class="header-wave" viewBox="0 0 1440 48" preserveAspectRatio="none">
+    <path d="M0,28 C360,48 1080,8 1440,28 L1440,48 L0,48 Z"/>
+  </svg>
+</header>
+
+<div class="container">
+
+  <p class="section-title">금액 입력</p>
+
+  <div class="input-card">
+    <div class="input-row">
+      <select class="currency-select" id="fromCurrency" onchange="calculate()">
+        <option value="USD">🇺🇸 USD</option>
+        <option value="EUR">🇪🇺 EUR</option>
+        <option value="JPY">🇯🇵 JPY</option>
+        <option value="KRW" selected>🇰🇷 KRW</option>
+      </select>
+      <input class="amount-input" type="number" id="amountInput" value="10000" min="0" oninput="calculate()" placeholder="금액 입력">
+    </div>
+    <div class="quick-btns">
+      <button class="quick-btn" onclick="setAmount(1000)">1천</button>
+      <button class="quick-btn" onclick="setAmount(10000)">1만</button>
+      <button class="quick-btn" onclick="setAmount(100000)">10만</button>
+      <button class="quick-btn" onclick="setAmount(1000000)">100만</button>
+    </div>
+  </div>
+
+  <div class="results-section">
+    <p class="section-title">변환 결과</p>
+    <div id="results"></div>
+    <div class="rate-info" id="rateInfo"></div>
+  </div>
+
+  <p class="last-updated" id="lastUpdated"></p>
+</div>
+
+<script>
+  const RATES = {
+    USD: 1,
+    EUR: 0.9210,
+    JPY: 149.82,
+    KRW: 1329.50
+  };
+
+  const CURRENCY_INFO = {
+    USD: { name: '미국 달러', flag: '🇺🇸', symbol: '$' },
+    EUR: { name: '유럽 유로', flag: '🇪🇺', symbol: '€' },
+    JPY: { name: '일본 엔화', flag: '🇯🇵', symbol: '¥' },
+    KRW: { name: '대한민국 원', flag: '🇰🇷', symbol: '₩' }
+  };
+
+  function toUSD(amount, currency) {
+    return amount / RATES[currency];
+  }
+
+  function fromUSD(usdAmount, currency) {
+    return usdAmount * RATES[currency];
+  }
+
+  function formatAmount(amount, currency) {
+    if (currency === 'JPY' || currency === 'KRW') {
+      return Math.round(amount).toLocaleString();
+    }
+    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calculate() {
+    const from = document.getElementById('fromCurrency').value;
+    const rawAmount = parseFloat(document.getElementById('amountInput').value);
+    const amount = isNaN(rawAmount) || rawAmount < 0 ? 0 : rawAmount;
+
+    const usdAmount = toUSD(amount, from);
+    const currencies = ['USD', 'EUR', 'JPY', 'KRW'];
+    const resultsEl = document.getElementById('results');
+
+    let html = '';
+    currencies.forEach(currency => {
+      if (currency === from) return;
+      const converted = fromUSD(usdAmount, currency);
+      const info = CURRENCY_INFO[currency];
+      const isMain = currency === 'KRW' && from === 'USD' || currency === 'USD' && from === 'KRW';
+      html += `
+        <div class="result-card ${isMain ? 'active' : ''}">
+          <div class="result-left">
+            <div class="result-flag">${info.flag}</div>
+            <div>
+              <div class="result-code">${currency}</div>
+              <div class="result-name">${info.name}</div>
+            </div>
+          </div>
+          <div>
+            <div class="result-amount">${info.symbol}${formatAmount(converted, currency)}</div>
+            <div class="result-symbol">${formatAmount(converted, currency)} ${currency}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    resultsEl.innerHTML = html;
+
+    // Rate info
+    const rateEl = document.getElementById('rateInfo');
+    const fromInfo = CURRENCY_INFO[from];
+    const lines = currencies
+      .filter(c => c !== from)
+      .map(c => {
+        const rate = fromUSD(1 / RATES[from], c);
+        return `<span>1 ${from}</span> = <span>${formatAmount(rate, c)} ${c}</span>`;
+      });
+    rateEl.innerHTML = lines.join(' &nbsp;·&nbsp; ');
+  }
+
+  function setAmount(val) {
+    document.getElementById('amountInput').value = val;
+    calculate();
+  }
+
+  // Last updated
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('lastUpdated').textContent = `📅 기준일: ${dateStr} · 실제 환율과 차이가 있을 수 있습니다`;
+
+  calculate();
+</script>
+</body>
+</html>
