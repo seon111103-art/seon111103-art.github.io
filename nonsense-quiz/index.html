@@ -512,6 +512,16 @@ html.dark .score-num { color: #38bdf8; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
+/* ── 푸터 ── */
+.footer {
+  text-align: center; padding: 28px 16px 40px;
+  font-size: 0.78rem; color: var(--text-muted);
+  line-height: 2; position: relative; z-index: 1;
+}
+.footer a { color: var(--text-muted); text-decoration: none; }
+.footer a:hover { color: var(--primary); }
+.footer-dot { margin: 0 6px; opacity: 0.5; }
+
 /* ── 광고 영역 ── */
 .ad-wrap {
   margin: 14px 0 4px; text-align: center;
@@ -776,6 +786,17 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
   </div>
 
 </div>
+
+<!-- 푸터 -->
+<footer class="footer">
+  © 2026 뭉실뭉실 수수께끼
+  <span class="footer-dot">·</span>
+  광고 문의: <a href="mailto:seon111103@gmail.com">seon111103@gmail.com</a>
+  <br>
+  <a href="/nonsense-quiz/privacy.html">개인정보처리방침</a>
+  <span class="footer-dot">·</span>
+  <a href="/nonsense-quiz/terms.html">이용약관</a>
+</footer>
 
 <div class="confetti-wrap" id="confWrap"></div>
 
