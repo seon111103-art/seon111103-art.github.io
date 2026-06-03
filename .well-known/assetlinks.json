@@ -13,10 +13,13 @@
     "sha256_cert_fingerprints": ["E1:3C:2B:AF:68:C5:78:96:75:A9:6E:3B:79:CF:7C:6C:AE:AF:29:97:28:9F:1E:4F:B3:BB:2A:7A:72:8C:34:7D"]
   }
 },{
-  "relation": ["delegate_permission/common.handle_all_urls"],
+  "relation": ["delegate_permission/common.handle_all_urls", "delegate_permission/common.get_login_creds"],
   "target": {
     "namespace": "android_app",
     "package_name": "com.munsilquiz.app",
-    "sha256_cert_fingerprints": ["B9:5E:4C:8E:93:BA:DE:05:E7:92:F1:76:26:A8:1D:C5:0F:ED:0B:61:39:16:FB:F7:D0:1A:A5:ED:3E:C1:F6:77"]
+    "sha256_cert_fingerprints": [
+      "B9:5E:4C:8E:93:BA:DE:05:E7:92:F1:76:26:A8:1D:C5:0F:ED:0B:61:39:16:FB:F7:D0:1A:A5:ED:3E:C1:F6:77",
+      "7E:55:FD:93:0C:6E:91:60:6D:AF:39:78:C5:73:EB:C3:FD:B5:FB:CD:BD:AD:4E:F6:27:CA:13:F7:FC:03:B3:41"
+    ]
   }
 }]
