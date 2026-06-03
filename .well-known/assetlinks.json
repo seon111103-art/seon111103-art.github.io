@@ -10,7 +10,10 @@
   "target": {
     "namespace": "android_app",
     "package_name": "com.windholiday.app",
-    "sha256_cert_fingerprints": ["E1:3C:2B:AF:68:C5:78:96:75:A9:6E:3B:79:CF:7C:6C:AE:AF:29:97:28:9F:1E:4F:B3:BB:2A:7A:72:8C:34:7D"]
+    "sha256_cert_fingerprints": [
+      "E1:3C:2B:AF:68:C5:78:96:75:A9:6E:3B:79:CF:7C:6C:AE:AF:29:97:28:9F:1E:4F:B3:BB:2A:7A:72:8C:34:7D",
+      "D5:0B:F5:6C:99:C2:95:76:C4:C1:C3:45:F3:B2:87:62:AF:7C:28:AA:5C:FA:85:AE:22:49:55:03:86:37:32:3A"
+    ]
   }
 },{
   "relation": ["delegate_permission/common.handle_all_urls", "delegate_permission/common.get_login_creds"],
