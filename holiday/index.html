@@ -175,6 +175,7 @@
     }
     .cal-tag.holiday{background:var(--red-light);color:var(--red);}
     .cal-tag.sub{background:var(--green-light);color:var(--green);}
+    .cal-tag.national{background:var(--purple-light);color:var(--purple);}
     .cal-tag.golden{background:var(--orange-light);color:var(--orange);}
 
     /* 이달의 황금연휴 요약 */
@@ -841,6 +842,20 @@ function getHolidayMap(year){
       map[dk(s)].push({name:'대체공휴일',type:'sub'});
     }
   });
+  // 제헌절: 2025년까지 국경일(비공휴일), 2026년부터 공휴일 재지정
+  {
+    const k=year+'-07-17';
+    if(!map[k])map[k]=[];
+    if(!map[k].some(x=>x.name==='제헌절')){
+      map[k].push({name:'제헌절', type: year>=2026 ? 'holiday' : 'national'});
+    }
+  }
+  // 임시공휴일 (연도 한정)
+  if(year===2026){
+    const elec='2026-06-03';
+    if(!map[elec])map[elec]=[];
+    if(!map[elec].some(x=>x.name==='지방선거'))map[elec].push({name:'지방선거',type:'holiday'});
+  }
   return map;
 }
 
@@ -903,7 +918,7 @@ function renderCalendar(){
     let numCls='cal-num';
     if(holidays.length||dow===0)numCls+=' holiday-day';
     else if(dow===6)numCls+=' sat';
-    const tags=holidays.map(h=>`<span class="cal-tag ${h.type==='sub'?'sub':'holiday'}">${h.name}</span>`).join('');
+    const tags=holidays.map(h=>`<span class="cal-tag ${h.type==='sub'?'sub':h.type==='national'?'national':'holiday'}">${h.name}</span>`).join('');
     html+=`<div class="${cls}"><span class="${numCls}">${d}</span>${tags}</div>`;
   }
   document.getElementById('cal-grid').innerHTML=html;
