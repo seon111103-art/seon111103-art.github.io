@@ -297,6 +297,31 @@ html.dark .header-wave { fill: #082f49; }
 .cat-name { font-size: 0.92rem; font-weight: 900; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.4); line-height: 1.2; }
 .cat-count { font-size: 0.70rem; color: rgba(255,255,255,0.88); margin-top: 1px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
+/* ── 난이도 선택 ── */
+.diff-row { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.diff-btn {
+  flex: 1; min-width: 70px; padding: 11px 6px;
+  background: var(--card); border: 2.5px solid var(--border);
+  border-radius: var(--radius); font-size: 0.82rem; font-weight: 800;
+  color: var(--text); cursor: pointer; transition: var(--transition);
+  box-shadow: var(--shadow-sm); text-align: center; line-height: 1.3;
+}
+.diff-btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+.diff-btn.on {
+  border-color: transparent; color: #fff;
+  animation: skyGlow 1.8s ease-in-out infinite;
+}
+.diff-btn[data-lv="0"].on  { background: linear-gradient(135deg,#ff6b6b,#fb923c); }
+.diff-btn[data-lv="1"].on  { background: linear-gradient(135deg,#22c55e,#6bcb77); }
+.diff-btn[data-lv="2"].on  { background: linear-gradient(135deg,#0ea5e9,#38bdf8); }
+.diff-btn[data-lv="3"].on  { background: linear-gradient(135deg,#a78bfa,#f472b6); }
+/* 퀴즈 카드 난이도 뱃지 */
+.lv-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: 0.72rem; letter-spacing: 1px;
+  opacity: 0.82;
+}
+
 /* ── 문제 수 선택 ── */
 .count-row { display: flex; gap: 8px; margin-bottom: 18px; }
 .cnt-btn {
@@ -719,6 +744,14 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
       </div>
     </div>
 
+    <p class="sec-title"><span>⭐</span> 난이도 선택</p>
+    <div class="diff-row">
+      <button class="diff-btn on" data-lv="0" onclick="pickLv(this)">🎲 전체</button>
+      <button class="diff-btn" data-lv="1" onclick="pickLv(this)">⭐ 쉬움</button>
+      <button class="diff-btn" data-lv="2" onclick="pickLv(this)">⭐⭐ 보통</button>
+      <button class="diff-btn" data-lv="3" onclick="pickLv(this)">⭐⭐⭐ 어려움</button>
+    </div>
+
     <p class="sec-title"><span>🔢</span> 몇 문제 풀까?</p>
     <div class="count-row">
       <button class="cnt-btn on" data-n="5"  onclick="pickN(this)">5문제</button>
@@ -752,6 +785,7 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
 
     <div class="quiz-card">
       <span class="cat-tag" id="catTag">🐶 동물</span>
+      <span class="lv-badge" id="lvBadge"></span>
       <div class="q-emoji" id="qEmoji">🐶</div>
       <div class="q-text" id="qText">문제 로딩 중...</div>
     </div>
@@ -1156,106 +1190,122 @@ const DB = {
   ]
 ,
   english: [
-    // 알파벳 수수께끼
-    { q:"알파벳 중에서 꿀벌(bee) 소리가 나는 글자는?", a:"B! (Bee = 꿀벌 🐝)", emoji:"🐝", choices:["A (에이)","G (지)","D (디)"] },
-    { q:"알파벳 중에서 눈(eye) 소리가 나는 글자는?", a:"I! (Eye = 눈 👁️)", emoji:"👁️", choices:["A (에이)","U (유)","E (이)"] },
-    { q:"알파벳 중에서 바다(sea) 소리가 나는 글자는?", a:"C! (Sea = 바다 🌊)", emoji:"🌊", choices:["S (에스)","G (지)","Z (제트)"] },
-    { q:"알파벳 중에서 차(tea) 소리가 나는 글자는?", a:"T! (Tea = 차 ☕)", emoji:"☕", choices:["D (디)","E (이)","P (피)"] },
-    { q:"알파벳 중에서 '왜?' 소리가 나는 글자는?", a:"Y! (Why = 왜? 🤔)", emoji:"🤔", choices:["W (더블유)","H (에이치)","Q (큐)"] },
-    { q:"알파벳 26글자 중 발음이 제일 긴 글자는?", a:"W! (더블유 - 3음절! ✨)", emoji:"🔤", choices:["M (엠)","X (엑스)","G (지)"] },
-    { q:"알파벳 중 제일 학교를 좋아하는 글자는?", a:"A! (에이 = 최고 점수 🏆)", emoji:"🏅", choices:["B (비)","Z (제트)","F (에프)"] },
-    // 단어 거꾸로
-    { q:"DOG(개 🐕)를 거꾸로 쓰면?", a:"GOD! (신이 됐어요 😮)", emoji:"🐕", choices:["OGD","GDO","ODG"] },
-    { q:"BUS(버스 🚌)를 거꾸로 쓰면?", a:"SUB! (잠수함이 됐어요 🤿)", emoji:"🚌", choices:["UBS","BSU","USB"] },
-    { q:"NAP(낮잠 😴)을 거꾸로 쓰면?", a:"PAN! (냄비가 됐어요 🍳)", emoji:"😴", choices:["ANP","NPA","APN"] },
-    { q:"STAR(별 ⭐)를 거꾸로 쓰면?", a:"RATS! (쥐들이 됐어요 🐭)", emoji:"⭐", choices:["TARS","ARTS","TRAS"] },
-    { q:"TOP(꼭대기 ⛰️)를 거꾸로 쓰면?", a:"POT! (냄비가 됐어요 🍲)", emoji:"⛰️", choices:["OPT","TPO","OTP"] },
-    { q:"TEN(열 🔢)을 거꾸로 쓰면?", a:"NET! (그물이 됐어요 🎣)", emoji:"🔢", choices:["ETN","TNE","ENT"] },
-    { q:"MOM을 위아래로 뒤집어 읽으면?", a:"MOM! (엄마는 어디서 봐도 엄마! 💗)", emoji:"👩", choices:["WOW","MAN","MON"] },
-    { q:"YAM(참마)을 거꾸로 쓰면?", a:"MAY! (5월이 됐어요 🌸)", emoji:"🌱", choices:["AMY","YMA","AYM"] },
-    // 글자 변환
-    { q:"COOL(시원한 ❄️) 앞에 S를 붙이면?", a:"SCHOOL! (학교~ 🏫)", emoji:"❄️", choices:["STOOL","SCOOP","SPOON"] },
-    { q:"HAT(모자 🎩)에서 H를 C로 바꾸면?", a:"CAT! (고양이 😸)", emoji:"🎩", choices:["MAT","RAT","SAT"] },
-    { q:"PIG(돼지 🐷)에서 P를 B로 바꾸면?", a:"BIG! (크다! 💪)", emoji:"🐷", choices:["DIG","FIG","GIG"] },
-    { q:"CAT(고양이 😸)에서 C를 B로 바꾸면?", a:"BAT! (박쥐/야구방망이 ⚾)", emoji:"😸", choices:["FAT","MAT","SAT"] },
-    { q:"SMILE(미소 😄)에서 S를 빼면?", a:"MILE! (마일 = 거리 단위 📏)", emoji:"😄", choices:["ILE","PILE","FILE"] },
-    { q:"BAND(밴드 🎸)에서 B를 H로 바꾸면?", a:"HAND! (손 🤚)", emoji:"🎸", choices:["LAND","SAND","WAND"] },
-    { q:"MAN(남자)에서 M을 C로 바꾸면?", a:"CAN! (할 수 있다! 💪)", emoji:"🧑", choices:["BAN","FAN","RAN"] },
-    // 단어 합치기
-    { q:"BOOK(책 📚) + WORM(벌레 🐛)를 합치면?", a:"BOOKWORM! (책벌레 📖)", emoji:"📚", choices:["BOOKCLUB","READWORM","BOOKISH"] },
-    { q:"RAIN(비 🌧️) + BOW(활 🏹)를 합치면?", a:"RAINBOW! (무지개 🌈)", emoji:"🌧️", choices:["RAINDROP","RAINCOAT","RAINDAY"] },
-    { q:"SUN(태양 ☀️) + FLOWER(꽃 🌸)를 합치면?", a:"SUNFLOWER! (해바라기 🌻)", emoji:"☀️", choices:["SUNSHINE","SUNLIGHT","SUNBEAM"] },
-    { q:"FIRE(불 🔥) + WORK(일)를 합치면?", a:"FIREWORK! (불꽃놀이 🎆)", emoji:"🔥", choices:["FIRETRUCK","FIREMAN","FIRESIDE"] },
-    { q:"SNOW(눈 ❄️) + BALL(공 ⚽)를 합치면?", a:"SNOWBALL! (눈덩이 ⛄)", emoji:"❄️", choices:["SNOWFLAKE","SNOWMAN","SNOWFALL"] },
-    { q:"BUTTER(버터) + FLY(날다 🕊️)를 합치면?", a:"BUTTERFLY! (나비 🦋)", emoji:"🦋", choices:["BUTTERCUP","BUTTERMILK","BUTTERSCOTCH"] },
-    { q:"WATER(물 💧) + FALL(떨어지다)를 합치면?", a:"WATERFALL! (폭포 🌊)", emoji:"💧", choices:["WATERMELON","WATERPARK","WATERCOLOR"] },
-    { q:"SUPER(슈퍼) + MAN(남자)을 합치면?", a:"SUPERMAN! (슈퍼맨 🦸)", emoji:"🦸", choices:["SUPERFOOD","SUPERCOOL","SUPERSTAR"] },
-    { q:"STAR(별 ⭐) + FISH(물고기 🐟)를 합치면?", a:"STARFISH! (불가사리 🌟)", emoji:"⭐", choices:["STARDUST","STARLIGHT","STARSHIP"] },
-    { q:"SEA(바다 🌊) + SHELL(껍질)를 합치면?", a:"SEASHELL! (조개껍질 🐚)", emoji:"🐚", choices:["SEABIRD","SEAWEED","SEAFOOD"] },
-    { q:"DO(하다) + NUT(견과류)를 합치면?", a:"DONUT! (도넛 🍩)", emoji:"🍩", choices:["DONKEY","DOLLAR","DOME"] },
-    { q:"SUN(태양) + DAY(날)를 합치면?", a:"SUNDAY! (일요일 ☀️)", emoji:"☀️", choices:["SUNLIGHT","SUNRISE","SUNSET"] },
-    { q:"MOON(달) + DAY(날)를 합치면?", a:"MONDAY! (월요일 🌙)", emoji:"🌙", choices:["MOONLIGHT","MOONRISE","MOONDUST"] },
-    { q:"CUP(컵) + CAKE(케이크)를 합치면?", a:"CUPCAKE! (컵케이크 🧁)", emoji:"🧁", choices:["CUPBOARD","CUPFUL","CUSTARD"] },
-    { q:"POP(뻥!) + CORN(옥수수)를 합치면?", a:"POPCORN! (팝콘 🍿)", emoji:"🍿", choices:["POPSTAR","POPPY","POPULAR"] },
-    { q:"ICE(얼음) + CREAM(크림)을 합치면?", a:"ICE CREAM! (아이스크림 🍦)", emoji:"🍦", choices:["ICEBERG","ICEFISH","ICEBOX"] },
-    { q:"SAND(모래) + CASTLE(성)를 합치면?", a:"SANDCASTLE! (모래성 🏖️)", emoji:"🏖️", choices:["SANDBOX","SANDSTORM","SANDPAPER"] },
-    { q:"FRIEND(친구) + SHIP(배)를 합치면?", a:"FRIENDSHIP! (우정 💗)", emoji:"🤝", choices:["FRIENDZONE","FRIENDLY","FRIENDS"] },
-    { q:"HAND(손) + SHAKE(흔들다)를 합치면?", a:"HANDSHAKE! (악수 🤝)", emoji:"🤝", choices:["HANDBAG","HANDBALL","HANDSOME"] },
-    // 숨은 단어
-    { q:"EARTH(지구 🌍) 안에 숨어있는 예술 단어는?", a:"ART! (지구 속에 예술이! 🎨)", emoji:"🌍", choices:["EAR","THE","RAH"] },
-    { q:"LISTEN(듣다)의 철자를 섞으면 나오는 단어는?", a:"SILENT! (들으려면 조용해야! 🤫)", emoji:"👂", choices:["TINSEL","INLETS","ENLIST"] },
-    { q:"TEACHER(선생님 👩‍🏫) 안에 숨은 음료 단어는?", a:"TEA! (선생님은 차를 마셔요 ☕)", emoji:"👩‍🏫", choices:["EACH","HER","ACHE"] },
-    { q:"SCHOOL(학교 🏫) 안에 숨은 멋있는 단어는?", a:"COOL! (학교 안에 COOL이! 😎)", emoji:"🏫", choices:["HOT","OLD","NEW"] },
-    { q:"LIGHTNING(번개 ⚡) 안에 숨은 빛 단어는?", a:"LIGHT! (번개 안에 빛이! 💡)", emoji:"⚡", choices:["NING","GHTN","IGHT"] },
-    // 영어 기초 지식
-    { q:"영어로 11은 ELEVEN, 유명한 편의점 이름은?", a:"세븐일레븐! (7-ELEVEN 🏪)", emoji:"🏪", choices:["이마트","GS25","CU편의점"] },
-    { q:"영어로 왕은 KING, 여왕은?", a:"QUEEN! (퀸 👸)", emoji:"👑", choices:["PRINCESS","EMPRESS","DUCHESS"] },
-    { q:"PIZZA(피자 🍕)에서 Z는 몇 개?", a:"2개! (piZZa - 두 개 있어요!)", emoji:"🍕", choices:["1개","3개","0개"] },
-    { q:"영어로 생일 축하해는?", a:"HAPPY BIRTHDAY! 🎂", emoji:"🎂", choices:["HAPPY NEW YEAR","HAPPY HOLIDAY","MERRY CHRISTMAS"] },
-    { q:"영어로 무지개 색은 몇 가지?", a:"7가지! (빨주노초파남보 🌈)", emoji:"🌈", choices:["5가지","6가지","8가지"] },
-    { q:"영어로 동물원은 ZOO, Z로 시작하는 동물은?", a:"ZEBRA! (얼룩말 🦓)", emoji:"🦓", choices:["ZOMBIE","ZIGZAG","ZERO"] },
-    { q:"영어로 귀신이 나타날 때 하는 말은?", a:"BOO! 👻", emoji:"👻", choices:["WOO","MOO","ZOO"] },
-    { q:"영어로 웃음소리는?", a:"HA HA HA! 또는 LOL! 😂", emoji:"😂", choices:["HOO HOO","HEE HEE","HUH HUH"] },
-    { q:"알파벳에서 맨 처음 글자는?", a:"A! (에이 🔤)", emoji:"📖", choices:["B","C","Z"] },
-    { q:"알파벳에서 맨 마지막 글자는?", a:"Z! (제트 ✏️)", emoji:"🔤", choices:["Y","X","W"] },
-    { q:"YES와 NO 중 글자 수가 더 많은 것은?", a:"YES! (3글자, NO는 2글자 ✅)", emoji:"✅", choices:["NO","둘 다 같아","NO가 더 많아"] },
-    { q:"알파벳 중 가장 달콤한 글자는?", a:"C! (Candy 사탕의 C! 🍬)", emoji:"🍬", choices:["S","H","D"] },
-    { q:"HELLO(안녕)의 반대말은?", a:"GOODBYE! (굿바이! 👋)", emoji:"👋", choices:["BYE BYE","SEE YOU","FAREWELL"] },
-    // 동물 소리
-    { q:"영어로 고양이 소리는?", a:"MEOW! (야옹~ 🐱)", emoji:"🐱", choices:["WOOF","MOO","OINK"] },
-    { q:"영어로 개 소리는?", a:"WOOF! 또는 BOW WOW! 🐕", emoji:"🐕", choices:["MEOW","MOO","BUZZ"] },
-    { q:"영어로 소 소리는?", a:"MOO! (음매~ 🐄)", emoji:"🐄", choices:["OINK","MEOW","WOOF"] },
-    { q:"영어로 돼지 소리는?", a:"OINK! (꿀꿀~ 🐷)", emoji:"🐷", choices:["MOO","MEOW","BUZZ"] },
-    { q:"영어로 꿀벌 소리는?", a:"BUZZ! (윙윙~ 🐝)", emoji:"🐝", choices:["HISS","MOO","WOOF"] },
-    { q:"영어로 뱀 소리는?", a:"HISS! (쉬익~ 🐍)", emoji:"🐍", choices:["BUZZ","MEOW","OINK"] },
-    { q:"영어로 닭 소리는?", a:"CLUCK! 또는 COCK-A-DOODLE-DOO! 🐔", emoji:"🐔", choices:["MEOW","OINK","MOO"] },
-    { q:"영어로 개구리 소리는?", a:"RIBBIT! (개굴~ 🐸)", emoji:"🐸", choices:["BUZZ","WOOF","MEOW"] },
-    // 재미있는 영어
-    { q:"왜 영어 선생님은 안경을 쓸까?", a:"학생들을 C(see=보다) 하려고! 😄", emoji:"👓", choices:["책이 많아서","멋있어서","눈이 나빠서"] },
-    { q:"물고기는 왜 영어를 못 배울까?", a:"SCHOOL(학교)에서 맨날 빠져나가서! (school of fish = 물고기 떼 🐟)", emoji:"🐟", choices:["물에 젖어서","공부 안 해서","지느러미 없어서"] },
-    { q:"왜 컴퓨터는 노래를 못 부를까?", a:"바이러스(VIRUS)에 걸렸으니까! 💻", emoji:"💻", choices:["목이 없어서","귀가 없어서","전원이 없어서"] },
-    { q:"영어로 마법사가 하는 말은?", a:"ABRACADABRA! (아브라카다브라! ✨)", emoji:"🪄", choices:["HOCUS POCUS","ALAKAZAM","PRESTO"] },
-    { q:"알파벳 X는 수학에서 무엇을 뜻할까?", a:"모르는 수! X = 미지수 ❓", emoji:"❓", choices:["10","곱셈 표시","오답 표시"] },
-    { q:"영어로 마법사가 토끼를 꺼내는 곳은?", a:"HAT! (모자에서 꺼내요 🎩)", emoji:"🐇", choices:["BOX","BAG","POCKET"] },
-    // 영어 단어 놀이
-    { q:"INVISIBLE(보이지 않는) 안에 있는 긍정 단어는?", a:"VISIBLE! (보이는 👀)", emoji:"👀", choices:["INVINCIBLE","VISION","VISIT"] },
-    { q:"UP(위) + SET(놓다)를 합치면?", a:"UPSET! (화가 난 😤)", emoji:"😤", choices:["UPDATE","UPSIDE","UPPER"] },
-    { q:"OUT(밖) + SIDE(쪽)를 합치면?", a:"OUTSIDE! (바깥 🌳)", emoji:"🌳", choices:["OUTRUN","OUTDOOR","OUTLET"] },
-    { q:"영어로 SUN + GLASSES를 합치면?", a:"SUNGLASSES! (선글라스 😎)", emoji:"😎", choices:["SUNSHINE","SUNLIGHT","SUNBURN"] },
-    { q:"영어로 OVER + TIME을 합치면?", a:"OVERTIME! (초과 근무 ⏰)", emoji:"⏰", choices:["OVERRUN","OVERLOOK","OVERKILL"] },
-    { q:"영어로 무지개의 첫 색깔의 첫 글자는?", a:"R! (RED = 빨강 🔴)", emoji:"🌈", choices:["B","Y","G"] },
-    { q:"TEACHER(선생님)에서 마지막 3글자는?", a:"HER! (그녀 👩)", emoji:"👩‍🏫", choices:["ACH","EAC","CHE"] },
-    { q:"영어로 '나는 너를 사랑해'는?", a:"I LOVE YOU! ❤️", emoji:"❤️", choices:["I LIKE YOU","I NEED YOU","I MISS YOU"] },
-    { q:"영어로 '좋은 아침'은?", a:"GOOD MORNING! ☀️", emoji:"☀️", choices:["GOOD NIGHT","GOOD EVENING","GOOD AFTERNOON"] },
-    { q:"영어로 '감사합니다'는?", a:"THANK YOU! 🙏", emoji:"🙏", choices:["SORRY","PLEASE","EXCUSE ME"] },
-    { q:"알파벳 ABC에서 B는 몇 번째?", a:"2번째! (A=1, B=2 🔢)", emoji:"🔢", choices:["1번째","3번째","4번째"] },
-    { q:"영어로 사자 울음소리는?", a:"ROAR! (으르렁~ 🦁)", emoji:"🦁", choices:["BARK","MEOW","OINK"] },
+    // ── ⭐ 쉬움 (lv:1) ─────────────────────────────
+    { lv:1, q:"알파벳 중에서 꿀벌(bee) 소리가 나는 글자는?", a:"B! (Bee = 꿀벌 🐝)", emoji:"🐝", choices:["A (에이)","G (지)","D (디)"] },
+    { lv:1, q:"알파벳 중에서 눈(eye) 소리가 나는 글자는?", a:"I! (Eye = 눈 👁️)", emoji:"👁️", choices:["A (에이)","U (유)","E (이)"] },
+    { lv:1, q:"알파벳 중에서 바다(sea) 소리가 나는 글자는?", a:"C! (Sea = 바다 🌊)", emoji:"🌊", choices:["S (에스)","G (지)","Z (제트)"] },
+    { lv:1, q:"알파벳 중에서 차(tea) 소리가 나는 글자는?", a:"T! (Tea = 차 ☕)", emoji:"☕", choices:["D (디)","E (이)","P (피)"] },
+    { lv:1, q:"알파벳 중에서 '왜?' 소리가 나는 글자는?", a:"Y! (Why = 왜? 🤔)", emoji:"🤔", choices:["W (더블유)","H (에이치)","Q (큐)"] },
+    { lv:1, q:"알파벳 26글자 중 발음이 제일 긴 글자는?", a:"W! (더블유 - 3음절! ✨)", emoji:"🔤", choices:["M (엠)","X (엑스)","G (지)"] },
+    { lv:1, q:"알파벳에서 맨 처음 글자는?", a:"A! (에이 🔤)", emoji:"📖", choices:["B","C","Z"] },
+    { lv:1, q:"알파벳에서 맨 마지막 글자는?", a:"Z! (제트 ✏️)", emoji:"🔤", choices:["Y","X","W"] },
+    { lv:1, q:"MOM을 위아래로 뒤집어 읽으면?", a:"MOM! (엄마는 어디서 봐도 엄마! 💗)", emoji:"👩", choices:["WOW","MAN","MON"] },
+    { lv:1, q:"COOL(시원한 ❄️) 앞에 S를 붙이면?", a:"SCHOOL! (학교~ 🏫)", emoji:"❄️", choices:["STOOL","SCOOP","SPOON"] },
+    { lv:1, q:"HAT(모자 🎩)에서 H를 C로 바꾸면?", a:"CAT! (고양이 😸)", emoji:"🎩", choices:["MAT","RAT","SAT"] },
+    { lv:1, q:"PIG(돼지 🐷)에서 P를 B로 바꾸면?", a:"BIG! (크다! 💪)", emoji:"🐷", choices:["DIG","FIG","GIG"] },
+    { lv:1, q:"CAT(고양이 😸)에서 C를 B로 바꾸면?", a:"BAT! (박쥐/야구방망이 ⚾)", emoji:"😸", choices:["FAT","MAT","SAT"] },
+    { lv:1, q:"BOOK(책 📚) + WORM(벌레 🐛)를 합치면?", a:"BOOKWORM! (책벌레 📖)", emoji:"📚", choices:["BOOKCLUB","READWORM","BOOKISH"] },
+    { lv:1, q:"RAIN(비 🌧️) + BOW(활 🏹)를 합치면?", a:"RAINBOW! (무지개 🌈)", emoji:"🌧️", choices:["RAINDROP","RAINCOAT","RAINDAY"] },
+    { lv:1, q:"SUN(태양 ☀️) + FLOWER(꽃 🌸)를 합치면?", a:"SUNFLOWER! (해바라기 🌻)", emoji:"☀️", choices:["SUNSHINE","SUNLIGHT","SUNBEAM"] },
+    { lv:1, q:"FIRE(불 🔥) + WORK(일)를 합치면?", a:"FIREWORK! (불꽃놀이 🎆)", emoji:"🔥", choices:["FIRETRUCK","FIREMAN","FIRESIDE"] },
+    { lv:1, q:"SNOW(눈 ❄️) + BALL(공 ⚽)를 합치면?", a:"SNOWBALL! (눈덩이 ⛄)", emoji:"❄️", choices:["SNOWFLAKE","SNOWMAN","SNOWFALL"] },
+    { lv:1, q:"BUTTER(버터) + FLY(날다 🕊️)를 합치면?", a:"BUTTERFLY! (나비 🦋)", emoji:"🦋", choices:["BUTTERCUP","BUTTERMILK","BUTTERSCOTCH"] },
+    { lv:1, q:"SUPER(슈퍼) + MAN(남자)을 합치면?", a:"SUPERMAN! (슈퍼맨 🦸)", emoji:"🦸", choices:["SUPERFOOD","SUPERCOOL","SUPERSTAR"] },
+    { lv:1, q:"DO(하다) + NUT(견과류)를 합치면?", a:"DONUT! (도넛 🍩)", emoji:"🍩", choices:["DONKEY","DOLLAR","DOME"] },
+    { lv:1, q:"ICE(얼음) + CREAM(크림)을 합치면?", a:"ICE CREAM! (아이스크림 🍦)", emoji:"🍦", choices:["ICEBERG","ICEFISH","ICEBOX"] },
+    { lv:1, q:"POP(뻥!) + CORN(옥수수)를 합치면?", a:"POPCORN! (팝콘 🍿)", emoji:"🍿", choices:["POPSTAR","POPPY","POPULAR"] },
+    { lv:1, q:"CUP(컵) + CAKE(케이크)를 합치면?", a:"CUPCAKE! (컵케이크 🧁)", emoji:"🧁", choices:["CUPBOARD","CUPFUL","CUSTARD"] },
+    { lv:1, q:"SCHOOL(학교 🏫) 안에 숨은 멋있는 단어는?", a:"COOL! (학교 안에 COOL이! 😎)", emoji:"🏫", choices:["HOT","OLD","NEW"] },
+    { lv:1, q:"영어로 11은 ELEVEN, 유명한 편의점 이름은?", a:"세븐일레븐! (7-ELEVEN 🏪)", emoji:"🏪", choices:["이마트","GS25","CU편의점"] },
+    { lv:1, q:"영어로 왕은 KING, 여왕은?", a:"QUEEN! (퀸 👸)", emoji:"👑", choices:["PRINCESS","EMPRESS","DUCHESS"] },
+    { lv:1, q:"영어로 생일 축하해는?", a:"HAPPY BIRTHDAY! 🎂", emoji:"🎂", choices:["HAPPY NEW YEAR","HAPPY HOLIDAY","MERRY CHRISTMAS"] },
+    { lv:1, q:"영어로 귀신이 나타날 때 하는 말은?", a:"BOO! 👻", emoji:"👻", choices:["WOO","MOO","ZOO"] },
+    { lv:1, q:"YES와 NO 중 글자 수가 더 많은 것은?", a:"YES! (3글자, NO는 2글자 ✅)", emoji:"✅", choices:["NO","둘 다 같아","NO가 더 많아"] },
+    { lv:1, q:"HELLO(안녕)의 반대말은?", a:"GOODBYE! (굿바이! 👋)", emoji:"👋", choices:["BYE BYE","SEE YOU","FAREWELL"] },
+    { lv:1, q:"영어로 고양이 소리는?", a:"MEOW! (야옹~ 🐱)", emoji:"🐱", choices:["WOOF","MOO","OINK"] },
+    { lv:1, q:"영어로 개 소리는?", a:"WOOF! 또는 BOW WOW! 🐕", emoji:"🐕", choices:["MEOW","MOO","BUZZ"] },
+    { lv:1, q:"영어로 소 소리는?", a:"MOO! (음매~ 🐄)", emoji:"🐄", choices:["OINK","MEOW","WOOF"] },
+    { lv:1, q:"영어로 돼지 소리는?", a:"OINK! (꿀꿀~ 🐷)", emoji:"🐷", choices:["MOO","MEOW","BUZZ"] },
+    { lv:1, q:"영어로 꿀벌 소리는?", a:"BUZZ! (윙윙~ 🐝)", emoji:"🐝", choices:["HISS","MOO","WOOF"] },
+    { lv:1, q:"영어로 뱀 소리는?", a:"HISS! (쉬익~ 🐍)", emoji:"🐍", choices:["BUZZ","MEOW","OINK"] },
+    { lv:1, q:"영어로 닭 소리는?", a:"CLUCK! 또는 COCK-A-DOODLE-DOO! 🐔", emoji:"🐔", choices:["MEOW","OINK","MOO"] },
+    { lv:1, q:"영어로 개구리 소리는?", a:"RIBBIT! (개굴~ 🐸)", emoji:"🐸", choices:["BUZZ","WOOF","MEOW"] },
+    { lv:1, q:"영어로 사자 울음소리는?", a:"ROAR! (으르렁~ 🦁)", emoji:"🦁", choices:["BARK","MEOW","OINK"] },
+    { lv:1, q:"영어로 '나는 너를 사랑해'는?", a:"I LOVE YOU! ❤️", emoji:"❤️", choices:["I LIKE YOU","I NEED YOU","I MISS YOU"] },
+    { lv:1, q:"영어로 '좋은 아침'은?", a:"GOOD MORNING! ☀️", emoji:"☀️", choices:["GOOD NIGHT","GOOD EVENING","GOOD AFTERNOON"] },
+    { lv:1, q:"영어로 '감사합니다'는?", a:"THANK YOU! 🙏", emoji:"🙏", choices:["SORRY","PLEASE","EXCUSE ME"] },
+    // ── ⭐⭐ 보통 (lv:2) ──────────────────────────────
+    { lv:2, q:"DOG(개 🐕)를 거꾸로 쓰면?", a:"GOD! (신이 됐어요 😮)", emoji:"🐕", choices:["OGD","GDO","ODG"] },
+    { lv:2, q:"BUS(버스 🚌)를 거꾸로 쓰면?", a:"SUB! (잠수함이 됐어요 🤿)", emoji:"🚌", choices:["UBS","BSU","USB"] },
+    { lv:2, q:"NAP(낮잠 😴)을 거꾸로 쓰면?", a:"PAN! (냄비가 됐어요 🍳)", emoji:"😴", choices:["ANP","NPA","APN"] },
+    { lv:2, q:"STAR(별 ⭐)를 거꾸로 쓰면?", a:"RATS! (쥐들이 됐어요 🐭)", emoji:"⭐", choices:["TARS","ARTS","TRAS"] },
+    { lv:2, q:"TOP(꼭대기 ⛰️)를 거꾸로 쓰면?", a:"POT! (냄비가 됐어요 🍲)", emoji:"⛰️", choices:["OPT","TPO","OTP"] },
+    { lv:2, q:"TEN(열 🔢)을 거꾸로 쓰면?", a:"NET! (그물이 됐어요 🎣)", emoji:"🔢", choices:["ETN","TNE","ENT"] },
+    { lv:2, q:"YAM(참마)을 거꾸로 쓰면?", a:"MAY! (5월이 됐어요 🌸)", emoji:"🌱", choices:["AMY","YMA","AYM"] },
+    { lv:2, q:"SMILE(미소 😄)에서 S를 빼면?", a:"MILE! (마일 = 거리 단위 📏)", emoji:"😄", choices:["ILE","PILE","FILE"] },
+    { lv:2, q:"BAND(밴드 🎸)에서 B를 H로 바꾸면?", a:"HAND! (손 🤚)", emoji:"🎸", choices:["LAND","SAND","WAND"] },
+    { lv:2, q:"MAN(남자)에서 M을 C로 바꾸면?", a:"CAN! (할 수 있다! 💪)", emoji:"🧑", choices:["BAN","FAN","RAN"] },
+    { lv:2, q:"WATER(물 💧) + FALL(떨어지다)를 합치면?", a:"WATERFALL! (폭포 🌊)", emoji:"💧", choices:["WATERMELON","WATERPARK","WATERCOLOR"] },
+    { lv:2, q:"STAR(별 ⭐) + FISH(물고기 🐟)를 합치면?", a:"STARFISH! (불가사리 🌟)", emoji:"⭐", choices:["STARDUST","STARLIGHT","STARSHIP"] },
+    { lv:2, q:"SEA(바다 🌊) + SHELL(껍질)를 합치면?", a:"SEASHELL! (조개껍질 🐚)", emoji:"🐚", choices:["SEABIRD","SEAWEED","SEAFOOD"] },
+    { lv:2, q:"SUN(태양) + DAY(날)를 합치면?", a:"SUNDAY! (일요일 ☀️)", emoji:"☀️", choices:["SUNLIGHT","SUNRISE","SUNSET"] },
+    { lv:2, q:"MOON(달) + DAY(날)를 합치면?", a:"MONDAY! (월요일 🌙)", emoji:"🌙", choices:["MOONLIGHT","MOONRISE","MOONDUST"] },
+    { lv:2, q:"SAND(모래) + CASTLE(성)를 합치면?", a:"SANDCASTLE! (모래성 🏖️)", emoji:"🏖️", choices:["SANDBOX","SANDSTORM","SANDPAPER"] },
+    { lv:2, q:"FRIEND(친구) + SHIP(배)를 합치면?", a:"FRIENDSHIP! (우정 💗)", emoji:"🤝", choices:["FRIENDZONE","FRIENDLY","FRIENDS"] },
+    { lv:2, q:"HAND(손) + SHAKE(흔들다)를 합치면?", a:"HANDSHAKE! (악수 🤝)", emoji:"🤝", choices:["HANDBAG","HANDBALL","HANDSOME"] },
+    { lv:2, q:"EARTH(지구 🌍) 안에 숨어있는 예술 단어는?", a:"ART! (지구 속에 예술이! 🎨)", emoji:"🌍", choices:["EAR","THE","RAH"] },
+    { lv:2, q:"TEACHER(선생님 👩‍🏫) 안에 숨은 음료 단어는?", a:"TEA! (선생님은 차를 마셔요 ☕)", emoji:"👩‍🏫", choices:["EACH","HER","ACHE"] },
+    { lv:2, q:"TEACHER(선생님)에서 마지막 3글자는?", a:"HER! (그녀 👩)", emoji:"👩‍🏫", choices:["ACH","EAC","CHE"] },
+    { lv:2, q:"LIGHTNING(번개 ⚡) 안에 숨은 빛 단어는?", a:"LIGHT! (번개 안에 빛이! 💡)", emoji:"⚡", choices:["NING","GHTN","IGHT"] },
+    { lv:2, q:"PIZZA(피자 🍕)에서 Z는 몇 개?", a:"2개! (piZZa - 두 개 있어요!)", emoji:"🍕", choices:["1개","3개","0개"] },
+    { lv:2, q:"영어로 무지개 색은 몇 가지?", a:"7가지! (빨주노초파남보 🌈)", emoji:"🌈", choices:["5가지","6가지","8가지"] },
+    { lv:2, q:"영어로 동물원은 ZOO, Z로 시작하는 동물은?", a:"ZEBRA! (얼룩말 🦓)", emoji:"🦓", choices:["ZOMBIE","ZIGZAG","ZERO"] },
+    { lv:2, q:"왜 영어 선생님은 안경을 쓸까?", a:"학생들을 C(see=보다) 하려고! 😄", emoji:"👓", choices:["책이 많아서","멋있어서","눈이 나빠서"] },
+    { lv:2, q:"물고기는 왜 영어를 못 배울까?", a:"SCHOOL(학교)에서 맨날 빠져나가서! (school of fish = 물고기 떼 🐟)", emoji:"🐟", choices:["물에 젖어서","공부 안 해서","지느러미 없어서"] },
+    { lv:2, q:"왜 컴퓨터는 노래를 못 부를까?", a:"바이러스(VIRUS)에 걸렸으니까! 💻", emoji:"💻", choices:["목이 없어서","귀가 없어서","전원이 없어서"] },
+    { lv:2, q:"영어로 마법사가 하는 말은?", a:"ABRACADABRA! (아브라카다브라! ✨)", emoji:"🪄", choices:["HOCUS POCUS","ALAKAZAM","PRESTO"] },
+    { lv:2, q:"알파벳 X는 수학에서 무엇을 뜻할까?", a:"모르는 수! X = 미지수 ❓", emoji:"❓", choices:["10","곱셈 표시","오답 표시"] },
+    { lv:2, q:"INVISIBLE(보이지 않는) 안에 있는 긍정 단어는?", a:"VISIBLE! (보이는 👀)", emoji:"👀", choices:["INVINCIBLE","VISION","VISIT"] },
+    { lv:2, q:"영어로 SUN + GLASSES를 합치면?", a:"SUNGLASSES! (선글라스 😎)", emoji:"😎", choices:["SUNSHINE","SUNLIGHT","SUNBURN"] },
+    { lv:2, q:"영어로 OVER + TIME을 합치면?", a:"OVERTIME! (초과 근무 ⏰)", emoji:"⏰", choices:["OVERRUN","OVERLOOK","OVERKILL"] },
+    { lv:2, q:"영어로 무지개의 첫 색깔의 첫 글자는?", a:"R! (RED = 빨강 🔴)", emoji:"🌈", choices:["B","Y","G"] },
+    { lv:2, q:"알파벳 ABC에서 B는 몇 번째?", a:"2번째! (A=1, B=2 🔢)", emoji:"🔢", choices:["1번째","3번째","4번째"] },
+    { lv:2, q:"영어로 알파벳 중 가장 달콤한 글자는?", a:"C! (Candy 사탕의 C! 🍬)", emoji:"🍬", choices:["S","H","D"] },
+    // ── ⭐⭐⭐ 어려움 (lv:3) ──────────────────────────
+    { lv:3, q:"LISTEN(듣다)의 철자를 섞으면 나오는 단어는?", a:"SILENT! (들으려면 조용해야! 🤫)", emoji:"👂", choices:["TINSEL","INLETS","ENLIST"] },
+    { lv:3, q:"WEDNESDAY(수요일)에서 소리 안 나는 글자는?", a:"D! (Web-nes-day처럼 읽어요 🗓️)", emoji:"📅", choices:["W","E","A"] },
+    { lv:3, q:"KNIGHT(기사 ♟️)에서 소리 안 나는 첫 글자는?", a:"K! (나이트로 읽어요!)", emoji:"♟️", choices:["N","G","H"] },
+    { lv:3, q:"WRAP(포장하다 🎁)에서 소리 안 나는 글자는?", a:"W! (랩으로 읽어요!)", emoji:"🎁", choices:["R","A","P"] },
+    { lv:3, q:"ISLAND(섬 🏝️)에서 소리 안 나는 글자는?", a:"S! (아이랜드로 읽어요!)", emoji:"🏝️", choices:["I","L","D"] },
+    { lv:3, q:"SCISSORS(가위 ✂️)에서 소리 안 나는 글자는?", a:"C! (시저스로 읽어요!)", emoji:"✂️", choices:["S","I","O"] },
+    { lv:3, q:"영어 모음(vowel)은 몇 개?", a:"5개! (A, E, I, O, U 🔤)", emoji:"🔤", choices:["4개","6개","7개"] },
+    { lv:3, q:"RHYTHM(리듬)에서 모음(a,e,i,o,u)이 몇 개?", a:"0개! (모음 없이 읽히는 신기한 단어 🎵)", emoji:"🎵", choices:["1개","2개","3개"] },
+    { lv:3, q:"ENOUGH(충분한)에서 GH는 어떤 소리가 날까?", a:"F 소리! (이너프로 읽어요 🎙️)", emoji:"🔊", choices:["G 소리","H 소리","묵음"] },
+    { lv:3, q:"1~10 영어 숫자 중 글자 수가 가장 많은 것은?", a:"THREE와 SEVEN! (둘 다 5글자 🔢)", emoji:"🔢", choices:["EIGHT (5글자)","NINE (4글자)","TEN (3글자)"] },
+    { lv:3, q:"SHEEP(양 🐑)의 복수형(여러 마리)은?", a:"SHEEP! (단수·복수가 똑같아요!)", emoji:"🐑", choices:["SHEEPS","SHEEPIES","SHEEPES"] },
+    { lv:3, q:"물고기 FISH의 복수형(여러 마리)은?", a:"FISH! (그대로예요 🐟)", emoji:"🐟", choices:["FISHES","FISHS","FISHIES"] },
+    { lv:3, q:"영어 관용어 'It's raining cats and dogs'의 뜻은?", a:"비가 엄청나게 쏟아진다! 🌧️", emoji:"🌧️", choices:["고양이와 개가 비를 맞아","동물들이 하늘에서 내려와","날씨가 흐리다"] },
+    { lv:3, q:"FEBRUARY(2월)에서 R이 몇 번 나올까?", a:"2번! (Feb-R-ua-R-y 📅)", emoji:"📅", choices:["1번","3번","0번"] },
+    { lv:3, q:"THE를 '디'로 읽는 경우는 언제?", a:"모음(a,e,i,o,u) 앞에서! (the apple = 디 애플 🍎)", emoji:"📖", choices:["항상 디로 읽어","자음 앞에서","단어 끝에서"] },
+    { lv:3, q:"I(나)와 EYE(눈)의 공통점은?", a:"발음이 똑같아요! (동음이의어 👁️)", emoji:"👁️", choices:["글자 수가 같아","뜻이 같아","모양이 같아"] },
+    { lv:3, q:"PIECE(조각)와 PEACE(평화)의 공통점은?", a:"둘 다 '피스'로 읽어요! (동음이의어 ✌️)", emoji:"✌️", choices:["뜻이 같아","글자 수가 같아","알파벳이 같아"] },
+    { lv:3, q:"FRIEND(친구)에 END가 들어있는 이유는?", a:"친구는 끝(END)까지니까! 🤝", emoji:"🤝", choices:["우연이야","영어 문법 규칙","고대 영어에서 왔어"] },
+    { lv:3, q:"영어에서 ALPHABET이 온 언어는?", a:"그리스어! (알파(α)+베타(β)에서 왔어요 🇬🇷)", emoji:"🔤", choices:["라틴어","프랑스어","히브리어"] },
+    { lv:3, q:"COLONEL(대령 🎖️)은 어떻게 읽을까?", a:"커넬! (글자와 발음이 전혀 달라요 😱)", emoji:"🎖️", choices:["콜로넬","코로넬","클로넬"] },
   ]
 };
 
 const CAT_COLOR = { animal:'#22c55e', food:'#fb923c', school:'#38bdf8', word:'#a78bfa', all:'#ff6b6b', english:'#3b82f6' };
 
-let selCat = 'all', selN = 5, list = [], idx = 0, score = 0, answered = false;
+let selCat = 'all', selN = 5, selLv = 0, list = [], idx = 0, score = 0, answered = false;
+
+// 영어 외 카테고리 난이도 자동 배분 (배열 앞/중/뒤 = 쉬움/보통/어려움)
+Object.entries(DB).forEach(([cat, arr]) => {
+  if (cat !== 'english') {
+    const n = arr.length;
+    arr.forEach((q, i) => { if (!q.lv) q.lv = i < n/3 ? 1 : i < n*2/3 ? 2 : 3; });
+  }
+});
 
 function setChar(name) {
   const el = document.getElementById('reactChar');
@@ -1275,11 +1325,20 @@ function pickN(el) {
   el.classList.add('on');
   selN = +el.dataset.n;
 }
+function pickLv(el) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  selLv = +el.dataset.lv;
+}
 
 function startQuiz() {
   let pool = selCat === 'all'
     ? Object.values(DB).flat()
     : [...DB[selCat]];
+  if (selLv > 0) {
+    const filtered = pool.filter(q => q.lv === selLv);
+    if (filtered.length >= 3) pool = filtered;
+  }
   list = shuffle(pool).slice(0, Math.min(selN, pool.length));
   idx = 0; score = 0;
   show('s-quiz'); render();
@@ -1304,6 +1363,8 @@ function render() {
   const tag = document.getElementById('catTag');
   tag.textContent = {animal:'🐶 동물',food:'🍕 음식',school:'📚 학교',word:'💬 말장난',all:'🎲 랜덤',english:'🔤 영어'}[cat] || '';
   tag.style.background = CAT_COLOR[cat] || '#ff6b6b';
+  const lvBadge = document.getElementById('lvBadge');
+  lvBadge.textContent = ['','⭐','⭐⭐','⭐⭐⭐'][q.lv] || '';
   document.getElementById('qEmoji').textContent   = q.emoji;
   document.getElementById('qText').textContent    = q.q;
   document.getElementById('reaction').textContent = '';
