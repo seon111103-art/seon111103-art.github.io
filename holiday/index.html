@@ -1436,51 +1436,57 @@ init();
 </script>
 
 
-<section style="max-width:900px;margin:0 auto 28px;padding:0 20px;">
-  <div style="background:var(--card);border:2px solid var(--border);border-radius:20px;padding:28px 32px;box-shadow:var(--shadow);">
-    <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;color:var(--text);">💼 연차 효율적으로 쓰는 방법 완벽 가이드</h2>
-    <p style="font-size:.9rem;line-height:1.8;color:var(--sub);margin-bottom:14px;">직장인이라면 누구나 연차를 최대한 효율적으로 활용하고 싶습니다. 무작정 쓰는 것보다 공휴일 패턴을 미리 파악하고 전략적으로 배치하면 같은 연차로 훨씬 긴 휴가를 즐길 수 있습니다.</p>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">✅ 연차 황금 배치 전략</h3>
-    <ul style="font-size:.88rem;line-height:2;color:var(--sub);padding-left:20px;margin-bottom:14px;">
+<!-- 연차 가이드 모달 -->
+<div class="info-modal-overlay" id="modal-leave" onclick="if(event.target===this)closeInfoModal('leave')">
+  <div class="info-modal">
+    <button class="info-modal-close" onclick="closeInfoModal('leave')">✕</button>
+    <h2>💼 연차 효율적으로 쓰는 방법 완벽 가이드</h2>
+    <p>직장인이라면 누구나 연차를 최대한 효율적으로 활용하고 싶습니다. 무작정 쓰는 것보다 공휴일 패턴을 미리 파악하고 전략적으로 배치하면 같은 연차로 훨씬 긴 휴가를 즐길 수 있습니다.</p>
+    <h3>✅ 연차 황금 배치 전략</h3>
+    <ul>
       <li><strong>브릿지 연차</strong>: 공휴일과 주말 사이 평일에 연차 1일로 4~5일 연속 휴가 만들기</li>
       <li><strong>샌드위치 연차</strong>: 월요일 또는 금요일에 연차를 배치해 3일 연휴를 5일로 늘리기</li>
       <li><strong>명절 전후 연차</strong>: 추석·설날 전후 평일에 연차를 배치해 최장 10일 연휴 만들기</li>
       <li><strong>연말 소진 전략</strong>: 12월 말 잔여 연차로 크리스마스~신정 연속 휴가 완성</li>
     </ul>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">📌 연차 사용 시 주의사항</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);">연차는 근로기준법상 보장된 권리입니다. 1년 미만 근무자는 매월 1일씩 발생하며, 1년 이상 근무자는 15일이 기본 지급됩니다. 3년 이상 근무 시 2년마다 1일씩 가산되어 최대 25일까지 받을 수 있습니다. 사용하지 않은 연차는 수당으로 보상받을 수 있으니 꼭 챙기세요.</p>
+    <h3>📌 연차 사용 시 주의사항</h3>
+    <p>연차는 근로기준법상 보장된 권리입니다. 1년 미만 근무자는 매월 1일씩 발생하며, 1년 이상 근무자는 15일이 기본 지급됩니다. 3년 이상 근무 시 2년마다 1일씩 가산되어 최대 25일까지 받을 수 있습니다. 사용하지 않은 연차는 수당으로 보상받을 수 있으니 꼭 챙기세요.</p>
   </div>
-</section>
+</div>
 
-<section style="max-width:900px;margin:0 auto 28px;padding:0 20px;">
-  <div style="background:var(--card);border:2px solid var(--border);border-radius:20px;padding:28px 32px;box-shadow:var(--shadow);">
-    <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;color:var(--text);">✈️ 황금연휴 국내외 여행지 추천</h2>
-    <p style="font-size:.9rem;line-height:1.8;color:var(--sub);margin-bottom:14px;">황금연휴를 알차게 보내려면 여행지 선택이 중요합니다. 연휴 길이와 예산에 맞게 국내외 여행지를 추천해드립니다.</p>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">🇰🇷 국내 여행지 추천 (3~5일)</h3>
-    <ul style="font-size:.88rem;line-height:2;color:var(--sub);padding-left:20px;margin-bottom:14px;">
+<!-- 여행지 추천 모달 -->
+<div class="info-modal-overlay" id="modal-travel" onclick="if(event.target===this)closeInfoModal('travel')">
+  <div class="info-modal">
+    <button class="info-modal-close" onclick="closeInfoModal('travel')">✕</button>
+    <h2>✈️ 황금연휴 국내외 여행지 추천</h2>
+    <p>황금연휴를 알차게 보내려면 여행지 선택이 중요합니다. 연휴 길이와 예산에 맞게 국내외 여행지를 추천해드립니다.</p>
+    <h3>🇰🇷 국내 여행지 추천 (3~5일)</h3>
+    <ul>
       <li><strong>제주도</strong>: 사계절 아름다운 자연경관, 한라산 트레킹, 해안 드라이브</li>
       <li><strong>경주</strong>: 신라 역사문화 탐방, 불국사·석굴암, 야경이 아름다운 동궁과 월지</li>
       <li><strong>강릉·속초</strong>: 동해안 해변, 신선한 해산물, 설악산 단풍</li>
       <li><strong>전주</strong>: 한옥마을, 전통 비빔밥, 근대 문화유산 탐방</li>
     </ul>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">🌏 해외 여행지 추천 (5~9일)</h3>
-    <ul style="font-size:.88rem;line-height:2;color:var(--sub);padding-left:20px;margin-bottom:14px;">
+    <h3>🌏 해외 여행지 추천 (5~9일)</h3>
+    <ul>
       <li><strong>일본 오사카·도쿄</strong>: 가깝고 볼거리 풍부, 쇼핑·음식·문화 모두 만족</li>
       <li><strong>태국 방콕·치앙마이</strong>: 물가 저렴, 다양한 먹거리, 사원 문화 체험</li>
       <li><strong>베트남 다낭·나트랑</strong>: 아름다운 해변 리조트, 합리적인 가격</li>
       <li><strong>유럽 (장기 연휴)</strong>: 9일 이상 확보 시 파리·로마·바르셀로나 추천</li>
     </ul>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">💡 여행 준비 체크리스트</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);">황금연휴 여행은 최소 2~3개월 전 항공권 예매가 필수입니다. 숙소는 취소 가능한 조건으로 미리 예약해두고, 해외여행 시 여권 유효기간(6개월 이상)과 여행자보험 가입을 반드시 확인하세요. 환율이 유리한 시점에 환전하면 여행 경비를 절약할 수 있습니다.</p>
+    <h3>💡 여행 준비 체크리스트</h3>
+    <p>황금연휴 여행은 최소 2~3개월 전 항공권 예매가 필수입니다. 숙소는 취소 가능한 조건으로 미리 예약해두고, 해외여행 시 여권 유효기간(6개월 이상)과 여행자보험 가입을 반드시 확인하세요. 환율이 유리한 시점에 환전하면 여행 경비를 절약할 수 있습니다.</p>
   </div>
-</section>
+</div>
 
-<section style="max-width:900px;margin:0 auto 28px;padding:0 20px;">
-  <div style="background:var(--card);border:2px solid var(--border);border-radius:20px;padding:28px 32px;box-shadow:var(--shadow);">
-    <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;color:var(--text);">🗺️ 황금연휴 여행 준비 완벽 가이드</h2>
-    <p style="font-size:.9rem;line-height:1.8;color:var(--sub);margin-bottom:14px;">황금연휴가 확정되면 여행 준비를 얼마나 일찍 시작하느냐가 성패를 가릅니다. 인기 여행지의 항공권과 숙소는 연휴 시작 3~6개월 전에 이미 매진되는 경우가 많습니다. 체계적인 준비 순서를 알아두면 비용도 절약하고 더 좋은 조건으로 여행을 즐길 수 있습니다.</p>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">📅 여행 준비 타임라인</h3>
-    <ul style="font-size:.88rem;line-height:2;color:var(--sub);padding-left:20px;margin-bottom:14px;">
+<!-- 여행 준비 가이드 모달 -->
+<div class="info-modal-overlay" id="modal-guide" onclick="if(event.target===this)closeInfoModal('guide')">
+  <div class="info-modal">
+    <button class="info-modal-close" onclick="closeInfoModal('guide')">✕</button>
+    <h2>🗺️ 황금연휴 여행 준비 완벽 가이드</h2>
+    <p>황금연휴가 확정되면 여행 준비를 얼마나 일찍 시작하느냐가 성패를 가릅니다. 인기 여행지의 항공권과 숙소는 연휴 시작 3~6개월 전에 이미 매진되는 경우가 많습니다. 체계적인 준비 순서를 알아두면 비용도 절약하고 더 좋은 조건으로 여행을 즐길 수 있습니다.</p>
+    <h3>📅 여행 준비 타임라인</h3>
+    <ul>
       <li><strong>D-180 (6개월 전)</strong>: 여행지 결정, 여권 유효기간 확인 (6개월 이상 남아야 함)</li>
       <li><strong>D-90 (3개월 전)</strong>: 항공권 예약 — 이 시기가 가격 대비 좋은 좌석 확보의 골든타임</li>
       <li><strong>D-60 (2개월 전)</strong>: 숙소 예약, 여행자보험 가입, 비자 필요 여부 확인</li>
@@ -1488,31 +1494,28 @@ init();
       <li><strong>D-7 (1주일 전)</strong>: 최종 짐 싸기, 해외 로밍 또는 현지 유심 준비</li>
       <li><strong>D-1 (하루 전)</strong>: 여권·항공권 출력, 공항 이동 시간 재확인</li>
     </ul>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);">💳 여행 경비 절약 꿀팁</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);">항공권은 화요일~수요일 새벽에 검색하면 저렴한 경우가 많습니다. 숙소는 호텔 예약 사이트에서 '환불 가능 조건'으로 미리 예약해두고, 더 저렴한 방이 나오면 취소 후 재예약하는 전략이 효과적입니다. 현지에서는 교통카드나 데이 패스를 활용하면 이동 비용을 크게 절약할 수 있습니다.</p>
+    <h3>💳 여행 경비 절약 꿀팁</h3>
+    <p>항공권은 화요일~수요일 새벽에 검색하면 저렴한 경우가 많습니다. 숙소는 호텔 예약 사이트에서 '환불 가능 조건'으로 미리 예약해두고, 더 저렴한 방이 나오면 취소 후 재예약하는 전략이 효과적입니다. 현지에서는 교통카드나 데이 패스를 활용하면 이동 비용을 크게 절약할 수 있습니다.</p>
   </div>
-</section>
+</div>
 
-<section style="max-width:900px;margin:0 auto 28px;padding:0 20px;">
-  <div style="background:var(--card);border:2px solid var(--border);border-radius:20px;padding:28px 32px;box-shadow:var(--shadow);">
-    <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;color:var(--text);">❓ 자주 묻는 질문 (FAQ)</h2>
-
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px;color:var(--text);">Q. 황금연휴는 어떻게 정의되나요?</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);margin-bottom:16px;">A. 공휴일과 주말이 연이어 이어져 4일 이상 쉴 수 있는 기간을 황금연휴라고 합니다. 연차를 1~2일 추가로 사용하면 5~9일의 장기 휴가를 만들 수 있어 직장인들이 가장 기다리는 시기입니다. 7일 이상 이어지는 경우는 '슈퍼황금연휴'로 분류합니다.</p>
-
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px;color:var(--text);">Q. 대체공휴일이란 무엇인가요?</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);margin-bottom:16px;">A. 공휴일이 일요일과 겹칠 경우 그다음 평일을 쉬게 되는 제도입니다. 한국은 2021년부터 대체공휴일 적용 대상을 확대하여 설날·추석·어린이날 외에도 광복절, 개천절, 한글날, 크리스마스 등에도 적용됩니다. 윈드홀리데이 달력에는 대체공휴일이 자동으로 표시됩니다.</p>
-
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px;color:var(--text);">Q. 연차는 언제 쓰는 게 가장 효율적인가요?</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);margin-bottom:16px;">A. 공휴일과 주말 사이의 '끼인 평일'에 연차를 사용하는 것이 가장 효율적입니다. 예를 들어 월요일이 공휴일일 때 그 전 금요일에 연차를 쓰면 4일 연속 휴가를 만들 수 있습니다. 윈드홀리데이의 '연차 붙여쓰기 추천' 기능에서 연차 일수를 입력하면 가장 효율적인 조합을 자동으로 추천해드립니다.</p>
-
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px;color:var(--text);">Q. 항공권은 얼마나 일찍 예매해야 하나요?</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);margin-bottom:16px;">A. 황금연휴 기간 항공권은 매우 빠르게 매진됩니다. 일반적으로 3개월 전 예매가 가격과 선택폭 모두에서 유리합니다. 특히 추석·설날·황금연휴처럼 수요가 몰리는 시기에는 6개월 전부터 가격이 오르기 시작하므로, 일정이 확정되면 최대한 빨리 예매하는 것을 권장합니다.</p>
-
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px;color:var(--text);">Q. 여행 경비 계산기는 어떻게 사용하나요?</h3>
-    <p style="font-size:.88rem;line-height:1.8;color:var(--sub);">A. 위쪽 '여행 경비 계산기' 섹션에서 인원 수를 설정한 뒤, 항공·숙소·식비·교통·관광·쇼핑 등 항목별로 예상 금액을 입력하면 총합계와 1인당 비용이 자동으로 계산됩니다. 입력한 내용은 기기에 자동 저장되어 다음 방문 시에도 유지됩니다.</p>
+<!-- FAQ 모달 -->
+<div class="info-modal-overlay" id="modal-faq" onclick="if(event.target===this)closeInfoModal('faq')">
+  <div class="info-modal">
+    <button class="info-modal-close" onclick="closeInfoModal('faq')">✕</button>
+    <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+    <h3>Q. 황금연휴는 어떻게 정의되나요?</h3>
+    <p>A. 공휴일과 주말이 연이어 이어져 4일 이상 쉴 수 있는 기간을 황금연휴라고 합니다. 연차를 1~2일 추가로 사용하면 5~9일의 장기 휴가를 만들 수 있어 직장인들이 가장 기다리는 시기입니다. 7일 이상 이어지는 경우는 '슈퍼황금연휴'로 분류합니다.</p>
+    <h3>Q. 대체공휴일이란 무엇인가요?</h3>
+    <p>A. 공휴일이 일요일과 겹칠 경우 그다음 평일을 쉬게 되는 제도입니다. 한국은 2021년부터 대체공휴일 적용 대상을 확대하여 설날·추석·어린이날 외에도 광복절, 개천절, 한글날, 크리스마스 등에도 적용됩니다. 윈드홀리데이 달력에는 대체공휴일이 자동으로 표시됩니다.</p>
+    <h3>Q. 연차는 언제 쓰는 게 가장 효율적인가요?</h3>
+    <p>A. 공휴일과 주말 사이의 '끼인 평일'에 연차를 사용하는 것이 가장 효율적입니다. 예를 들어 월요일이 공휴일일 때 그 전 금요일에 연차를 쓰면 4일 연속 휴가를 만들 수 있습니다. 윈드홀리데이의 '연차 붙여쓰기 추천' 기능에서 연차 일수를 입력하면 가장 효율적인 조합을 자동으로 추천해드립니다.</p>
+    <h3>Q. 항공권은 얼마나 일찍 예매해야 하나요?</h3>
+    <p>A. 황금연휴 기간 항공권은 매우 빠르게 매진됩니다. 일반적으로 3개월 전 예매가 가격과 선택폭 모두에서 유리합니다. 특히 추석·설날·황금연휴처럼 수요가 몰리는 시기에는 6개월 전부터 가격이 오르기 시작하므로, 일정이 확정되면 최대한 빨리 예매하는 것을 권장합니다.</p>
+    <h3>Q. 여행 경비 계산기는 어떻게 사용하나요?</h3>
+    <p>A. 위쪽 '여행 경비 계산기' 섹션에서 인원 수를 설정한 뒤, 항공·숙소·식비·교통·관광·쇼핑 등 항목별로 예상 금액을 입력하면 총합계와 1인당 비용이 자동으로 계산됩니다. 입력한 내용은 기기에 자동 저장되어 다음 방문 시에도 유지됩니다.</p>
   </div>
-</section>
+</div>
 
 <!-- 윈드홀리데이란? 모달 -->
 <div class="info-modal-overlay" id="modal-about" onclick="if(event.target===this)closeInfoModal('about')">
@@ -1551,9 +1554,13 @@ init();
 </div>
 
 <footer class="site-footer">
-  © 2026 윈드홀리데이 · 광고 문의: seon111103@gmail.com &nbsp;·&nbsp;
+  © 2026 윈드홀리데이 · 광고 문의: seon111103@gmail.com<br style="display:none">
   <a href="#" onclick="openInfoModal('about');return false;" style="color:var(--sub);text-decoration:none;">윈드홀리데이란?</a> &nbsp;·&nbsp;
   <a href="#" onclick="openInfoModal('golden');return false;" style="color:var(--sub);text-decoration:none;">2026년 황금연휴</a> &nbsp;·&nbsp;
+  <a href="#" onclick="openInfoModal('leave');return false;" style="color:var(--sub);text-decoration:none;">연차 활용 가이드</a> &nbsp;·&nbsp;
+  <a href="#" onclick="openInfoModal('travel');return false;" style="color:var(--sub);text-decoration:none;">여행지 추천</a> &nbsp;·&nbsp;
+  <a href="#" onclick="openInfoModal('guide');return false;" style="color:var(--sub);text-decoration:none;">여행 준비 가이드</a> &nbsp;·&nbsp;
+  <a href="#" onclick="openInfoModal('faq');return false;" style="color:var(--sub);text-decoration:none;">FAQ</a> &nbsp;·&nbsp;
   <a href="guide.html" style="color:var(--sub);text-decoration:none;">📚 이용 가이드</a> &nbsp;·&nbsp;
   <a href="privacy.html" style="color:var(--sub);text-decoration:none;">개인정보처리방침</a> &nbsp;·&nbsp;
   <a href="terms.html" style="color:var(--sub);text-decoration:none;">이용약관</a>
@@ -1570,7 +1577,7 @@ function closeInfoModal(id){
 }
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
-    ['about','golden'].forEach(function(id){
+    ['about','golden','leave','travel','guide','faq'].forEach(function(id){
       document.getElementById('modal-'+id).classList.remove('open');
     });
     document.body.style.overflow='';
