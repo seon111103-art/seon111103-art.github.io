@@ -464,6 +464,17 @@ html.dark .header-wave { fill: #082f49; }
 }
 .choice-btn:disabled { cursor: default; opacity: 0.55; }
 
+/* ── 정답 해설 박스 ── */
+.answer-explain {
+  text-align: center; font-size: 0.88rem; font-weight: 700;
+  color: var(--primary); background: rgba(14,165,233,0.10);
+  border-radius: var(--radius); padding: 10px 14px; margin: 8px 0 0;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.28s, transform 0.28s;
+}
+.answer-explain.show { opacity: 1; transform: translateY(0); }
+html.dark .answer-explain { background: rgba(14,165,233,0.15); color: #38bdf8; }
+
 @keyframes shake {
   0%,100% { transform: translateX(0); }
   20%      { transform: translateX(-7px); }
@@ -794,6 +805,7 @@ html.dark .rank-score { color: #38bdf8; background: rgba(56,189,248,0.15); }
     <div class="reaction" id="reaction"></div>
 
     <div class="choices" id="choicesBox"></div>
+    <div class="answer-explain" id="answerExplain"></div>
     <button class="btn-next-main" id="btnNextMain" onclick="nextQ()" style="display:none">다음 문제 →</button>
   </div>
 
@@ -876,7 +888,7 @@ const DB = {
     { q:"닭이 추우면?", a:"닭살 돋아! 🐔", emoji:"🐔", choices:["꼬꼬댁 떨어 🥶","달걀 품어 🥚","털 세워 🪶"] },
     { q:"강아지가 지하철 타면?", a:"멍멍이 환승! 🚇", emoji:"🐕", choices:["짖어서 내려 😤","꼬리 끼여 😣","개집역 도착 🏠"] },
     { q:"물고기가 공부하면?", a:"수학! (수+학) 🐟", emoji:"🐟", choices:["바다공부 🌊","수영수업 🏊","비늘수업 🐠"] },
-    { q:"참새가 전봇대에 앉으면?", a:"쇼킹! ⚡", emoji:"🐦", choices:["짹짹 🐦","전봇대 부러져 🪵","사진 찍어 📸"] },
+    { q:"문어가 악수하면?", a:"여덟 번 악수! 🐙", emoji:"🐙", choices:["발이 없어 못 해 🐙","한 번만 해 👋","먹물이 튀어 🖤"] },
     { q:"뱀이 수학 공부하면?", a:"구구단! 🐍", emoji:"🐍", choices:["기어가는 수학 📚","뱀 곱하기 🔢","꼬물꼬물 수학 🌀"] },
     { q:"코끼리가 재채기하면?", a:"코가 로켓이 돼! 🐘", emoji:"🐘", choices:["에취! 크게 😤","코 빠져 💧","주변이 다 젖어 💦"] },
     { q:"토끼가 이발하면?", a:"귀만 남아! 🐰", emoji:"🐰", choices:["당근 먹어 🥕","털이 수북해 🌿","깡충 뛰어 🐰"] },
@@ -952,7 +964,7 @@ const DB = {
     { q:"수박이 뛰면?", a:"수박이 박수! 🍉", emoji:"🍉", choices:["수박이 굴러 🍉","쿵쿵쿵 🍉","터져! 💥"] },
     { q:"포도가 넘어지면?", a:"포도 포도~ 🍇", emoji:"🍇", choices:["포도 굴러 🍇","포도 터져 💥","포도 울어 😢"] },
     { q:"도넛 가운데 구멍이 있는 이유는?", a:"안 먹으려고! 🍩", emoji:"🍩", choices:["더 맛있으려고 😋","예뻐서 💕","만들기 쉬워서 👐"] },
-    { q:"세상에서 가장 용감한 김밥은?", a:"두룹지 않은 김밥 🍱", emoji:"🍱", choices:["씩씩한 김밥 💪","용사 김밥 ⚔️","무서운 김밥 😱"] },
+    { q:"세상에서 가장 용감한 김밥은?", a:"두렵지 않은 김밥 🍱", emoji:"🍱", choices:["씩씩한 김밥 💪","용사 김밥 ⚔️","무서운 김밥 😱"] },
     { q:"김치가 화나면?", a:"더 빨개져! 🌶️", emoji:"🌶️", choices:["맵게 울어 😭","냉장고 들어가 ❄️","뚜껑 열어 💨"] },
     { q:"빵이 달리면?", a:"빵빵해! 🍞", emoji:"🍞", choices:["굴러가 🥐","터져버려 💥","빵집으로 🏠"] },
     { q:"케이크에 초가 없으면?", a:"그냥 날이야! 📅", emoji:"🎂", choices:["슬픈 생일 😢","초 빌려 🕯️","불 못 붙여 🔥"] },
@@ -986,7 +998,7 @@ const DB = {
     { q:"고추장이 화나면?", a:"더 매워져! 🌶️", emoji:"🌶️", choices:["고추장 빨개져 🔴","고추장 끓어 🔥","고추장 냉장고 가 ❄️"] },
     { q:"과자가 비를 맞으면?", a:"눅눅해져! 🍪", emoji:"🍪", choices:["과자 녹아 🍪","과자 도망가 🏃","과자 우산 써 ☂️"] },
     { q:"라면이 수영하면?", a:"면이 불어! 🍜", emoji:"🍜", choices:["라면 수영 선수 🏊","라면 물먹어 💧","라면 가라앉아 🌊"] },
-    { q:"토마토를 거꾸로 하면?", a:"토마토! (앞뒤가 같아) 🍅", emoji:"🍅", choices:["오토마 🍅","마토토 🍅","토토마 🍅"] },
+    { q:"소금이 바다에 빠지면?", a:"원래 살던 데잖아! 🌊", emoji:"🧂", choices:["녹아버려 💧","소금이 수영해 🏊","짠물이 더 짜져 🌊"] },
     { q:"감자튀김이 비 맞으면?", a:"감자탕! 🍟", emoji:"🍟", choices:["감자 눅눅해 🍟","감자 우산 써 ☂️","감자 빨리 먹어 🏃"] },
     { q:"불고기가 달리면?", a:"연기가 나! 🥩", emoji:"🥩", choices:["불고기 마라톤 🏃","불고기 1등 🥇","불고기 땀 흘려 💧"] },
     { q:"만두가 추우면?", a:"꽁꽁 얼어! 🥟", emoji:"🥟", choices:["만두 떨어 🥶","만두 이불 덮어 🛏️","만두 국 속으로 🍲"] },
@@ -1287,11 +1299,11 @@ const DB = {
     { lv:3, q:"'It's raining cats and dogs!' What does this really mean? 🌧️", a:"It's raining very heavily! 🌧️", emoji:"🌧️", choices:["Cats and dogs got wet","Animals fell from sky","The weather is cloudy"] },
     { lv:3, q:"How many times does the letter R appear in FEBRUARY? 📅", a:"2 times! (Feb-R-ua-R-y 📅)", emoji:"📅", choices:["1 time","3 times","0 times"] },
     { lv:3, q:"When do you pronounce THE as 'dee' (디) instead of 'thuh'? 📖", a:"Before a vowel sound! (the apple = 디 애플 🍎)", emoji:"📖", choices:["Always say 'dee'","Before consonants","At end of sentence"] },
-    { lv:3, q:"I (pronoun) and EYE (body part) — what surprising thing do they share? 👁️", a:"They sound exactly the same! (동음이의어 👁️)", emoji:"👁️", choices:["Same letter count","Same meaning","Same shape"] },
-    { lv:3, q:"PIECE (a slice) and PEACE (no war) — what's their secret? ✌️", a:"They sound exactly the same! (동음이의어 ✌️)", emoji:"✌️", choices:["Same meaning","Same letter count","Same letters"] },
-    { lv:3, q:"What word about 'finishing' hides inside FRIEND? 🤝", a:"END! (친구는 끝까지니까! 🤝)", emoji:"🤝", choices:["It's random","Grammar rule","Ancient English"] },
-    { lv:3, q:"The word ALPHABET came from which ancient language? 🇬🇷", a:"Greek! (알파(α)+베타(β)에서 왔어요 🇬🇷)", emoji:"🔤", choices:["Latin","French","Hebrew"] },
-    { lv:3, q:"How do you actually pronounce COLONEL? 🎖️", a:"KER-nel! (커넬! 글자와 발음이 전혀 달라요 😱)", emoji:"🎖️", choices:["kol-o-nel","ko-ro-nel","klo-ro-nel"] },
+    { lv:3, q:"I(나)와 EYE(눈)의 공통점은? 👁️", a:"발음이 똑같아! (동음이의어 👁️)", emoji:"👁️", choices:["글자 수가 같아","뜻이 같아","모양이 같아"] },
+    { lv:3, q:"PIECE(조각)와 PEACE(평화)의 공통점은? ✌️", a:"둘 다 '피스'로 읽어요! (동음이의어 ✌️)", emoji:"✌️", choices:["뜻이 같아","글자 수가 같아","알파벳이 같아"] },
+    { lv:3, q:"FRIEND(친구) 안에 숨어있는 END는 무슨 뜻? 🤝", a:"끝! (친구는 끝까지니까! 🤝)", emoji:"🤝", choices:["우연이야","영어 문법 규칙","고대 영어에서 왔어"] },
+    { lv:3, q:"ALPHABET이라는 단어, 어느 나라 언어에서 왔을까? 🇬🇷", a:"그리스어! (알파(α)+베타(β) 🇬🇷)", emoji:"🇬🇷", choices:["라틴어","프랑스어","히브리어"] },
+    { lv:3, q:"COLONEL(대령)은 어떻게 읽을까? 🎖️", a:"커넬! (글자와 발음이 전혀 달라요 😱)", emoji:"🎖️", choices:["콜로넬","코로넬","클로로넬"] },
   ]
 };
 
@@ -1369,15 +1381,20 @@ function render() {
   document.getElementById('qText').textContent    = q.q;
   document.getElementById('reaction').textContent = '';
   document.getElementById('btnNextMain').style.display = 'none';
+  const explainEl = document.getElementById('answerExplain');
+  explainEl.textContent = '';
+  explainEl.classList.remove('show');
 
   // 선택지 생성 (정답 1 + 오답 3 섞기)
+  // 보기 버튼에서 (괄호 설명)을 숨겨 정답이 시각적으로 안 보이게 함
   const allChoices = shuffle([q.a, ...q.choices]);
   const box = document.getElementById('choicesBox');
   box.innerHTML = '';
   allChoices.forEach(c => {
     const btn = document.createElement('button');
     btn.className = 'choice-btn';
-    btn.textContent = c;
+    btn.dataset.answer = c;
+    btn.textContent = c.replace(/\s*\([^)]*\)\s*/g, '').trim();
     btn.onclick = () => pickChoice(btn, c === q.a);
     box.appendChild(btn);
   });
@@ -1395,11 +1412,19 @@ function pickChoice(btn, isCorrect) {
   if (answered) return;
   answered = true;
 
-  // 모든 버튼 비활성화 + 정답 강조
+  // 모든 버튼 비활성화 + 정답 강조 (dataset.answer로 전체 텍스트 비교)
   document.querySelectorAll('.choice-btn').forEach(b => {
     b.disabled = true;
-    if (b.textContent === list[idx].a) b.classList.add('correct');
+    if (b.dataset.answer === list[idx].a) b.classList.add('correct');
   });
+
+  // 정답 괄호 설명 표시
+  const explainMatch = list[idx].a.match(/\(([^)]+)\)/);
+  const explainEl2 = document.getElementById('answerExplain');
+  if (explainMatch && explainMatch[1].trim()) {
+    explainEl2.textContent = '💡 ' + explainMatch[1].trim();
+    explainEl2.classList.add('show');
+  }
 
   if (isCorrect) {
     score += 10;
