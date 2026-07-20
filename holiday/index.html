@@ -852,12 +852,13 @@ function getHolidayMap(year){
     if(!map[k])map[k]=[];
     if(!map[k].some(x=>x.name===name))map[k].push({name,type:'holiday'});
   });
-  // 대체공휴일
+  // 대체공휴일 (일요일 → 다음 평일, 토요일 → 다음 월요일)
   const subKeys=new Set();
   Object.keys(map).forEach(k=>{
     const dt=parseDate(k);
-    if(dt.getDay()===0){
-      let s=addDays(dt,1);
+    const dow=dt.getDay();
+    if(dow===0||dow===6){
+      let s=addDays(dt,dow===0?1:2);
       while(map[dk(s)]||subKeys.has(dk(s))||s.getDay()===0||s.getDay()===6)s=addDays(s,1);
       subKeys.add(dk(s));
       if(!map[dk(s)])map[dk(s)]=[];
